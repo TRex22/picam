@@ -15,7 +15,7 @@ from picamera import PiCamera
 # 'bgra' - Write the raw image data to a file in 32-bit BGRA format
 # 'raw' - Deprecated option for raw captures; the format is taken from the deprecated raw_format attribute
 
-filetype = '.jpeg'
+filetype = '.jpg'
 dcim_images_path = '/home/pi/DCIM/images'
 dcim_videos_path = '/home/pi/DCIM/videos'
 
@@ -26,6 +26,11 @@ frame_count = filecount + 1
 camera = PiCamera()
 # camera.resolution = (w, h)
 # camera.brightness = step
+
+w = 3280
+h = 2464
+
+camera.resolution = (w, h)
 
 camera.start_preview()
 # time.sleep(10)
