@@ -43,12 +43,14 @@ exp_step = 5
 exp_step = (exposure_max - exposure_min) / (nimages - 1.0)
 exposures = range(exposure_min, exposure_max + 1, int(exp_step))
 
-fnames = []
+filenames = []
 for step in exposures:
   # Set filename based on exposure
-  fname = f'{dcim_hdr_images_path}/{frame_count}_{step}_HDR_{filetype}' # 'e%d.jpg' % (step)
-  fnames.append(fname)
+  filename = f'{dcim_hdr_images_path}/{frame_count}_{step}_HDR_{filetype}' # 'e%d.jpg' % (step)
+  print(filename)
+
+  filenames.append(filename)
   # Set camera properties and capture
   camera.brightness = step
-  camera.capture(fname)
+  camera.capture(filename)
 

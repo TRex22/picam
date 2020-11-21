@@ -24,8 +24,11 @@ format = 'h264'
 
 camera = PiCamera()
 
-camera.start_preview()
-camera.start_recording(f'{dcim_videos_path}/{frame_count}{filetype}', format=format)
+filename = f'{dcim_videos_path}/{frame_count}{filetype}'
+print(filename)
+
+# camera.start_preview()
+camera.start_recording(filename, format=format)
 time.sleep(15)
 camera.stop_recording()
-camera.stop_preview()
+# camera.stop_preview()

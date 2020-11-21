@@ -32,7 +32,10 @@ h = 2464
 
 camera.resolution = (w, h)
 
+filename = f'{dcim_images_path}/{frame_count}{filetype}'
+print(filename)
+
 # camera.start_preview()
 # time.sleep(10)
-camera.capture(f'{dcim_images_path}/{frame_count}{filetype}')
+camera.capture(filename)
 # camera.stop_preview()
