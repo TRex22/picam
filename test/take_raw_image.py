@@ -31,7 +31,8 @@ w = 3280
 h = 2464
 
 # format = 'bgr'
-format = 'yuv'
+# format = 'yuv'
+format = 'raw'
 
 camera.resolution = (w, h)
 
