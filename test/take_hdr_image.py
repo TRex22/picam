@@ -1,6 +1,9 @@
 import time
 import glob
 
+import cv2 as cv
+import numpy as np
+
 from picamera import PiCamera
 
 # Supported file types: https://picamera.readthedocs.io/en/release-1.10/api_camera.html#picamera.camera.PiCamera.capture
@@ -41,10 +44,10 @@ exposure_max = 90
 exp_step = 5
 
 exp_step = (exposure_max - exposure_min) / (nimages - 1.0)
-exposures = range(exposure_min, exposure_max + 1, int(exp_step))
+exposure_times = range(exposure_min, exposure_max + 1, int(exp_step))
 
 filenames = []
-for step in exposures:
+for step in exposure_times:
   # Set filename based on exposure
   filename = f'{dcim_hdr_images_path}/{frame_count}_{step}_HDR_{filetype}' # 'e%d.jpg' % (step)
   print(filename)
@@ -53,4 +56,38 @@ for step in exposures:
   # Set camera properties and capture
   camera.brightness = step
   camera.capture(filename)
+
+# https://docs.opencv.org/3.4/d2/df0/tutorial_py_hdr.html
+img_list = [cv2.imread(filename) for filename in filenames]
+
+# Merge exposures to HDR image
+merge_debevec = cv2.createMergeDebevec()
+hdr_debevec = merge_debevec.process(img_list, times=exposure_times.copy())
+merge_robertson = cv2.createMergeRobertson()
+hdr_robertson = merge_robertson.process(img_list, times=exposure_times.copy())
+
+# Tonemap HDR image
+tonemap1 = cv2.createTonemap(gamma=2.2)
+res_debevec = tonemap1.process(hdr_debevec.copy())
+
+# Exposure fusion using Mertens
+merge_mertens = cv2.createMergeMertens()
+res_mertens = merge_mertens.process(img_list)
+
+# Convert datatype to 8-bit and save
+res_debevec_8bit = np.clip(res_debevec*255, 0, 255).astype('uint8')
+res_robertson_8bit = np.clip(res_robertson*255, 0, 255).astype('uint8')
+res_mertens_8bit = np.clip(res_mertens*255, 0, 255).astype('uint8')
+
+cv2.imwrite(f'{dcim_hdr_images_path}/{frame_count}_ldr_debevec_HDR_{filetype}', res_debevec_8bit)
+cv2.imwrite(f'{dcim_hdr_images_path}/{frame_count}_ldr_robertson_HDR_{filetype}', res_robertson_8bit)
+cv2.imwrite(f'{dcim_hdr_images_path}/{frame_count}_fusion_mertens_{filetype}', res_mertens_8bit)
+
+# Estimate camera response function (CRF)
+# cal_debevec = cv2.createCalibrateDebevec()
+# crf_debevec = cal_debevec.process(img_list, times=exposure_times)
+# hdr_debevec = merge_debevec.process(img_list, times=exposure_times.copy(), response=crf_debevec.copy())
+# cal_robertson = cv2.createCalibrateRobertson()
+# crf_robertson = cal_robertson.process(img_list, times=exposure_times)
+# hdr_robertson = merge_robertson.process(img_list, times=exposure_times.copy(), response=crf_robertson.copy())
 
