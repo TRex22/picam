@@ -49,7 +49,7 @@ exposure_max = 90
 exp_step = 5
 
 exp_step = (exposure_max - exposure_min) / (nimages - 1.0)
-exposure_times = range(exposure_min, exposure_max + 1, int(exp_step))
+exposure_times = np.array(range(exposure_min, exposure_max + 1, int(exp_step)), dtype=np.float32)
 
 # Must be jpg for exif data
 reference_filename = f'{hdr_dir}/{frame_count}_REFERENCE.jpg'
