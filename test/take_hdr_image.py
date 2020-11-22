@@ -28,7 +28,7 @@ dcim_videos_path = '/home/pi/DCIM/videos'
 existing_folders = glob.glob(f'{dcim_hdr_images_path}/*')
 
 filecount = len(existing_folders)
-frame_count = filecount + 1
+frame_count = filecount
 
 hdr_dir = f'{dcim_hdr_images_path}/{filecount}'
 os.mkdir(hdr_dir)
