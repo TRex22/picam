@@ -84,7 +84,7 @@ camera.iso = 0
 print('=======================================================================')
 print('shutter_speed')
 print(f'exposure_speed for 0: {camera.exposure_speed}')
-available_shutter_speeds = [0, 1, 10, 30, 50, 100, 1000, 10000, 100000, 150000, 200000, 500000, 1000000]
+available_shutter_speeds = [0, 1, 10, 30, 50, 100, 1000, 10000, 100000, 150000, 200000, 500000, 1000000, 10000000, 100000000]
 
 for shutter_speed in available_shutter_speeds:
   filename = f'{manual_dir}/{frame_count}_shutter_speed_{shutter_speed}{filetype}'
