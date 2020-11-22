@@ -68,7 +68,7 @@ format = 'jpeg'
 # 100, 200, 320, 400, 500, 640, 800
 print('=======================================================================')
 print('iso')
-available_isos = [0, 100, 200, 320, 400, 500, 640, 800, 1600]
+available_isos = [0, 100, 200, 320, 400, 500, 640, 800, 900, 1000, 1500, 1600]
 for iso in available_isos:
   filename = f'{manual_dir}/{frame_count}_iso_{iso}{filetype}'
   print(filename)
@@ -84,7 +84,7 @@ camera.iso = 0
 print('=======================================================================')
 print('shutter_speed')
 print(f'exposure_speed for 0: {camera.exposure_speed}')
-available_shutter_speeds = [0, 1, 10, 30, 50, 100, 1000, 10000, 100000]
+available_shutter_speeds = [0, 1, 10, 30, 50, 100, 1000, 10000, 100000, 150000, 200000, 500000, 1000000]
 
 for shutter_speed in available_shutter_speeds:
   filename = f'{manual_dir}/{frame_count}_shutter_speed_{shutter_speed}{filetype}'
@@ -141,12 +141,12 @@ camera.exposure_mode = 'auto'
 print('=======================================================================')
 print("image_denoise")
 # image_denoise # Default is True
-filename = f'{manual_dir}/{frame_count}_denoise_{false}{filetype}'
+filename = f'{manual_dir}/{frame_count}_denoise_false{filetype}'
 print(filename)
 camera.image_denoise = False
 camera.capture(filename, format=format)
 
-filename = f'{manual_dir}/{frame_count}_denoise_{true}{filetype}'
+filename = f'{manual_dir}/{frame_count}_denoise_true{filetype}'
 print(filename)
 camera.image_denoise = True
 camera.capture(filename, format=format)
