@@ -1,3 +1,4 @@
+import os
 import time
 import glob
 
@@ -25,8 +26,12 @@ dcim_images_path = '/home/pi/DCIM/images'
 dcim_videos_path = '/home/pi/DCIM/videos'
 
 existing_files = glob.glob(f'{dcim_hdr_images_path}/*{filetype}')
+
 filecount = len(existing_files)
 frame_count = filecount + 1
+
+hdr_dir = f'{dcim_hdr_images_path}/{filecount}'
+os.mkdir(hdr_dir)
 
 camera = PiCamera()
 # camera.resolution = (w, h)
@@ -49,7 +54,7 @@ exposure_times = range(exposure_min, exposure_max + 1, int(exp_step))
 filenames = []
 for step in exposure_times:
   # Set filename based on exposure
-  filename = f'{dcim_hdr_images_path}/{frame_count}_{step}_HDR_{filetype}' # 'e%d.jpg' % (step)
+  filename = f'{hdr_dir}/{frame_count}_{step}_HDR_{filetype}' # 'e%d.jpg' % (step)
   print(filename)
 
   filenames.append(filename)
