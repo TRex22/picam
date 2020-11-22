@@ -68,10 +68,10 @@ for iso in available_isos:
   filename = f'{manual_dir}/{frame_count}_iso_{iso}{filetype}'
   print(filename)
 
-  camera.iso(iso)
+  camera.iso = iso
   camera.capture(filename, format=format)
 
-camera.iso(0)
+camera.iso = 0
 
 # shutter speed
 # shutter speed of the camera in microseconds, or 0 which indicates that the speed will be automatically determined by the auto-exposure algorithm.
@@ -85,10 +85,10 @@ for shutter_speed in available_shutter_speeds:
   filename = f'{manual_dir}/{frame_count}_shutter_speed_{shutter_speed}{filetype}'
   print(filename)
 
-  camera.shutter_speed(shutter_speed)
+  camera.shutter_speed = shutter_speed
   camera.capture(filename, format=format)
 
-camera.shutter_speed(0)
+camera.shutter_speed = 0
 
 # exposure / white balance
 print('=======================================================================')
@@ -101,10 +101,10 @@ for exposure_compensation in available_exposure_compensations:
   filename = f'{manual_dir}/{frame_count}_exposure_compensation_{exposure_compensation}{filetype}'
   print(filename)
 
-  camera.exposure_compensation(exposure_compensation)
+  camera.exposure_compensation = exposure_compensation
   camera.capture(filename, format=format)
 
-camera.exposure_compensation(0)
+camera.exposure_compensation = 0
 
 print('=======================================================================')
 print("exposure_mode")
@@ -127,10 +127,10 @@ for exposure_mode in available_exposure_modes:
   filename = f'{manual_dir}/{frame_count}_exposure_mode_{exposure_mode}{filetype}'
   print(filename)
 
-  camera.exposure_mode(exposure_mode)
+  camera.exposure_mode = exposure_mode
   camera.capture(filename, format=format)
 
-camera.exposure_mode('auto')
+camera.exposure_mode = 'auto'
 
 # image_denoise
 print('=======================================================================')
@@ -138,12 +138,12 @@ print("image_denoise")
 # image_denoise # Default is True
 filename = f'{manual_dir}/{frame_count}_denoise_{false}{filetype}'
 print(filename)
-camera.image_denoise(False)
+camera.image_denoise = False
 camera.capture(filename, format=format)
 
 filename = f'{manual_dir}/{frame_count}_denoise_{true}{filetype}'
 print(filename)
-camera.image_denoise(True)
+camera.image_denoise = True
 camera.capture(filename, format=format)
 
 # effect
@@ -155,10 +155,10 @@ for image_effect in available_effects:
   filename = f'{manual_dir}/{frame_count}_effect_{image_effect}{filetype}'
   print(filename)
 
-  camera.image_effect(image_effect)
+  camera.image_effect = image_effect
   camera.capture(filename, format=format)
 
-camera.image_effect('none')
+camera.image_effect = 'none'
 
 # drc_strength
 print('=======================================================================')
@@ -168,10 +168,10 @@ for drc_strength in available_drc_strengths:
   filename = f'{manual_dir}/{frame_count}_drc_strength_{drc_strength}{filetype}'
   print(filename)
 
-  camera.drc_strength(drc_strength)
+  camera.drc_strength = drc_strength
   camera.capture(filename, format=format)
 
-camera.drc_strength('off')
+camera.drc_strength = 'off'
 
 # contrast
 print('=======================================================================')
@@ -182,10 +182,10 @@ for contrast in available_contrasts:
   filename = f'{manual_dir}/{frame_count}_contrast_{contrast}{filetype}'
   print(filename)
 
-  camera.contrast(contrast)
+  camera.contrast = contrast
   camera.capture(filename, format=format)
 
-camera.contrast(0)
+camera.contrast = 0
 
 # brightness
 print('=======================================================================')
@@ -196,9 +196,9 @@ for brightness in available_brightnesses:
   filename = f'{manual_dir}/{frame_count}_brightness_{brightness}{filetype}'
   print(filename)
 
-  camera.brightness(brightness)
+  camera.brightness = brightness
   camera.capture(filename, format=format)
 
-camera.brightness(50)
+camera.brightness = 50
 
 print('Much Success!')
