@@ -20,8 +20,15 @@ filetype = '.jpg'
 dcim_images_path = '/home/pi/DCIM/images'
 dcim_videos_path = '/home/pi/DCIM/videos'
 
-try: os.mkdir(dcim_images_path) except OSError as error: print(error)
-try: os.mkdir(dcim_videos_path) except OSError as error: print(error)
+try:
+  os.mkdir(dcim_images_path)
+except OSError as error:
+  print(error)
+
+try:
+  os.mkdir(dcim_videos_path)
+except OSError as error:
+  print(error)
 
 existing_files = glob.glob(f'{dcim_images_path}/*{filetype}')
 filecount = len(existing_files)

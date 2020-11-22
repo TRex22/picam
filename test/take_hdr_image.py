@@ -25,9 +25,20 @@ dcim_hdr_images_path = '/home/pi/DCIM/hdr_images'
 dcim_images_path = '/home/pi/DCIM/images'
 dcim_videos_path = '/home/pi/DCIM/videos'
 
-try: os.mkdir(dcim_hdr_images_path) except OSError as error: print(error)
-try: os.mkdir(dcim_images_path) except OSError as error: print(error)
-try: os.mkdir(dcim_videos_path) except OSError as error: print(error)
+try:
+  os.mkdir(dcim_hdr_images_path)
+except OSError as error:
+  print(error)
+
+try:
+  os.mkdir(dcim_images_path)
+except OSError as error:
+  print(error)
+
+try:
+  os.mkdir(dcim_videos_path)
+except OSError as error:
+  print(error)
 
 existing_folders = glob.glob(f'{dcim_hdr_images_path}/*')
 
@@ -35,7 +46,11 @@ filecount = len(existing_folders)
 frame_count = filecount
 
 hdr_dir = f'{dcim_hdr_images_path}/{filecount}'
-try: os.mkdir(hdr_dir) except OSError as error: print(error)
+
+try:
+  os.mkdir(hdr_dir)
+except OSError as error:
+  print(error)
 
 camera = PiCamera()
 # camera.resolution = (w, h)
