@@ -49,10 +49,11 @@ exposure_max = 90
 exp_step = 5
 
 exp_step = (exposure_max - exposure_min) / (nimages - 1.0)
-exposure_times = np.array(range(exposure_min, exposure_max + 1, int(exp_step)), dtype=np.float32)
+exposure_times = range(exposure_min, exposure_max + 1, int(exp_step))
 
 # Must be jpg for exif data
 reference_filename = f'{hdr_dir}/{frame_count}_REFERENCE.jpg'
+print(reference_filename)
 camera.capture(reference_filename)
 
 filenames = []
@@ -67,6 +68,7 @@ for step in exposure_times:
   camera.capture(filename)
 
 # https://docs.opencv.org/3.4/d2/df0/tutorial_py_hdr.html
+exposure_times = np.array(exposure_times, dtype=np.float32)
 img_list = [cv2.imread(filename) for filename in filenames]
 
 # Merge exposures to HDR image
