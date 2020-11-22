@@ -36,6 +36,7 @@ os.mkdir(manual_dir)
 camera = PiCamera()
 # camera.resolution = (w, h)
 # camera.brightness = step
+# camera.exif_tags['IFD0.Copyright'] = 'Copyright (c) 2013 Foo Industries'
 
 w = 3280
 h = 2464
@@ -147,5 +148,46 @@ for image_effect in available_effects:
   camera.capture(filename, format=format)
 
 camera.image_effect('none')
+
+# drc_strength
+print('=======================================================================')
+print("drc_strength")
+available_drc_strengths = ['off', 'low', 'medium', 'high']
+for drc_strength in available_drc_strengths:
+  filename = f'{manual_dir}/{frame_count}_drc_strength_{drc_strength}{filetype}'
+  print(filename)
+
+  camera.drc_strength(drc_strength)
+  camera.capture(filename, format=format)
+
+camera.drc_strength('off')
+
+# contrast
+print('=======================================================================')
+print("contrast")
+# -100 and 100, default is 0
+available_contrasts = [-100, -80, -60, -40, -20, 0, 20, 40, 60, 80, 100]
+for contrast in available_contrasts:
+  filename = f'{manual_dir}/{frame_count}_contrast_{contrast}{filetype}'
+  print(filename)
+
+  camera.contrast(contrast)
+  camera.capture(filename, format=format)
+
+camera.contrast(0)
+
+# brightness
+print('=======================================================================')
+print("brightness")
+# 0 and 100, default is 50
+available_brightnesses = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+for brightness in available_brightnesses:
+  filename = f'{manual_dir}/{frame_count}_brightness_{brightness}{filetype}'
+  print(filename)
+
+  camera.brightness(brightness)
+  camera.capture(filename, format=format)
+
+camera.brightness(50)
 
 print('Much Success!')
