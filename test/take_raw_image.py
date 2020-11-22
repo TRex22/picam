@@ -21,7 +21,7 @@ dcim_videos_path = '/home/pi/DCIM/videos'
 
 existing_files = glob.glob(f'{dcim_images_path}/*{filetype}')
 filecount = len(existing_files)
-frame_count = filecount + 1
+frame_count = filecount
 
 camera = PiCamera()
 # camera.resolution = (w, h)

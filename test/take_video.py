@@ -9,7 +9,7 @@ dcim_videos_path = '/home/pi/DCIM/videos'
 
 existing_files = glob.glob(f'{dcim_videos_path}/*{filetype}')
 filecount = len(existing_files)
-frame_count = filecount + 1
+frame_count = filecount
 
 # Available formats: https://picamera.readthedocs.io/en/release-1.10/api_camera.html#picamera.camera.PiCamera.capture
 # 'h264' - Write an H.264 video stream
