@@ -51,6 +51,10 @@ exp_step = 5
 exp_step = (exposure_max - exposure_min) / (nimages - 1.0)
 exposure_times = range(exposure_min, exposure_max + 1, int(exp_step))
 
+# Must be jpg for exif data
+reference_filename = f'{hdr_dir}/{frame_count}_REFERENCE.jpg'
+camera.capture(reference_filename)
+
 filenames = []
 for step in exposure_times:
   # Set filename based on exposure
