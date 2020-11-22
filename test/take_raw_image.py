@@ -19,6 +19,9 @@ filetype = '.raw'
 dcim_images_path = '/home/pi/DCIM/images'
 dcim_videos_path = '/home/pi/DCIM/videos'
 
+os.mkdir(dcim_images_path)
+os.mkdir(dcim_videos_path)
+
 existing_files = glob.glob(f'{dcim_images_path}/*{filetype}')
 filecount = len(existing_files)
 frame_count = filecount

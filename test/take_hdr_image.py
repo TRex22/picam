@@ -25,6 +25,10 @@ dcim_hdr_images_path = '/home/pi/DCIM/hdr_images'
 dcim_images_path = '/home/pi/DCIM/images'
 dcim_videos_path = '/home/pi/DCIM/videos'
 
+os.mkdir(dcim_hdr_images_path)
+os.mkdir(dcim_images_path)
+os.mkdir(dcim_videos_path)
+
 existing_folders = glob.glob(f'{dcim_hdr_images_path}/*')
 
 filecount = len(existing_folders)
