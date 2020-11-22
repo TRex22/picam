@@ -23,6 +23,11 @@ dcim_images_path = '/home/pi/DCIM/images'
 dcim_videos_path = '/home/pi/DCIM/videos'
 
 try:
+  os.mkdir(dcim_images_manual_path)
+except OSError as error:
+  print(error)
+
+try:
   os.mkdir(dcim_images_path)
 except OSError as error:
   print(error)
