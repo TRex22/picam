@@ -42,13 +42,6 @@ existing_files = glob.glob(f'{dcim_images_path}/*{filetype}')
 filecount = len(existing_files)
 frame_count = filecount
 
-hdr_dir = f'{dcim_hdr_images_path}/{filecount}'
-
-try:
-  os.mkdir(hdr_dir)
-except OSError as error:
-  print(error)
-
 camera = PiCamera()
 # camera.resolution = (w, h)
 # camera.brightness = step
