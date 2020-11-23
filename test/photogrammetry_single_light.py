@@ -23,6 +23,7 @@ else:
   sub_folder = ""
 
 filetype = '.jpg'
+format = 'jpeg'
 
 dcim_images_path = f'/home/pi/DCIM/images_photogrammetry/'
 
@@ -82,6 +83,7 @@ for exposure_compensation in available_exposure_compensations:
 
   camera.exposure_compensation = exposure_compensation
   camera.capture(filename, format=format)
+camera.exposure_compensation = 0
 
 nimages = 10 #2160
 exposure_min = 10
@@ -97,10 +99,12 @@ for brightness_step in brightness_steps:
   except OSError as error:
     print(error)
 
-  filename = f'{dcim_images_path}/brightness_compensation_{frame_count}/{exposure_compensation}{filetype}'
+  filename = f'{dcim_images_path}/brightness_compensation_{frame_count}/{brightness_step}{filetype}'
   print(filename)
 
-  camera.exposure_compensation = exposure_compensation
+  camera.brightness = brightness_step
   camera.capture(filename, format=format)
+
+camera.brightness = 50
 
 print('Much Success!')
