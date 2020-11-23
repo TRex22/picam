@@ -84,6 +84,8 @@ for step in exposure_times:
   filenames.append(filename)
   # Set camera properties and capture
   camera.brightness = step
+  # TODO: Exposure
+  # available_exposure_compensations = [-25, -20, -15, -10, -5, 0, 5, 10, 15, 20, 25]
   camera.capture(filename)
 
 # https://docs.opencv.org/3.4/d2/df0/tutorial_py_hdr.html
