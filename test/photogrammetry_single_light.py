@@ -23,6 +23,14 @@ else:
   sub_folder = ""
 
 filetype = '.jpg'
+
+dcim_images_path = f'/home/pi/DCIM/images_photogrammetry/'
+
+try:
+  os.mkdir(dcim_images_path)
+except OSError as error:
+  print(error)
+
 dcim_images_path = f'/home/pi/DCIM/images_photogrammetry/{sub_folder}'
 
 try:
