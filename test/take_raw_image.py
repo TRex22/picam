@@ -37,8 +37,13 @@ camera = PiCamera()
 # camera.resolution = (w, h)
 # camera.brightness = step
 
+# 8MP pi camera v2.1
 w = 3280
 h = 2464
+
+# 12MP Pi HQ camera
+w = 4056
+h = 3040
 
 # format = 'bgr'
 # format = 'yuv'

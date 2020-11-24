@@ -54,8 +54,14 @@ camera = PiCamera()
 # camera.brightness = step
 # camera.exif_tags['IFD0.Copyright'] = 'Copyright (c) 2013 Foo Industries'
 
+# 8MP pi camera v2.1
 w = 3280
 h = 2464
+
+# 12MP Pi HQ camera
+w = 4056
+h = 3040
+
 camera.resolution = (w, h)
 
 # format = 'bgr'
