@@ -101,8 +101,8 @@ button_3 = 22
 button_4 = 17
 
 GPIO.setwarnings(False) # Ignore warning for now
-GPIO.setmode(GPIO.BOARD) # Use physical pin numbering
-# GPIO.setmode(GPIO.BCM) # Use physical pin numbering
+# GPIO.setmode(GPIO.BOARD) # Use physical pin numbering
+GPIO.setmode(GPIO.BCM) # Use physical pin numbering
 
 GPIO.setup(button_1, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(button_2, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
