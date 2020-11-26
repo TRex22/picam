@@ -105,10 +105,10 @@ GPIO.setwarnings(True)
 # GPIO.setmode(GPIO.BOARD) # Use physical pin numbering
 GPIO.setmode(GPIO.BCM)
 
-GPIO.setup(button_1, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-GPIO.setup(button_2, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-GPIO.setup(button_3, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-GPIO.setup(button_4, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(button_1, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(button_2, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(button_3, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(button_4, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 GPIO.add_event_detect(button_1, GPIO.RISING, callback=button_callback_1)
 GPIO.add_event_detect(button_2, GPIO.RISING, callback=button_callback_2)
