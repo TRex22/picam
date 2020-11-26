@@ -85,13 +85,24 @@ def button_callback_3(channel):
 def button_callback_4(channel):
   print("Button 4 was pushed!")
 
-button_1 = 13 # 27
+# button_1 = 13 # 27
+# button_2 = 16 # 23
+# button_3 = 15 # 22
+# button_4 = 11 # 17
+
+button_1 = 20 # 27
 button_2 = 16 # 23
 button_3 = 15 # 22
-button_4 = 11 # 17
+button_4 = 10 # 17
+
+# button_1 = 27
+# button_2 = 23
+# button_3 = 22
+# button_4 = 17
 
 GPIO.setwarnings(False) # Ignore warning for now
 GPIO.setmode(GPIO.BOARD) # Use physical pin numbering
+# GPIO.setmode(GPIO.BCM) # Use physical pin numbering
 
 GPIO.setup(button_1, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(button_2, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
