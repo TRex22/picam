@@ -32,10 +32,6 @@ try:
 except OSError as error:
   print(error)
 
-existing_files = glob.glob(f'{dcim_images_path}/*{filetype}')
-filecount = len(existing_files)
-frame_count = filecount
-
 camera = PiCamera()
 # camera.resolution = (w, h)
 # camera.brightness = step
@@ -51,10 +47,7 @@ screen_h = 240
 w = 4056
 h = 3040
 
-camera.resolution = (w, h)
-
-filename = f'{dcim_images_path}/{frame_count}{filetype}'
-print(filename)
+# camera.resolution = (w, h)
 
 # Preview
 def preview(camera, zoom=False):
@@ -67,7 +60,21 @@ def preview(camera, zoom=False):
   camera.stop_preview()
 
 def button_callback_1(channel):
+  camera.stop_preview()
   print("Button 1 was pushed!")
+
+  existing_files = glob.glob(f'{dcim_images_path}/*{filetype}')
+  filecount = len(existing_files)
+  frame_count = filecount
+
+  filename = f'{dcim_images_path}/{frame_count}{filetype}'
+  print(filename)
+
+  camera.resolution = (w, h)
+  camera.capture(filename)
+
+  camera.resolution = (screen_w, screen_h)
+  camera.start_preview()
 
 def button_callback_2(channel):
   print("Button 2 was pushed!")
@@ -96,5 +103,9 @@ GPIO.add_event_detect(button_2, GPIO.RISING, callback=button_callback_2)
 GPIO.add_event_detect(button_3, GPIO.RISING, callback=button_callback_3)
 GPIO.add_event_detect(button_4, GPIO.RISING, callback=button_callback_4)
 
+camera.resolution = (screen_w, screen_h)
+camera.start_preview()
+
 message = input("Press enter to quit\n\n") # Run until someone presses enter
+camera.stop_preview()
 GPIO.cleanup() # Clean up
