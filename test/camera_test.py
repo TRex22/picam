@@ -90,15 +90,15 @@ def button_callback_4(channel):
 # button_3 = 15 # 22
 # button_4 = 11 # 17
 
-button_1 = 20 # 27
-button_2 = 16 # 23
-button_3 = 15 # 22
-button_4 = 10 # 17
+# button_1 = 20 # 27
+# button_2 = 16 # 23
+# button_3 = 15 # 22
+# button_4 = 10 # 17
 
-# button_1 = 27
-# button_2 = 23
-# button_3 = 22
-# button_4 = 17
+button_1 = 27
+button_2 = 23
+button_3 = 22
+button_4 = 17
 
 GPIO.setwarnings(False) # Ignore warning for now
 GPIO.setmode(GPIO.BOARD) # Use physical pin numbering
