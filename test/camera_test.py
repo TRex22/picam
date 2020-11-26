@@ -66,14 +66,35 @@ def preview(camera, zoom=False):
   # camera.capture(filename)
   camera.stop_preview()
 
-def button_callback(channel):
-  print("Button was pushed!")
+def button_callback_1(channel):
+  print("Button 1 was pushed!")
+
+def button_callback_2(channel):
+  print("Button 2 was pushed!")
+
+def button_callback_3(channel):
+  print("Button 3 was pushed!")
+
+def button_callback_4(channel):
+  print("Button 4 was pushed!")
+
+button_1 = 13 # 27
+button_2 = 16 # 23
+button_3 = 15 # 22
+button_4 = 11 # 17
 
 GPIO.setwarnings(False) # Ignore warning for now
 GPIO.setmode(GPIO.BOARD) # Use physical pin numbering
-GPIO.setup(13, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) # Set pin 10 to be an input pin and set initial value to be pulled low (off)
 
-GPIO.add_event_detect(10, GPIO.RISING, callback=button_callback) # Setup event on pin 10 rising edge
+GPIO.setup(button_1, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(button_2, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(button_3, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(button_4, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+
+GPIO.add_event_detect(button_1, GPIO.RISING, callback=button_callback_1)
+GPIO.add_event_detect(button_2, GPIO.RISING, callback=button_callback_2)
+GPIO.add_event_detect(button_3, GPIO.RISING, callback=button_callback_3)
+GPIO.add_event_detect(button_4, GPIO.RISING, callback=button_callback_4)
 
 message = input("Press enter to quit\n\n") # Run until someone presses enter
 GPIO.cleanup() # Clean up
