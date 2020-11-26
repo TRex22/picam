@@ -100,7 +100,8 @@ button_2 = 23
 button_3 = 22
 button_4 = 17
 
-GPIO.setwarnings(False) # Ignore warning for now
+# GPIO.setwarnings(False) # Ignore warning for now
+GPIO.setwarnings(True)
 # GPIO.setmode(GPIO.BOARD) # Use physical pin numbering
 GPIO.setmode(GPIO.BCM) # Use physical pin numbering
 
