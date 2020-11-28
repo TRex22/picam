@@ -129,20 +129,6 @@ camera.resolution = (width, height)
 filename = f'{dcim_images_path}/{frame_count}{filetype}'
 print(filename)
 
-# camera.start_preview()
-# time.sleep(10)
-# camera.capture(filename, format=format)
-
-# load raw data into 16-bit numpy array.
-numPixels = width*height
-camera.capture(stream, format, bayer=True)
-
-rawData = struct.unpack("H"*numPixels,stream.read(2*numPixels))
-rawFlatImage = np.zeros(numPixels, dtype=np.uint16)
-rawFlatImage[:] = rawData[:]
-rawImage = np.reshape(rawFlatImage,(height,width))
-rawImage = rawImage >> (16 - bpp)
-
 start_time = time.time()
 
 d = RPICAM2DNG()
