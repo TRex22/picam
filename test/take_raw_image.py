@@ -104,7 +104,7 @@ with open(colour_profile_path, "r") as stream:
 # Colour Calibration
 t.set(Tag.UniqueCameraModel, colour_profile["UniqueCameraModel"])
 t.set(Tag.ProfileName, colour_profile["ProfileName"])
-t.set(Tag.ProfileCopyright, colour_profile["ProfileCopyright"])
+# t.set(Tag.ProfileCopyright, colour_profile["ProfileCopyright"])
 t.set(Tag.ProfileEmbedPolicy, colour_profile["ProfileEmbedPolicy"])
 t.set(Tag.CalibrationIlluminant1, colour_profile["CalibrationIlluminant1"])
 t.set(Tag.ColorMatrix1, colour_profile["ColorMatrix1"])
