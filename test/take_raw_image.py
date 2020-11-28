@@ -3,6 +3,7 @@ from io import BytesIO
 import time
 import glob
 import json
+import struct
 
 import numpy as np
 
