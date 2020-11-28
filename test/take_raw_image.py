@@ -63,13 +63,15 @@ format = 'jpeg'
 # calibrated colour matrix
 # colour_profile = "/home/pi/DCIM/Colour_Profiles/imx477/PyDNG_profile.dcp"
 # colour_profile = "/home/pi/DCIM/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Skin+Sky Look.dcp"
-colour_profile = '"/home/pi/DCIM/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Neutral Look.dcp"'
+# colour_profile = "/home/pi/DCIM/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Neutral Look.dcp"
+colour_profile = "/home/pi/DCIM/Colour_Profiles/imx477/neutral.dcp"
+
 dcp = DCP(colour_profile)
 dcp.parse()
 status, report = dcp.check()
 
 print(status)
-print(report)
+print(repo)
 
 
 # ccm1 =
