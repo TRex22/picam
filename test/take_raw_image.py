@@ -52,8 +52,8 @@ camera = PiCamera()
 
 # 12MP Pi HQ camera
 # RAW image specs
-width = 4096
-height = 3072
+width = 4056
+height = 3040
 bpp= 12
 
 # format = 'bgr'
@@ -72,7 +72,7 @@ t.set(Tag.SamplesPerPixel, 1)
 t.set(Tag.BitsPerSample, bpp)
 t.set(Tag.CFARepeatPatternDim, [2,2])
 t.set(Tag.CFAPattern, [1, 2, 0, 1])
-t.set(Tag.BlackLevel, (4096 >> (16 - bpp)))
+t.set(Tag.BlackLevel, (4056 >> (16 - bpp)))
 t.set(Tag.WhiteLevel, ((1 << bpp) -1) )
 t.set(Tag.AsShotNeutral, [[1,1],[1,1],[1,1]])
 t.set(Tag.DNGVersion, [1, 4, 0, 0])
