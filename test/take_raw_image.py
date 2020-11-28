@@ -131,7 +131,7 @@ print(filename)
 
 start_time = time.time()
 
-camera.capture(filename, bayer=True)
+camera.capture(stream, format, bayer=True)
 
 # d = RPICAM2DNG()
 # output = d.convert(stream, tags=t)
