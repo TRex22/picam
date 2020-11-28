@@ -133,10 +133,9 @@ start_time = time.time()
 
 camera.capture(stream, format, bayer=True)
 
-# d = RPICAM2DNG()
-# output = d.convert(stream, tags=t)
+output = RPICAM2DNG().convert(stream)
 # output = RAW2DNG().convert(stream, tags=t, filename="custom", path="")
-output = RAW2DNG().convert(stream, tags=t)
+output = RAW2DNG().convert(output, tags=t)
 
 with open(filename, 'wb') as f:
   f.write(output)
