@@ -65,6 +65,10 @@ format = 'jpeg'
 # colour_profile = "/home/pi/DCIM/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Skin+Sky Look.dcp"
 # colour_profile = "/home/pi/DCIM/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Neutral Look.dcp"
 colour_profile = "/home/pi/DCIM/Colour_Profiles/imx477/neutral.dcp"
+colour_profile = "/home/pi/dcp"
+
+# python -m clairmeta.cli probe -type dcp "/home/pi/DCIM/Colour_Profiles/imx477/neutral.dcp" -format json > dcp.json
+# python -m clairmeta.cli probe -type dcp "/home/pi/dcp" -format json > dcp.json
 
 dcp = DCP(colour_profile)
 dcp.parse()
