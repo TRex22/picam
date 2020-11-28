@@ -2,12 +2,12 @@ import os
 from io import BytesIO
 import time
 import glob
+import json
 
 import numpy as np
 
 from picamera import PiCamera
 
-from clairmeta import DCP
 from pydng.core import RPICAM2DNG
 from pydng.core import RAW2DNG, DNGTags, Tag
 
@@ -60,26 +60,6 @@ bpp= 12
 # format = 'yuv'
 format = 'jpeg'
 
-# calibrated colour matrix
-# colour_profile = "/home/pi/DCIM/Colour_Profiles/imx477/PyDNG_profile.dcp"
-# colour_profile = "/home/pi/DCIM/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Skin+Sky Look.dcp"
-# colour_profile = "/home/pi/DCIM/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Neutral Look.dcp"
-colour_profile = "/home/pi/DCIM/Colour_Profiles/imx477/neutral.dcp"
-colour_profile = "/home/pi/dcp"
-
-# python -m clairmeta.cli probe -type dcp "/home/pi/DCIM/Colour_Profiles/imx477/neutral.dcp" -format json > dcp.json
-# python -m clairmeta.cli probe -type dcp "/home/pi/dcp" -format json > dcp.json
-
-dcp = DCP(colour_profile)
-dcp.parse()
-status, report = dcp.check()
-
-print(status)
-print(repo)
-
-
-# ccm1 =
-
 # set DNG tags.
 t = DNGTags()
 t.set(Tag.ImageWidth, width)
@@ -94,8 +74,6 @@ t.set(Tag.CFARepeatPatternDim, [2,2])
 t.set(Tag.CFAPattern, [1, 2, 0, 1])
 t.set(Tag.BlackLevel, (4096 >> (16 - bpp)))
 t.set(Tag.WhiteLevel, ((1 << bpp) -1) )
-t.set(Tag.ColorMatrix1, ccm1)
-t.set(Tag.CalibrationIlluminant1, 21)
 t.set(Tag.AsShotNeutral, [[1,1],[1,1],[1,1]])
 t.set(Tag.DNGVersion, [1, 4, 0, 0])
 t.set(Tag.DNGBackwardVersion, [1, 2, 0, 0])
@@ -103,19 +81,35 @@ t.set(Tag.Make, "RaspberryPi")
 t.set(Tag.Model, "RP_imx477")
 t.set(Tag.PreviewColorSpace, 2)
 
+# Calibrated colour matrix
+# colour_profile_path = "/home/pi/DCIM/Colour_Profiles/imx477/PyDNG_profile.dcp"
+# colour_profile_path = "/home/pi/DCIM/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Skin+Sky Look.dcp"
+# colour_profile_path = "/home/pi/DCIM/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Neutral Look.dcp"
+# colour_profile_path = "/home/pi/DCIM/Colour_Profiles/imx477/neutral.dcp"
+# colour_profile_path = "/home/pi/dcp"
+
+# python -m clairmeta.cli probe -type dcp "/home/pi/DCIM/Colour_Profiles/imx477/neutral.dcp" -format json > dcp.json
+# python -m clairmeta.cli probe -type dcp "/home/pi/dcp" -format json > dcp.json
+
+# JSON conversions
+# colour_profile_path = "/home/pi/DCIM/Colour_Profiles/imx477/PyDNG_profile.json"
+# colour_profile_path = "/home/pi/DCIM/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Skin+Sky Look.json"
+colour_profile_path = "/home/pi/DCIM/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Neutral Look.json"
+colour_profile = json.load(colour_profile_path)
+
 # Colour Calibration
-# UniqueCameraModel
-# ProfileName
-# ProfileCopyright
-# ProfileEmbedPolicy
-# CalibrationIlluminant1
-# ColorMatrix1
-# ForwardMatrix1
-# CalibrationIlluminant2
-# ColorMatrix2
-# ForwardMatrix2
-# DefaultBlackRender
-# ProfileToneCurve
+t.set(Tag.UniqueCameraModel, colour_profile["UniqueCameraModel"])
+t.set(Tag.ProfileName, colour_profile["ProfileName)"]
+t.set(Tag.ProfileCopyright, colour_profile["ProfileCopyright"])
+t.set(Tag.ProfileEmbedPolicy, colour_profile["ProfileEmbedPolicy"])
+t.set(Tag.CalibrationIlluminant1, colour_profile["CalibrationIlluminant1"])
+t.set(Tag.ColorMatrix1, colour_profile["ColorMatrix1"])
+t.set(Tag.ForwardMatrix1, colour_profile["ForwardMatrix1"])
+t.set(Tag.CalibrationIlluminant2, colour_profile["CalibrationIlluminant2"])
+t.set(Tag.ColorMatrix2, colour_profile["ColorMatrix2"])
+t.set(Tag.ForwardMatrix2, colour_profile["ForwardMatrix2"])
+t.set(Tag.DefaultBlackRender, colour_profile["DefaultBlackRender"])
+t.set(Tag.ProfileToneCurve, colour_profile["ProfileToneCurve"])
 
 # TODO:
 # t.set(Tag.FocalLength, )

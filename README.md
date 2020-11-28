@@ -11,10 +11,6 @@ RaspberryPi Camera software to be used with a screen module.
 - pip3 install opencv-contrib-python
 - sudo apt-get install -y libatlas-base-dev libhdf5-dev libhdf5-serial-dev libatlas-base-dev libjasper-dev  libqtgui4  libqt4-test
 - sudo apt-get install libatlas-base-dev libxml2-dev libxslt-dev
-- pip install clairmeta
-- pip install asdcp-info asdcp-unwrap sox
-- sudo apt install sox mediainfo
-- pip install six==1.12.0
 
 # Other tools
 ## PiCam experimental viewfinder
@@ -35,3 +31,10 @@ pip3 install src/.
 git clone https://github.com/davidplowman/Colour_Profiles.git
 ```
 
+# dcamprof
+https://torger.se/anders/dcamprof.html#download
+
+```
+./dcamprof.exe dcp2json "C:/development/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Skin+Sky Look.dcp" "C:/development/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Skin+Sky Look.json"
+./dcamprof.exe dcp2json "C:/development/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Neutral Look.dcp" "C:/development/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Neutral Look.json"
+```
