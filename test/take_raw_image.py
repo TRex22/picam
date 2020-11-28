@@ -58,16 +58,6 @@ bpp= 12
 # format = 'yuv'
 format = 'jpeg'
 
-# load raw data into 16-bit numpy array.
-numPixels = width*height
-rawFile = 'extras/scene_daylight_211ms_c2.raw16'
-rf = open(rawFile, mode='rb')
-rawData = struct.unpack("H"*numPixels,rf.read(2*numPixels))
-rawFlatImage = np.zeros(numPixels, dtype=np.uint16)
-rawFlatImage[:] = rawData[:]
-rawImage = np.reshape(rawFlatImage,(height,width))
-rawImage = rawImage >> (16 - bpp)
-
 # calibrated colour matrix
 # colour_profile = "/home/pi/DCIM/Colour_Profiles/imx477/PyDNG_profile.dcp"
 # colour_profile = "/home/pi/DCIM/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Skin+Sky Look.dcp"
@@ -113,7 +103,16 @@ print(filename)
 # camera.start_preview()
 # time.sleep(10)
 # camera.capture(filename, format=format)
+
+# load raw data into 16-bit numpy array.
+numPixels = width*height
 camera.capture(stream, format, bayer=True)
+
+rawData = struct.unpack("H"*numPixels,stream.read(2*numPixels))
+rawFlatImage = np.zeros(numPixels, dtype=np.uint16)
+rawFlatImage[:] = rawData[:]
+rawImage = np.reshape(rawFlatImage,(height,width))
+rawImage = rawImage >> (16 - bpp)
 
 start_time = time.time()
 
