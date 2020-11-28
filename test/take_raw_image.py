@@ -3,6 +3,10 @@ import glob
 
 from picamera import PiCamera
 
+from io import BytesIO
+import numpy as np
+from pydng.core import RPICAM2DNG
+
 # Supported file types: https://picamera.readthedocs.io/en/release-1.10/api_camera.html#picamera.camera.PiCamera.capture
 # 'jpeg' - Write a JPEG file
 # 'png' - Write a PNG file
@@ -15,7 +19,7 @@ from picamera import PiCamera
 # 'bgra' - Write the raw image data to a file in 32-bit BGRA format
 # 'raw' - Deprecated option for raw captures; the format is taken from the deprecated raw_format attribute
 
-filetype = '.raw'
+filetype = '.dng'
 dcim_images_path = '/home/pi/DCIM/images'
 dcim_videos_path = '/home/pi/DCIM/videos'
 
@@ -38,8 +42,8 @@ camera = PiCamera()
 # camera.brightness = step
 
 # 8MP pi camera v2.1
-w = 3280
-h = 2464
+# w = 3280
+# h = 2464
 
 # 12MP Pi HQ camera
 w = 4056
@@ -47,7 +51,9 @@ h = 3040
 
 # format = 'bgr'
 # format = 'yuv'
-format = 'raw'
+format = 'jpeg'
+
+stream = BytesIO()
 
 camera.resolution = (w, h)
 
@@ -56,5 +62,17 @@ print(filename)
 
 # camera.start_preview()
 # time.sleep(10)
-camera.capture(filename, format=format)
+# camera.capture(filename, format=format)
+camera.capture(stream, format, bayer=True)
+
+start_time = time.time()
+
+d = RPICAM2DNG()
+output = d.convert(stream)
+
+with open(filename, 'wb') as f:
+  f.write(output)
+
+print("--- %s seconds ---" % (time.time() - start_time))
+
 # camera.stop_preview()
