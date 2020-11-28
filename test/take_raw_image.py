@@ -132,8 +132,8 @@ print(filename)
 start_time = time.time()
 
 d = RPICAM2DNG()
-# output = d.convert(stream)
-output = RAW2DNG().convert(stream, tags=t, filename="custom", path="")
+output = d.convert(stream, tags=t)
+# output = RAW2DNG().convert(stream, tags=t, filename="custom", path="")
 
 with open(filename, 'wb') as f:
   f.write(output)
