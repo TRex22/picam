@@ -95,7 +95,11 @@ t.set(Tag.PreviewColorSpace, 2)
 # colour_profile_path = "/home/pi/DCIM/Colour_Profiles/imx477/PyDNG_profile.json"
 # colour_profile_path = "/home/pi/DCIM/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Skin+Sky Look.json"
 colour_profile_path = "/home/pi/DCIM/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Neutral Look.json"
-colour_profile = json.load(colour_profile_path)
+# colour_profile_path = "/home/pi/DCIM/Colour_Profiles/imx477/neutral.json"
+
+colour_profile = {}
+with open(colour_profile_path, "r") as stream:
+  colour_profile = json.load(stream)
 
 # Colour Calibration
 t.set(Tag.UniqueCameraModel, colour_profile["UniqueCameraModel"])
