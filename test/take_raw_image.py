@@ -99,8 +99,8 @@ colour_profile_path = "/home/pi/DCIM/Colour_Profiles/imx477/Raspberry Pi High Qu
 # colour_profile_path = "/home/pi/DCIM/Colour_Profiles/imx477/neutral.json"
 
 colour_profile = {}
-with open(colour_profile_path, "r") as stream:
-  colour_profile = json.load(stream)
+with open(colour_profile_path, "r") as file_stream:
+  colour_profile = json.load(file_stream)
 
 # Colour Calibration
 t.set(Tag.UniqueCameraModel, colour_profile["UniqueCameraModel"])
@@ -130,6 +130,8 @@ filename = f'{dcim_images_path}/{frame_count}{filetype}'
 print(filename)
 
 start_time = time.time()
+
+camera.capture(filename, bayer=True)
 
 # d = RPICAM2DNG()
 # output = d.convert(stream, tags=t)
