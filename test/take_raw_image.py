@@ -1,11 +1,13 @@
 import os
+from io import BytesIO
 import time
 import glob
 
+import numpy as np
+
 from picamera import PiCamera
 
-from io import BytesIO
-import numpy as np
+from clairmeta import DCP
 from pydng.core import RPICAM2DNG
 from pydng.core import RAW2DNG, DNGTags, Tag
 
@@ -61,8 +63,16 @@ format = 'jpeg'
 # calibrated colour matrix
 # colour_profile = "/home/pi/DCIM/Colour_Profiles/imx477/PyDNG_profile.dcp"
 # colour_profile = "/home/pi/DCIM/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Skin+Sky Look.dcp"
-colour_profile = "/home/pi/DCIM/Colour_Profiles/imx477/Raspberry\ Pi\ High\ Quality\ Camera\ Lumariver\ 2860k-5960k\ Neutral\ Look.dcp"
-ccm1 = np.load(colour_profile)
+colour_profile = "/home/pi/DCIM/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Neutral Look.dcp"
+dcp = DCP(colour_profile)
+dcp.parse()
+status, report = dcp.check()
+
+print(status)
+print(report)
+
+
+# ccm1 =
 
 # set DNG tags.
 t = DNGTags()
@@ -86,6 +96,20 @@ t.set(Tag.DNGBackwardVersion, [1, 2, 0, 0])
 t.set(Tag.Make, "RaspberryPi")
 t.set(Tag.Model, "RP_imx477")
 t.set(Tag.PreviewColorSpace, 2)
+
+# Colour Calibration
+# UniqueCameraModel
+# ProfileName
+# ProfileCopyright
+# ProfileEmbedPolicy
+# CalibrationIlluminant1
+# ColorMatrix1
+# ForwardMatrix1
+# CalibrationIlluminant2
+# ColorMatrix2
+# ForwardMatrix2
+# DefaultBlackRender
+# ProfileToneCurve
 
 # TODO:
 # t.set(Tag.FocalLength, )
