@@ -122,6 +122,9 @@ t.set(Tag.ProfileToneCurve, colour_profile["ProfileToneCurve"])
 # F-stop
 # Exposure bias
 
+print(t.list)
+import pdb; pdb.set_trace()
+
 stream = BytesIO()
 
 camera.resolution = (width, height)
