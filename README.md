@@ -12,6 +12,9 @@ RaspberryPi Camera software to be used with a screen module.
 - sudo apt-get install -y libatlas-base-dev libhdf5-dev libhdf5-serial-dev libatlas-base-dev libjasper-dev  libqtgui4  libqt4-test
 - sudo apt-get install libatlas-base-dev libxml2-dev libxslt-dev
 - pip install clairmeta
+- pip install asdcp-info asdcp-unwrap sox
+- sudo apt install sox mediainfo
+- pip install six==1.12.0
 
 # Other tools
 ## PiCam experimental viewfinder
@@ -31,3 +34,4 @@ pip3 install src/.
 # Colour profiles
 git clone https://github.com/davidplowman/Colour_Profiles.git
 ```
+
