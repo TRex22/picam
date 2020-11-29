@@ -55,7 +55,7 @@ camera = PiCamera()
 # RAW image specs
 width = 4056
 height = 3040
-bpp= 12
+bpp = 12
 
 # format = 'bgr'
 # format = 'yuv'

@@ -18,7 +18,10 @@ import RPi.GPIO as GPIO
 # 'bgra' - Write the raw image data to a file in 32-bit BGRA format
 # 'raw' - Deprecated option for raw captures; the format is taken from the deprecated raw_format attribute
 
-filetype = '.jpg'
+filetype = '.dng'
+bpp = 12
+format = 'jpeg'
+
 dcim_images_path = '/home/pi/DCIM/images'
 dcim_videos_path = '/home/pi/DCIM/videos'
 
@@ -32,9 +35,13 @@ try:
 except OSError as error:
   print(error)
 
+colour_profile_path = "/home/pi/DCIM/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Neutral Look.json"
+
+raw_colour_profile = None
+with open(colour_profile_path, "r") as file_stream:
+  json_colour_profile = json.load(file_stream)
+
 camera = PiCamera()
-# camera.resolution = (w, h)
-# camera.brightness = step
 
 # 8MP pi camera v2.1
 # w = 3280
@@ -44,10 +51,8 @@ screen_w = 320
 screen_h = 240
 
 # 12MP Pi HQ camera
-w = 4056
-h = 3040
-
-# camera.resolution = (w, h)
+width = 4056
+height = 3040
 
 # Preview
 def preview(camera, zoom=False):
@@ -60,21 +65,7 @@ def preview(camera, zoom=False):
   camera.stop_preview()
 
 def button_callback_1(channel):
-  camera.stop_preview()
   print("Button 1 was pushed!")
-
-  existing_files = glob.glob(f'{dcim_images_path}/*{filetype}')
-  filecount = len(existing_files)
-  frame_count = filecount
-
-  filename = f'{dcim_images_path}/{frame_count}{filetype}'
-  print(filename)
-
-  camera.resolution = (w, h)
-  camera.capture(filename)
-
-  camera.resolution = (screen_w, screen_h)
-  camera.start_preview()
 
 def button_callback_2(channel):
   print("Button 2 was pushed!")
@@ -84,6 +75,31 @@ def button_callback_3(channel):
 
 def button_callback_4(channel):
   print("Button 4 was pushed!")
+
+  # camera.stop_preview()
+  existing_files = glob.glob(f'{dcim_images_path}/*{filetype}')
+  filecount = len(existing_files)
+  frame_count = filecount
+
+  filename = f'{dcim_images_path}/{frame_count}{filetype}'
+  print(filename)
+
+  stream = BytesIO()
+
+  camera.resolution = (width, height)
+  start_time = time.time()
+
+  camera.capture(stream, format, bayer=True)
+
+  output = RPICAM2DNG().convert(stream, json_camera_profile=json_colour_profile)
+
+  with open(filename, 'wb') as f:
+    f.write(output)
+
+  print("--- %s seconds ---" % (time.time() - start_time))
+
+  camera.resolution = (screen_w, screen_h)
+  # camera.start_preview()
 
 # button_1 = 13 # 27
 # button_2 = 16 # 23
