@@ -79,7 +79,7 @@ colour_profile_path = "/home/pi/DCIM/Colour_Profiles/imx477/Raspberry Pi High Qu
 
 raw_colour_profile = None
 with open(colour_profile_path, "r") as file_stream:
-  raw_colour_profile = file_stream
+  json_colour_profile = json.load(file_stream)
 
 # TODO:
 # t.set(Tag.FocalLength, )
@@ -98,7 +98,7 @@ start_time = time.time()
 
 camera.capture(stream, format, bayer=True)
 
-output = RPICAM2DNG().convert(stream, profile_json=raw_colour_profile)
+output = RPICAM2DNG().convert(stream, json_camera_profile=json_colour_profile)
 
 with open(filename, 'wb') as f:
   f.write(output)
