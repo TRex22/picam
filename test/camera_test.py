@@ -3,6 +3,7 @@ import time
 import glob
 import json
 
+from io import BytesIO
 from picamera import PiCamera
 # from gpiozero import Button
 import RPi.GPIO as GPIO
