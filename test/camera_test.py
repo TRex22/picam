@@ -8,6 +8,9 @@ from picamera import PiCamera
 # from gpiozero import Button
 import RPi.GPIO as GPIO
 
+from pydng.core import RPICAM2DNG
+from pydng.core import RAW2DNG, DNGTags, Tag
+
 # Supported file types: https://picamera.readthedocs.io/en/release-1.10/api_camera.html#picamera.camera.PiCamera.capture
 # 'jpeg' - Write a JPEG file
 # 'png' - Write a PNG file
