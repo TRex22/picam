@@ -61,27 +61,6 @@ bpp= 12
 # format = 'yuv'
 format = 'jpeg'
 
-# set DNG tags.
-t = DNGTags()
-t.set(Tag.ImageWidth, width)
-t.set(Tag.ImageLength, height)
-t.set(Tag.TileWidth, width)
-t.set(Tag.TileLength, height)
-t.set(Tag.Orientation, 1)
-t.set(Tag.PhotometricInterpretation, 32803)
-t.set(Tag.SamplesPerPixel, 1)
-t.set(Tag.BitsPerSample, bpp)
-t.set(Tag.CFARepeatPatternDim, [2,2])
-t.set(Tag.CFAPattern, [1, 2, 0, 1])
-t.set(Tag.BlackLevel, (4056 >> (16 - bpp)))
-t.set(Tag.WhiteLevel, ((1 << bpp) -1) )
-t.set(Tag.AsShotNeutral, [[1,1],[1,1],[1,1]])
-t.set(Tag.DNGVersion, [1, 4, 0, 0])
-t.set(Tag.DNGBackwardVersion, [1, 2, 0, 0])
-t.set(Tag.Make, "RaspberryPi")
-t.set(Tag.Model, "RP_imx477")
-t.set(Tag.PreviewColorSpace, 2)
-
 # Calibrated colour matrix
 # colour_profile_path = "/home/pi/DCIM/Colour_Profiles/imx477/PyDNG_profile.dcp"
 # colour_profile_path = "/home/pi/DCIM/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Skin+Sky Look.dcp"
@@ -98,32 +77,15 @@ t.set(Tag.PreviewColorSpace, 2)
 colour_profile_path = "/home/pi/DCIM/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Neutral Look.json"
 # colour_profile_path = "/home/pi/DCIM/Colour_Profiles/imx477/neutral.json"
 
-colour_profile = {}
+raw_colour_profile = None
 with open(colour_profile_path, "r") as file_stream:
-  colour_profile = json.load(file_stream)
-
-# Colour Calibration
-t.set(Tag.UniqueCameraModel, colour_profile["UniqueCameraModel"])
-t.set(Tag.ProfileName, colour_profile["ProfileName"])
-# t.set(Tag.ProfileCopyright, colour_profile["ProfileCopyright"])
-t.set(Tag.ProfileEmbedPolicy, colour_profile["ProfileEmbedPolicy"])
-t.set(Tag.CalibrationIlluminant1, colour_profile["CalibrationIlluminant1"])
-t.set(Tag.ColorMatrix1, colour_profile["ColorMatrix1"])
-t.set(Tag.ForwardMatrix1, colour_profile["ForwardMatrix1"])
-t.set(Tag.CalibrationIlluminant2, colour_profile["CalibrationIlluminant2"])
-t.set(Tag.ColorMatrix2, colour_profile["ColorMatrix2"])
-t.set(Tag.ForwardMatrix2, colour_profile["ForwardMatrix2"])
-t.set(Tag.DefaultBlackRender, colour_profile["DefaultBlackRender"])
-t.set(Tag.ProfileToneCurve, colour_profile["ProfileToneCurve"])
+  raw_colour_profile = file_stream
 
 # TODO:
 # t.set(Tag.FocalLength, )
 # t.set(Tag.35mmFocalLength, 2)
 # F-stop
 # Exposure bias
-
-print(t.list)
-import pdb; pdb.set_trace()
 
 stream = BytesIO()
 
@@ -136,9 +98,7 @@ start_time = time.time()
 
 camera.capture(stream, format, bayer=True)
 
-output = RPICAM2DNG().convert(stream)
-# output = RAW2DNG().convert(stream, tags=t, filename="custom", path="")
-output = RAW2DNG().convert(output, tags=t)
+output = RPICAM2DNG().convert(stream, profile_json=raw_colour_profile)
 
 with open(filename, 'wb') as f:
   f.write(output)
