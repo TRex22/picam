@@ -59,6 +59,8 @@ screen_h = 240
 width = 4056
 height = 3040
 
+recording_state = False
+
 # Preview
 def preview(camera, zoom=False):
   if zoom == True:
@@ -71,6 +73,8 @@ def preview(camera, zoom=False):
 
 def button_callback_1(channel):
   print("Button 1 was pushed!")
+  print(f"recording_state: {recording_state}")
+  recording_state = True
 
 def button_callback_2(channel):
   print("Button 2 was pushed!")
