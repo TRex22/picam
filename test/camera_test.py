@@ -127,6 +127,8 @@ def button_callback_4(channel):
   filename = f'{dcim_images_path}/{frame_count}{filetype}'
   print(filename)
 
+  original_filename = f'{dcim_original_images_path}/{frame_count}{filetype}'
+
   stream = BytesIO()
 
   camera.resolution = (width, height)
@@ -134,14 +136,14 @@ def button_callback_4(channel):
 
   camera.capture(stream, format, bayer=True)
 
+  with open(original_filename, 'wb') as f:
+    f.write(stream)
+
   # camera.stop_preview()
 
   output = RPICAM2DNG().convert(stream, json_camera_profile=json_colour_profile)
 
   with open(filename, 'wb') as f:
-    f.write(output)
-
-  with open(dcim_original_images_path, 'wb') as f:
     f.write(output)
 
   print("--- %s seconds ---" % (time.time() - start_time))
