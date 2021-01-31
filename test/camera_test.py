@@ -127,7 +127,7 @@ def button_callback_4(channel):
   filename = f'{dcim_images_path}/{frame_count}{filetype}'
   print(filename)
 
-  original_filename = f'{dcim_original_images_path}/{frame_count}{format}'
+  original_filename = f'{dcim_original_images_path}/{frame_count}.{format}'
 
   stream = BytesIO()
 
@@ -137,7 +137,7 @@ def button_callback_4(channel):
   camera.capture(stream, format, bayer=True)
 
   with open(original_filename, 'wb') as f:
-    f.write(stream)
+    f.write(stream.getbuffer())
 
   # camera.stop_preview()
 
