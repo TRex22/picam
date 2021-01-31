@@ -11,9 +11,6 @@ import RPi.GPIO as GPIO
 from pydng.core import RPICAM2DNG
 from pydng.core import RAW2DNG, DNGTags, Tag
 
-from PIL import Image
-import piexif
-
 # Supported file types: https://picamera.readthedocs.io/en/release-1.10/api_camera.html#picamera.camera.PiCamera.capture
 # 'jpeg' - Write a JPEG file
 # 'png' - Write a PNG file
@@ -148,14 +145,6 @@ def button_callback_4(channel):
 
   with open(filename, 'wb') as f:
     f.write(output)
-
-  # EXIF Data Import
-  image = Image.open(filename)
-  exif_dict = piexif.load(original_filename)
-  exif_bytes = piexif.dump(exif_dict)
-
-  image.save(filename, exif=exif_bytes)
-  image.close()
 
   print("--- %s seconds ---" % (time.time() - start_time))
 
