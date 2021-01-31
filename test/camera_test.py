@@ -58,7 +58,7 @@ camera = PiCamera()
 # w = 3280
 # h = 2464
 
-screen_w = 320
+screen_w = 340
 screen_h = 240
 
 # 12MP Pi HQ camera
@@ -74,7 +74,7 @@ def defaults():
   bpp = 12
   format = 'jpeg'
 
-  screen_w = 320
+  screen_w = 340
   screen_h = 240
 
   # 12MP Pi HQ camera
@@ -112,7 +112,7 @@ def button_callback_3(channel):
 def button_callback_4(channel):
   print("Button 4: Take shot")
 
-  screen_w = 320
+  screen_w = 340
   screen_h = 240
 
   # 12MP Pi HQ camera
