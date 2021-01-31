@@ -61,10 +61,24 @@ height = 3040
 
 recording_state = False
 
+default_zoom = camera.zoom
+
+def defaults():
+  filetype = '.dng'
+  bpp = 12
+  format = 'jpeg'
+
+  screen_w = 320
+  screen_h = 240
+
+  # 12MP Pi HQ camera
+  width = 4056
+  height = 3040
+
 # Preview
 def preview(camera, zoom=False):
   if zoom == True:
-    camera.zoom = (0.4,0.4,0.2,0.2)
+    camera.zoom = (0.4, 0.4, 0.2, 0.2)
 
   camera.start_preview()
   time.sleep(10)
@@ -73,17 +87,31 @@ def preview(camera, zoom=False):
 
 def button_callback_1(channel):
   print("Button 1 was pushed!")
-  print(f"recording_state: {recording_state}")
-  recording_state = True
+  # print(f"recording_state: {recording_state}")
+  # recording_state = True
 
 def button_callback_2(channel):
   print("Button 2 was pushed!")
 
 def button_callback_3(channel):
-  print("Button 3 was pushed!")
+  print("Button 3: Zoom")
+
+  current_zoom = camera.zoom
+  if (current_zoom == (0.4, 0.4, 0.2, 0.2)):
+    camera.zoom = (0.0, 0.0, 1.0, 1.0)
+  else:
+    camera.zoom = (0.4, 0.4, 0.2, 0.2)
+
 
 def button_callback_4(channel):
-  print("Button 4 was pushed!")
+  print("Button 4: Take shot")
+
+  screen_w = 320
+  screen_h = 240
+
+  # 12MP Pi HQ camera
+  width = 4056
+  height = 3040
 
   # camera.stop_preview()
   existing_files = glob.glob(f'{dcim_images_path}/*{filetype}')

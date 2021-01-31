@@ -8,7 +8,7 @@ GREEN = 92
 RED = 31
 CYAN = 36
 
-IP_ADDRESS = '1.1.1.1'
+IP_ADDRESS = '192.168.1.114'
 
 def down?(host, max_ping, timeout = TIMEOUT)
   !up?(host, max_ping, timeout)
