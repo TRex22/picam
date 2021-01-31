@@ -28,6 +28,7 @@ bpp = 12
 format = 'jpeg'
 
 dcim_images_path = '/home/pi/DCIM/images'
+dcim_original_images_path = '/home/pi/DCIM/images/original'
 dcim_videos_path = '/home/pi/DCIM/videos'
 
 try:
@@ -134,19 +135,6 @@ def button_callback_4(channel):
     f.write(output)
 
   print("--- %s seconds ---" % (time.time() - start_time))
-
-  camera.resolution = (screen_w, screen_h)
-  # camera.start_preview()
-
-# button_1 = 13 # 27
-# button_2 = 16 # 23
-# button_3 = 15 # 22
-# button_4 = 11 # 17
-
-# button_1 = 20 # 27
-# button_2 = 16 # 23
-# button_3 = 15 # 22
-# button_4 = 10 # 17
 
 button_1 = 27
 button_2 = 23
