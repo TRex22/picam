@@ -37,6 +37,11 @@ except OSError as error:
   print(error)
 
 try:
+  os.mkdir(dcim_original_images_path)
+except OSError as error:
+  print(error)
+
+try:
   os.mkdir(dcim_videos_path)
 except OSError as error:
   print(error)
@@ -129,12 +134,20 @@ def button_callback_4(channel):
 
   camera.capture(stream, format, bayer=True)
 
+  camera.stop_preview()
+
+  with open(dcim_original_images_path, 'wb') as f:
+    f.write(output)
+
   output = RPICAM2DNG().convert(stream, json_camera_profile=json_colour_profile)
 
   with open(filename, 'wb') as f:
     f.write(output)
 
   print("--- %s seconds ---" % (time.time() - start_time))
+
+  camera.resolution = (screen_w, screen_h)
+  camera.start_preview()
 
 button_1 = 27
 button_2 = 23
