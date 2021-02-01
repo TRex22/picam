@@ -101,7 +101,7 @@ def add_crosshair():
   # o = camera.add_overlay(a.tobytes(), layer=3, alpha=64)
 
   # Image.new("RGB", (320, 240))
-  o = camera.add_overlay(Image.fromarray(a, 'RGB').convert("RGB").tostring(), size=(320,240), layer=3, alpha=64)
+  o = camera.add_overlay(Image.fromarray(a, 'RGB').tostring(), size=(320,240), layer=3, alpha=64)
 
   # camera.remove_overlay(o)
 
@@ -199,7 +199,7 @@ camera.resolution = (screen_w, screen_h)
 camera.start_preview()
 
 camera.framerate = fps
-add_crosshair()
+# add_crosshair()
 
 message = input("Press enter to quit\n\n") # Run until someone presses enter
 camera.stop_preview()
