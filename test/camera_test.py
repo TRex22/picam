@@ -27,6 +27,8 @@ filetype = '.dng'
 bpp = 12
 format = 'jpeg'
 
+fps = 60
+
 dcim_images_path = '/home/pi/DCIM/images'
 dcim_original_images_path = '/home/pi/DCIM/images/original'
 dcim_videos_path = '/home/pi/DCIM/videos'
@@ -74,12 +76,26 @@ def defaults():
   bpp = 12
   format = 'jpeg'
 
+  fps = 60
+
   screen_w = 340
   screen_h = 240
 
   # 12MP Pi HQ camera
   width = 4056
   height = 3040
+
+# https://picamera.readthedocs.io/en/release-1.10/recipes1.html#overlaying-images-on-the-preview
+def add_crosshair():
+  # Create an array representing a 1280x720 image of
+  # a cross through the center of the display. The shape of
+  # the array must be of the form (height, width, color)
+  a = np.zeros((720, 1280, 3), dtype=np.uint8)
+  a[360, :, :] = 0xff
+  a[:, 640, :] = 0xff
+
+  o = camera.add_overlay(np.getbuffer(a), layer=3, alpha=64)
+  # camera.remove_overlay(o)
 
 # Preview
 def preview(camera, zoom=False):
@@ -141,7 +157,7 @@ def button_callback_4(channel):
 
   # camera.stop_preview()
 
-  output = RPICAM2DNG().convert(stream, json_camera_profile=json_colour_profile)
+  output =  ().convert(stream, json_camera_profile=json_colour_profile)
 
   with open(filename, 'wb') as f:
     f.write(output)
@@ -173,6 +189,9 @@ GPIO.add_event_detect(button_4, GPIO.RISING, callback=button_callback_4)
 
 camera.resolution = (screen_w, screen_h)
 camera.start_preview()
+
+camera.framerate = fps
+add_crosshair()
 
 message = input("Press enter to quit\n\n") # Run until someone presses enter
 camera.stop_preview()
