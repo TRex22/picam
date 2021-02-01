@@ -130,14 +130,23 @@ def button_callback_2(channel):
   print("Button 2: HDR")
 
   start_time = time.time()
-  available_exposure_compensations = [-25, -20, -15, -10, -5, 0, 5, 10, 15, 20, 25]
+  # available_exposure_compensations = [-25, -20, -15, -10, -5, 0, 5, 10, 15, 20, 25] # TODO
+  # SEE: https://github.com/KEClaytor/pi-hdr-timelapse
+  nimages = 10 #2160
+  exposure_min = 10
+  exposure_max = 90
+  exp_step = 5
+
+  exp_step = (exposure_max - exposure_min) / (nimages - 1.0)
+  exposure_times = range(exposure_min, exposure_max + 1, int(exp_step))
+
   filenames = []
 
   existing_files = glob.glob(f'{dcim_hdr_images_path}/*{filetype}')
   filecount = len(existing_files)
   frame_count = filecount
 
-  for step in available_exposure_compensations:
+  for step in exposure_times: #available_exposure_compensations:
     filename = f'{dcim_hdr_images_path}/{frame_count}_{step}_HDR.{format}'
     camera.capture(filename, format, bayer=True)
 
