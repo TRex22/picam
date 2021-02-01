@@ -12,6 +12,7 @@ from pydng.core import RPICAM2DNG
 from pydng.core import RAW2DNG, DNGTags, Tag
 
 import numpy as np
+from PIL import Image, ImageDraw, ImageFont
 
 # Supported file types: https://picamera.readthedocs.io/en/release-1.10/api_camera.html#picamera.camera.PiCamera.capture
 # 'jpeg' - Write a JPEG file
@@ -96,7 +97,12 @@ def add_crosshair():
   a[360, :, :] = 0xff
   a[:, 640, :] = 0xff
 
-  o = camera.add_overlay(a.tobytes(), layer=3, alpha=64)
+  # Broken docs ...
+  # o = camera.add_overlay(a.tobytes(), layer=3, alpha=64)
+
+  # Image.new("RGB", (320, 240))
+  o = camera.add_overlay(Image.new(a).tostring(), layer=3, alpha=64)
+
   # camera.remove_overlay(o)
 
 # Preview
