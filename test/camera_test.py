@@ -139,7 +139,7 @@ def button_callback_2(channel):
   camera.resolution = (width, height)
 
   start_time = time.time()
-  # available_exposure_compensations = [-25, -20, -15, -10, -5, 0, 5, 10, 15, 20, 25] # TODO
+  available_exposure_compensations = [-25, -20, -15, -10, -5, 0, 5, 10, 15, 20, 25] # TODO
   # SEE: https://github.com/KEClaytor/pi-hdr-timelapse
   nimages = 10 #2160
   exposure_min = 10
