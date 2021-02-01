@@ -155,10 +155,15 @@ def button_callback_2(channel):
   filecount = len(existing_files)
   frame_count = filecount
 
-  for step in exposure_times: #available_exposure_compensations:
+  original_exposure_compensation = camera.exposure_compensation
+
+  for step in available_exposure_compensations: #exposure_times:
     filename = f'{dcim_hdr_images_path}/{frame_count}_{step}_HDR.{format}'
+    # camera.brightness = step
+    camera.exposure_compensation = step
     camera.capture(filename, format, bayer=True)
 
+  camera.exposure_compensation = original_exposure_compensation
   camera.resolution = (screen_w, screen_h)
   print("--- %s seconds ---" % (time.time() - start_time))
 
