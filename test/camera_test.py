@@ -1,4 +1,5 @@
 import os
+import shutil
 import time
 import glob
 import json
@@ -141,10 +142,11 @@ def button_callback_2(channel):
 
   start_time = time.time()
   available_exposure_compensations = [-25, -20, -15, -10, -5, 0, 5, 10, 15, 20, 25] # TODO
+
   # SEE: https://github.com/KEClaytor/pi-hdr-timelapse
-  nimages = 10 #2160
+  nimages = 5 #10 #2160
   exposure_min = 10
-  exposure_max = 90
+  exposure_max = 80 #90
   exp_step = 5
 
   exp_step = (exposure_max - exposure_min) / (nimages - 1.0)
@@ -172,6 +174,9 @@ def button_callback_2(channel):
   # camera.exposure_compensation = original_exposure_compensation
 
   camera.resolution = (screen_w, screen_h)
+
+  # for file in filenames:
+  # shutil.copyfile(src, dst)
 
   print("--- %s seconds ---" % (time.time() - start_time))
 
