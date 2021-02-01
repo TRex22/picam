@@ -96,7 +96,7 @@ def add_crosshair():
   a[360, :, :] = 0xff
   a[:, 640, :] = 0xff
 
-  o = camera.add_overlay(np.getbuffer(a), layer=3, alpha=64)
+  o = camera.add_overlay(a.tobytes(), layer=3, alpha=64)
   # camera.remove_overlay(o)
 
 # Preview
