@@ -162,8 +162,8 @@ def button_callback_2(channel):
   # original_exposure_compensation = camera.exposure_compensation
 
   for step in exposure_times: # available_exposure_compensations:
-    # filename = f'{dcim_hdr_images_path}/{frame_count}_{step}_HDR.{format}'
-    filename = f'{dcim_tmp_path}/{frame_count}_{step}_HDR.{format}'
+    filename = f'{dcim_hdr_images_path}/{frame_count}_{step}_HDR.{format}'
+    # filename = f'{dcim_tmp_path}/{frame_count}_{step}_HDR.{format}'
 
     camera.brightness = step
     # camera.exposure_compensation = step
