@@ -129,6 +129,15 @@ def button_callback_1(channel):
 def button_callback_2(channel):
   print("Button 2: HDR")
 
+  screen_w = 340
+  screen_h = 240
+
+  # 12MP Pi HQ camera
+  width = 4056
+  height = 3040
+
+  camera.resolution = (width, height)
+
   start_time = time.time()
   # available_exposure_compensations = [-25, -20, -15, -10, -5, 0, 5, 10, 15, 20, 25] # TODO
   # SEE: https://github.com/KEClaytor/pi-hdr-timelapse
@@ -150,6 +159,7 @@ def button_callback_2(channel):
     filename = f'{dcim_hdr_images_path}/{frame_count}_{step}_HDR.{format}'
     camera.capture(filename, format, bayer=True)
 
+  camera.resolution = (screen_w, screen_h)
   print("--- %s seconds ---" % (time.time() - start_time))
 
 def button_callback_3(channel):
