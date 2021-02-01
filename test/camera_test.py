@@ -121,11 +121,6 @@ def preview(camera, zoom=False):
   # camera.capture(filename)
   camera.stop_preview()
 
-def frame_count(path, filetype):
-  existing_files = glob.glob(f'{path}/*{filetype}')
-  filecount = len(existing_files)
-  return filecount
-
 def button_callback_1(channel):
   print("Button 1 was pushed!")
   # print(f"recording_state: {recording_state}")
@@ -138,8 +133,12 @@ def button_callback_2(channel):
   available_exposure_compensations = [-25, -20, -15, -10, -5, 0, 5, 10, 15, 20, 25]
   filenames = []
 
+  existing_files = glob.glob(f'{dcim_hdr_images_path}/*{filetype}')
+  filecount = len(existing_files)
+  frame_count = filecount
+
   for step in available_exposure_compensations:
-    filename = f'{dcim_hdr_images_path}/{frame_count(dcim_hdr_images_path, format)}_{step}_HDR.{format}'
+    filename = f'{dcim_hdr_images_path}/{frame_count}_{step}_HDR.{format}'
     camera.capture(filename, format, bayer=True)
 
   print("--- %s seconds ---" % (time.time() - start_time))
@@ -165,10 +164,14 @@ def button_callback_4(channel):
 
   # camera.stop_preview()
 
-  filename = f'{dcim_images_path}/{frame_count(dcim_images_path, filetype)}{filetype}'
+  existing_files = glob.glob(f'{dcim_images_path}/*{filetype}')
+  filecount = len(existing_files)
+  frame_count = filecount
+
+  filename = f'{dcim_images_path}/{frame_count}{filetype}'
   print(filename)
 
-  original_filename = f'{dcim_original_images_path}/{frame_count(dcim_images_path, filetype)}.{format}'
+  original_filename = f'{dcim_original_images_path}/{frame_count}.{format}'
 
   stream = BytesIO()
 
