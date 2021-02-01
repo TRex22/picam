@@ -36,6 +36,7 @@ dcim_images_path = '/home/pi/DCIM/images'
 dcim_original_images_path = '/home/pi/DCIM/images/original'
 dcim_hdr_images_path = '/home/pi/DCIM/images/hdr'
 dcim_videos_path = '/home/pi/DCIM/videos'
+dcim_tmp_path = '/home/pi/DCIM/tmp'
 
 try:
   os.mkdir(dcim_images_path)
@@ -141,7 +142,7 @@ def button_callback_2(channel):
   start_time = time.time()
   available_exposure_compensations = [-25, -20, -15, -10, -5, 0, 5, 10, 15, 20, 25] # TODO
   # SEE: https://github.com/KEClaytor/pi-hdr-timelapse
-  nimages = 5#10 #2160
+  nimages = 10 #2160
   exposure_min = 10
   exposure_max = 90
   exp_step = 5
@@ -159,7 +160,8 @@ def button_callback_2(channel):
   # original_exposure_compensation = camera.exposure_compensation
 
   for step in exposure_times: # available_exposure_compensations:
-    filename = f'{dcim_hdr_images_path}/{frame_count}_{step}_HDR.{format}'
+    # filename = f'{dcim_hdr_images_path}/{frame_count}_{step}_HDR.{format}'
+    filename = f'{dcim_tmp_path}/{frame_count}_{step}_HDR.{format}'
 
     camera.brightness = step
     # camera.exposure_compensation = step
