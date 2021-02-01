@@ -34,6 +34,7 @@ fps = 60
 
 dcim_images_path = '/home/pi/DCIM/images'
 dcim_original_images_path = '/home/pi/DCIM/images/original'
+dcim_hdr_images_path = '/home/pi/DCIM/images/hdr'
 dcim_videos_path = '/home/pi/DCIM/videos'
 
 try:
@@ -43,6 +44,11 @@ except OSError as error:
 
 try:
   os.mkdir(dcim_original_images_path)
+except OSError as error:
+  print(error)
+
+try:
+  os.mkdir(dcim_hdr_images_path)
 except OSError as error:
   print(error)
 
@@ -115,13 +121,28 @@ def preview(camera, zoom=False):
   # camera.capture(filename)
   camera.stop_preview()
 
+def frame_count(path, filetype):
+  existing_files = glob.glob(f'{path}/*{filetype}')
+  filecount = len(existing_files)
+  return filecount
+
 def button_callback_1(channel):
   print("Button 1 was pushed!")
   # print(f"recording_state: {recording_state}")
   # recording_state = True
 
 def button_callback_2(channel):
-  print("Button 2 was pushed!")
+  print("Button 2: HDR")
+
+  start_time = time.time()
+  available_exposure_compensations = [-25, -20, -15, -10, -5, 0, 5, 10, 15, 20, 25]
+  filenames = []
+
+  for step in available_exposure_compensations:
+    filename = f'{dcim_hdr_images_path}/{frame_count(dcim_hdr_images_path, format)}_{step}_HDR.{format}'
+    camera.capture(filename, format, bayer=True)
+
+  print("--- %s seconds ---" % (time.time() - start_time))
 
 def button_callback_3(channel):
   print("Button 3: Zoom")
@@ -131,7 +152,6 @@ def button_callback_3(channel):
     camera.zoom = (0.0, 0.0, 1.0, 1.0)
   else:
     camera.zoom = (0.4, 0.4, 0.2, 0.2)
-
 
 def button_callback_4(channel):
   print("Button 4: Take shot")
@@ -144,14 +164,11 @@ def button_callback_4(channel):
   height = 3040
 
   # camera.stop_preview()
-  existing_files = glob.glob(f'{dcim_images_path}/*{filetype}')
-  filecount = len(existing_files)
-  frame_count = filecount
 
-  filename = f'{dcim_images_path}/{frame_count}{filetype}'
+  filename = f'{dcim_images_path}/{frame_count(dcim_images_path, filetype)}{filetype}'
   print(filename)
 
-  original_filename = f'{dcim_original_images_path}/{frame_count}.{format}'
+  original_filename = f'{dcim_original_images_path}/{frame_count(dcim_images_path, filetype)}.{format}'
 
   stream = BytesIO()
 
@@ -165,7 +182,7 @@ def button_callback_4(channel):
 
   # camera.stop_preview()
 
-  output =  ().convert(stream, json_camera_profile=json_colour_profile)
+  output = RPICAM2DNG().convert(stream, json_camera_profile=json_colour_profile)
 
   with open(filename, 'wb') as f:
     f.write(output)
