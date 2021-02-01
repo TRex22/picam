@@ -218,7 +218,7 @@ GPIO.add_event_detect(button_4, GPIO.RISING, callback=button_callback_4)
 camera.resolution = (screen_w, screen_h)
 camera.start_preview()
 
-camera.framerate = fps
+# camera.framerate = fps
 # add_crosshair()
 
 message = input("Press enter to quit\n\n") # Run until someone presses enter
