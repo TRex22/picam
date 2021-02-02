@@ -9,6 +9,9 @@ import numpy as np
 # TODO: Handle commandline parameters
 # For now look at a static folder
 dcim_hdr_images_path = '/home/pi/DCIM/images/hdr'
+# dcim_hdr_images_path = '/mnt/i/tmp/hdr'
+
+filetype = '.png'
 
 try:
   os.mkdir(dcim_hdr_images_path)
@@ -29,7 +32,7 @@ def compute_exposure_times(nimages):
 files = glob.glob(f'{dcim_hdr_images_path}/*')
 print(files)
 
-filenames = ["0_10_HDR.jpeg",  "0_27_HDR.jpeg",  "0_44_HDR.jpeg",  "0_61_HDR.jpeg",  "0_78_HDR.jpeg"] # TODO: automate
+filenames = files # TODO: automate
 nimages = 5 #10 #2160 # TODO: Automate
 frame_count = 0 # TODO: automate
 
@@ -49,18 +52,20 @@ hdr_robertson = merge_robertson.process(img_list, times=exposure_times.copy())
 tonemap1 = cv2.createTonemap(gamma=2.2)
 res_debevec = tonemap1.process(hdr_debevec.copy())
 
+# res_robertson = merge_robertson(hdr_robertson.copy())
+
 # Exposure fusion using Mertens
 merge_mertens = cv2.createMergeMertens()
 res_mertens = merge_mertens.process(img_list)
 
 # Convert datatype to 8-bit and save
 res_debevec_8bit = np.clip(res_debevec*255, 0, 255).astype('uint8')
-res_robertson_8bit = np.clip(res_robertson*255, 0, 255).astype('uint8')
+res_robertson_8bit = np.clip(hdr_robertson*255, 0, 255).astype('uint8')
 res_mertens_8bit = np.clip(res_mertens*255, 0, 255).astype('uint8')
 
-cv2.imwrite(f'{dcim_hdr_images_path}/{file_count}_ldr_debevec_HDR_{filetype}', res_debevec_8bit)
-cv2.imwrite(f'{dcim_hdr_images_path}/{file_count}_ldr_robertson_HDR_{filetype}', res_robertson_8bit)
-cv2.imwrite(f'{dcim_hdr_images_path}/{file_count}_fusion_mertens_{filetype}', res_mertens_8bit)
+cv2.imwrite(f'{dcim_hdr_images_path}/{frame_count}_ldr_debevec_HDR_{filetype}', res_debevec_8bit)
+cv2.imwrite(f'{dcim_hdr_images_path}/{frame_count}_ldr_robertson_HDR_{filetype}', res_robertson_8bit)
+cv2.imwrite(f'{dcim_hdr_images_path}/{frame_count}_fusion_mertens_{filetype}', res_mertens_8bit)
 
 # Estimate camera response function (CRF)
 # cal_debevec = cv2.createCalibrateDebevec()
