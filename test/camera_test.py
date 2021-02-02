@@ -27,6 +27,8 @@ from PIL import Image, ImageDraw, ImageFont
 # 'bgra' - Write the raw image data to a file in 32-bit BGRA format
 # 'raw' - Deprecated option for raw captures; the format is taken from the deprecated raw_format attribute
 
+# TODO: Convert to proper interface in src/
+
 filetype = '.dng'
 bpp = 12
 format = 'jpeg'
@@ -131,6 +133,8 @@ def button_callback_1(channel):
 def button_callback_2(channel):
   print("Button 2: HDR")
 
+  # TODO: Need to figure out high-speed capture (~11FPS)
+
   screen_w = 340
   screen_h = 240
 
@@ -148,15 +152,15 @@ def button_callback_2(channel):
   exposure_min = 10
   exposure_max = 80 #90
   exp_step = 5
+  frame_count = filecount
 
   exp_step = (exposure_max - exposure_min) / (nimages - 1.0)
   exposure_times = range(exposure_min, exposure_max + 1, int(exp_step))
+  filecount = len(existing_files)
 
   filenames = []
 
   existing_files = glob.glob(f'{dcim_hdr_images_path}/*{filetype}')
-  filecount = len(existing_files)
-  frame_count = filecount
 
   original_brightness = camera.brightness
   # original_exposure_compensation = camera.exposure_compensation
