@@ -61,7 +61,7 @@ try:
 except OSError as error:
   print(error)
 
-colour_profile_path = "/home/pi/DCIM/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Neutral Look.json"
+colour_profile_path = "/home/pi/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Neutral Look.json"
 
 raw_colour_profile = None
 with open(colour_profile_path, "r") as file_stream:

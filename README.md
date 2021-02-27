@@ -21,14 +21,16 @@ raspivid -t 3000000000
 
 # RAW support
 ```
-git clone https://github.com/schoolpost/PyDNG.git
+# git clone https://github.com/schoolpost/PyDNG.git
+git clone https://github.com/TRex22/PyDNG.git # Use the fork for now
 cd PyDNG
 
 # install
 pip3 install src/.
 
 # Colour profiles
-git clone https://github.com/davidplowman/Colour_Profiles.git
+# git clone https://github.com/davidplowman/Colour_Profiles.git
+git clone https://github.com/trex22/Colour_Profiles.git
 ```
 
 # dcamprof
