@@ -18,7 +18,7 @@ mkdir -p ~/DCIM
 sudo apt update
 sudo apt install -y git build-essential cmake python3 python3-pip libopencv-dev python-opencv python-picamera libatlas-base-dev libhdf5-dev libhdf5-serial-dev libatlas-base-dev libjasper-dev libqtgui4 libqt4-test libatlas-base-dev libxml2-dev libxslt-dev
 
-pip3 install opencv-contrib-python numpy ExifRead
+pip3 install opencv-contrib-python numpy ExifRead click
 
 git clone https://github.com/TRex22/PyDNG.git
 git clone https://github.com/trex22/Colour_Profiles.git
