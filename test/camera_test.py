@@ -99,7 +99,7 @@ def defaults():
   height = 3040
 
 # https://picamera.readthedocs.io/en/release-1.10/recipes1.html#overlaying-images-on-the-preview
-def add_crosshair(camera):
+def add_overlay(camera):
   # Create an array representing a 1280x720 image of
   # a cross through the center of the display. The shape of
   # the array must be of the form (height, width, color)
@@ -110,11 +110,12 @@ def add_crosshair(camera):
   # Create image bytes
   # https://stackoverflow.com/questions/54891829/typeerror-memoryview-a-bytes-like-object-is-required-not-jpegimagefile
   # buf = BytesIO()
-  img = Image.fromarray(a, 'RGB')
+  # img = Image.fromarray(a, 'RGB')
 
   # img.save(buf, 'bmp')
   # buf.seek(0)
-  image_bytes = img.tobytes()
+  # image_bytes = img.tobytes()
+  image_bytes = np.getbuffer(a)
   # buf.close()
 
   # Broken docs ...
@@ -123,8 +124,11 @@ def add_crosshair(camera):
   # Image.new("RGB", (320, 240))
   # o = camera.add_overlay(Image.fromarray(a, 'RGB'), size=(320,240), layer=3, alpha=64)
   o = camera.add_overlay(image_bytes, size=img.size, layer=3, alpha=64)
-
+  camera.annotate_text = 'Hello world!'
   # camera.remove_overlay(o)
+
+def remove_overlay(camera):
+  camera.remove_overlay(o)
 
 # Preview
 def preview(camera, zoom=False):
@@ -153,6 +157,7 @@ def button_callback_2(channel):
   width = 4056
   height = 3040
 
+  remove_overlay(camera)
   camera.resolution = (width, height)
 
   start_time = time.time()
@@ -189,6 +194,7 @@ def button_callback_2(channel):
   # camera.exposure_compensation = original_exposure_compensation
 
   camera.resolution = (screen_w, screen_h)
+  add_overlay(camera)
 
   # for file in filenames:
   # shutil.copyfile(src, dst)
@@ -215,6 +221,7 @@ def button_callback_4(channel):
   height = 3040
 
   # camera.stop_preview()
+  remove_overlay(camera)
 
   existing_files = glob.glob(f'{dcim_images_path}/*{filetype}')
   filecount = len(existing_files)
@@ -245,12 +252,15 @@ def button_callback_4(channel):
   print("--- %s seconds ---" % (time.time() - start_time))
 
   camera.resolution = (screen_w, screen_h)
+  add_overlay(camera)
   # camera.start_preview()
 
 button_1 = 27
 button_2 = 23
 button_3 = 22
 button_4 = 17
+
+bouncetime = 300
 
 # GPIO.setwarnings(False) # Ignore warning for now
 GPIO.setwarnings(True)
@@ -262,17 +272,19 @@ GPIO.setup(button_2, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(button_3, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(button_4, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
-GPIO.add_event_detect(button_1, GPIO.RISING, callback=button_callback_1)
-GPIO.add_event_detect(button_2, GPIO.RISING, callback=button_callback_2)
-GPIO.add_event_detect(button_3, GPIO.RISING, callback=button_callback_3)
-GPIO.add_event_detect(button_4, GPIO.RISING, callback=button_callback_4)
+GPIO.add_event_detect(button_1, GPIO.RISING, callback=button_callback_1, bouncetime=bouncetime)
+GPIO.add_event_detect(button_2, GPIO.RISING, callback=button_callback_2, bouncetime=bouncetime)
+GPIO.add_event_detect(button_3, GPIO.RISING, callback=button_callback_3, bouncetime=bouncetime)
+GPIO.add_event_detect(button_4, GPIO.RISING, callback=button_callback_4, bouncetime=bouncetime)
 
 camera.resolution = (screen_w, screen_h)
 camera.start_preview()
 
 # camera.framerate = fps
-add_crosshair(camera)
+add_overlay(camera)
 
 message = input("Press enter to quit\n\n") # Run until someone presses enter
 camera.stop_preview()
 GPIO.cleanup() # Clean up
+
+# For fixing multi-press See: https://raspberrypi.stackexchange.com/questions/28955/unwanted-multiple-presses-when-using-gpio-button-press-detection
