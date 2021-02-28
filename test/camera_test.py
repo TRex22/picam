@@ -110,12 +110,12 @@ def add_overlay(camera):
   # Create image bytes
   # https://stackoverflow.com/questions/54891829/typeerror-memoryview-a-bytes-like-object-is-required-not-jpegimagefile
   # buf = BytesIO()
-  # img = Image.fromarray(a, 'RGB')
+  img = Image.fromarray(a, 'RGB')
 
   # img.save(buf, 'bmp')
   # buf.seek(0)
-  # image_bytes = img.tobytes()
-  image_bytes = np.getbuffer(a)
+  image_bytes = img.tobytes()
+  # image_bytes = np.getbuffer(a)
   # buf.close()
 
   # Broken docs ...
