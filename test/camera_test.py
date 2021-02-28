@@ -103,9 +103,9 @@ def add_overlay(camera):
   # Create an array representing a 1280x720 image of
   # a cross through the center of the display. The shape of
   # the array must be of the form (height, width, color)
-  a = np.zeros((720, 1280, 3), dtype=np.uint8)
-  a[360, :, :] = 0xff
-  a[:, 640, :] = 0xff
+  a = np.zeros((screen_w, screen_h, 3), dtype=np.uint8)
+  a[screen_h/2, :, :] = 0xff
+  a[:, screen_w/2, :] = 0xff
 
   # Create image bytes
   # https://stackoverflow.com/questions/54891829/typeerror-memoryview-a-bytes-like-object-is-required-not-jpegimagefile
@@ -126,9 +126,11 @@ def add_overlay(camera):
   o = camera.add_overlay(image_bytes, size=img.size, layer=3, alpha=64)
   camera.annotate_text = 'Hello world!'
   # camera.remove_overlay(o)
+  return o
 
-def remove_overlay(camera):
-  camera.remove_overlay(o)
+def remove_overlay(camera, overlay):
+  camera.remove_overlay(overlay)
+  camera.annotate_text = ''
 
 # Preview
 def preview(camera, zoom=False):
@@ -157,7 +159,7 @@ def button_callback_2(channel):
   width = 4056
   height = 3040
 
-  remove_overlay(camera)
+  remove_overlay(camera, overlay)
   camera.resolution = (width, height)
 
   start_time = time.time()
@@ -194,7 +196,7 @@ def button_callback_2(channel):
   # camera.exposure_compensation = original_exposure_compensation
 
   camera.resolution = (screen_w, screen_h)
-  add_overlay(camera)
+  overlay = add_overlay(camera)
 
   # for file in filenames:
   # shutil.copyfile(src, dst)
@@ -221,7 +223,7 @@ def button_callback_4(channel):
   height = 3040
 
   # camera.stop_preview()
-  remove_overlay(camera)
+  remove_overlay(camera, overlay)
 
   existing_files = glob.glob(f'{dcim_images_path}/*{filetype}')
   filecount = len(existing_files)
@@ -252,7 +254,7 @@ def button_callback_4(channel):
   print("--- %s seconds ---" % (time.time() - start_time))
 
   camera.resolution = (screen_w, screen_h)
-  add_overlay(camera)
+  overlay = overlay = add_overlay(camera)
   # camera.start_preview()
 
 button_1 = 27
@@ -281,7 +283,7 @@ camera.resolution = (screen_w, screen_h)
 camera.start_preview()
 
 # camera.framerate = fps
-add_overlay(camera)
+overlay = add_overlay(camera)
 
 message = input("Press enter to quit\n\n") # Run until someone presses enter
 camera.stop_preview()
