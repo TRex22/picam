@@ -91,7 +91,7 @@ def defaults():
 
   fps = 60
 
-  screen_w = 340
+  screen_w = 320
   screen_h = 240
 
   # 12MP Pi HQ camera
@@ -126,7 +126,7 @@ def add_overlay(camera):
 
   # Image.new("RGB", (320, 240))
   # o = camera.add_overlay(Image.fromarray(a, 'RGB'), size=(320,240), layer=3, alpha=64)
-  o = camera.add_overlay(image_bytes, size=img.size, layer=3, alpha=64)
+  o = camera.add_overlay(image_bytes, size=img.size, layer=3, alpha=64, format="RGB")
   camera.annotate_text = 'Hello world!'
   # camera.remove_overlay(o)
   return o
