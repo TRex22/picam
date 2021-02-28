@@ -100,12 +100,14 @@ def defaults():
 
 # https://picamera.readthedocs.io/en/release-1.10/recipes1.html#overlaying-images-on-the-preview
 def add_overlay(camera):
+  overlay_w = 320
+  overlay_h = 280
   # Create an array representing a 1280x720 image of
   # a cross through the center of the display. The shape of
   # the array must be of the form (height, width, color)
-  a = np.zeros((screen_h, screen_w, 3), dtype=np.uint8)
-  half_height = int(screen_h/2)
-  half_width = int(screen_w/2)
+  a = np.zeros((overlay_h, overlay_w, 3), dtype=np.uint8)
+  half_height = int(overlay_h/2)
+  half_width = int(overlay_w/2)
 
   a[half_height, :, :] = 0xff
   a[:, half_width, :] = 0xff
@@ -296,5 +298,6 @@ overlay = add_overlay(camera)
 message = input("Press enter to quit\n\n") # Run until someone presses enter
 camera.stop_preview()
 GPIO.cleanup() # Clean up
+remove_overlay(camera, overlay)
 
 # For fixing multi-press See: https://raspberrypi.stackexchange.com/questions/28955/unwanted-multiple-presses-when-using-gpio-button-press-detection
