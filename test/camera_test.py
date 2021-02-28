@@ -131,8 +131,8 @@ def add_overlay(camera):
   # camera.remove_overlay(o)
   return o
 
-def remove_overlay(camera):
-  camera.remove_overlay()
+def remove_overlay(camera, overlay):
+  camera.remove_overlay(overlay)
   camera.annotate_text = None
 
 # Preview
