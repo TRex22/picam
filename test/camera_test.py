@@ -222,6 +222,8 @@ def button_callback_3(channel):
   else:
     camera.zoom = (0.4, 0.4, 0.2, 0.2)
 
+  overlay = add_overlay(camera)
+
 def button_callback_4(channel):
   print("Button 4: Take shot")
   global overlay
