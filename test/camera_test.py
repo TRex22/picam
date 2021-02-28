@@ -147,11 +147,13 @@ def preview(camera, zoom=False):
 
 def button_callback_1(channel):
   print("Button 1 was pushed!")
+  global overlay
   # print(f"recording_state: {recording_state}")
   # recording_state = True
 
 def button_callback_2(channel):
   print("Button 2: HDR")
+  global overlay
 
   # TODO: Need to figure out high-speed capture (~11FPS)
 
@@ -208,6 +210,7 @@ def button_callback_2(channel):
 
 def button_callback_3(channel):
   print("Button 3: Zoom")
+  global overlay
 
   current_zoom = camera.zoom
   if (current_zoom == (0.4, 0.4, 0.2, 0.2)):
@@ -217,6 +220,7 @@ def button_callback_3(channel):
 
 def button_callback_4(channel):
   print("Button 4: Take shot")
+  global overlay
 
   screen_w = 340
   screen_h = 240
