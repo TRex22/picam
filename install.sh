@@ -1,5 +1,8 @@
 #!/bin/bash
 # Version 0.1
+# TODO: Check configurations exist
+# TODO: Automated rpi config
+
 cd ~/
 # Setup:
 # [] WLAN
@@ -15,15 +18,19 @@ cd ~/
 # [] Expand File-system
 sudo raspi-config
 mkdir -p ~/DCIM
-sudo apt update
-sudo apt install -y git build-essential cmake python3 python3-pip libopencv-dev python-opencv python-picamera libatlas-base-dev libhdf5-dev libhdf5-serial-dev libatlas-base-dev libjasper-dev libqtgui4 libqt4-test libatlas-base-dev libxml2-dev libxslt-dev
 
-pip3 install opencv-contrib-python numpy ExifRead click
+sudo apt update
+sudo apt install -y samba samba-common git build-essential cmake python3 python3-pip libopencv-dev python-opencv python-picamera python3-picamera libatlas-base-dev libhdf5-dev libhdf5-serial-dev libatlas-base-dev libjasper-dev libqtgui4 libqt4-test libatlas-base-dev libxml2-dev libxslt-dev
+
+pip3 install opencv-contrib-python numpy ExifRead
+sudo pip3 install Click==7.0
+sudo pip3 install adafruit-python-shell
 
 git clone https://github.com/TRex22/PyDNG.git
-git clone https://github.com/trex22/Colour_Profiles.git
+git clone https://github.com/TRex22/Colour_Profiles.git
 git clone https://github.com/tasanakorn/rpi-fbcp.git
 git clone https://github.com/adafruit/Raspberry-Pi-Installer-Scripts.git
+git clone https://github.com/TRex22/picam.git
 
 pip3 install ~/PyDNG/src/.
 
@@ -33,6 +40,7 @@ mkdir ~/rpi-fbcp/build
 cd ~/rpi-fbcp/build
 cmake ..
 make
+sudo cp fbcp /usr/bin
 cd ~/
 
 # adafruit screen
@@ -74,3 +82,5 @@ EOF
 
 sudo systemctl start smbd
 sudo systemctl start nmbd
+
+sudo reboot
