@@ -99,7 +99,7 @@ def defaults():
   height = 3040
 
 # https://picamera.readthedocs.io/en/release-1.10/recipes1.html#overlaying-images-on-the-preview
-def add_crosshair():
+def add_crosshair(camera):
   # Create an array representing a 1280x720 image of
   # a cross through the center of the display. The shape of
   # the array must be of the form (height, width, color)
@@ -260,7 +260,7 @@ camera.resolution = (screen_w, screen_h)
 camera.start_preview()
 
 # camera.framerate = fps
-# add_crosshair()
+add_crosshair(camera)
 
 message = input("Press enter to quit\n\n") # Run until someone presses enter
 camera.stop_preview()
