@@ -106,7 +106,7 @@ def add_overlay(camera):
   # Create an array representing a 1280x720 image of
   # a cross through the center of the display. The shape of
   # the array must be of the form (height, width, color)
-  a = np.zeros((overlay_h, overlay_w, 3), dtype=np.uint8)
+  a = np.zeros((overlay_h, overlay_w, 4), dtype=np.uint8)
   half_height = int(overlay_h/2)
   half_width = int(overlay_w/2)
 
