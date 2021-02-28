@@ -178,15 +178,16 @@ def button_callback_2(channel):
   exposure_min = 10
   exposure_max = 80 #90
   exp_step = 5
-  frame_count = filecount
+
 
   exp_step = (exposure_max - exposure_min) / (nimages - 1.0)
   exposure_times = range(exposure_min, exposure_max + 1, int(exp_step))
-  filecount = len(existing_files)
 
   filenames = []
 
   existing_files = glob.glob(f'{dcim_hdr_images_path}/*{filetype}')
+  filecount = len(existing_files)
+  frame_count = filecount
 
   original_brightness = camera.brightness
   # original_exposure_compensation = camera.exposure_compensation
