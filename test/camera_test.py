@@ -162,7 +162,7 @@ def button_callback_2(channel):
   width = 4056
   height = 3040
 
-  remove_overlay(camera)
+  remove_overlay(camera, overlay)
   camera.resolution = (width, height)
 
   start_time = time.time()
@@ -226,7 +226,7 @@ def button_callback_4(channel):
   height = 3040
 
   # camera.stop_preview()
-  remove_overlay(camera)
+  remove_overlay(camera, overlay)
 
   existing_files = glob.glob(f'{dcim_images_path}/*{filetype}')
   filecount = len(existing_files)
@@ -267,6 +267,12 @@ button_4 = 17
 
 bouncetime = 300
 
+camera.resolution = (screen_w, screen_h)
+camera.start_preview()
+
+# camera.framerate = fps
+overlay = add_overlay(camera)
+
 # GPIO.setwarnings(False) # Ignore warning for now
 GPIO.setwarnings(True)
 # GPIO.setmode(GPIO.BOARD) # Use physical pin numbering
@@ -281,12 +287,6 @@ GPIO.add_event_detect(button_1, GPIO.RISING, callback=button_callback_1, bouncet
 GPIO.add_event_detect(button_2, GPIO.RISING, callback=button_callback_2, bouncetime=bouncetime)
 GPIO.add_event_detect(button_3, GPIO.RISING, callback=button_callback_3, bouncetime=bouncetime)
 GPIO.add_event_detect(button_4, GPIO.RISING, callback=button_callback_4, bouncetime=bouncetime)
-
-camera.resolution = (screen_w, screen_h)
-camera.start_preview()
-
-# camera.framerate = fps
-overlay = add_overlay(camera)
 
 message = input("Press enter to quit\n\n") # Run until someone presses enter
 camera.stop_preview()
