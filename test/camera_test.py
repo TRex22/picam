@@ -110,13 +110,13 @@ def add_overlay(camera):
   half_height = int(overlay_h/2)
   half_width = int(overlay_w/2)
 
-  a[half_height, :, :] = 0 #0xff
-  a[:, half_width, :] = 0 #0xff
+  a[half_height, :, :] = 0xff
+  a[:, half_width, :] = 0xff
 
   # Create image bytes
   # https://stackoverflow.com/questions/54891829/typeerror-memoryview-a-bytes-like-object-is-required-not-jpegimagefile
   # buf = BytesIO()
-  img = Image.fromarray(a, 'RGB')
+  img = Image.fromarray(a, 'RGBA')
 
   # img.save(buf, 'bmp')
   # buf.seek(0)
@@ -129,7 +129,7 @@ def add_overlay(camera):
 
   # Image.new("RGB", (320, 240))
   # o = camera.add_overlay(Image.fromarray(a, 'RGB'), size=(320,240), layer=3, alpha=64)
-  o = camera.add_overlay(image_bytes, size=img.size, layer=3, alpha=64, format="rgb")
+  o = camera.add_overlay(image_bytes, size=img.size, layer=3, alpha=64, format="rgba")
   camera.annotate_text = 'Photo mode' # TODO: Cleanup
   # camera.remove_overlay(o)
   return o
