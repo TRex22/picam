@@ -111,7 +111,7 @@ def add_crosshair(camera):
   # o = camera.add_overlay(a.tobytes(), layer=3, alpha=64)
 
   # Image.new("RGB", (320, 240))
-  o = camera.add_overlay(Image.fromarray(a, 'RGB').tostring(), size=(320,240), layer=3, alpha=64)
+  o = camera.add_overlay(Image.fromarray(a, 'RGB'), size=(320,240), layer=3, alpha=64)
 
   # camera.remove_overlay(o)
 
