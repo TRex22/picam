@@ -100,7 +100,7 @@ def defaults():
 
 # https://picamera.readthedocs.io/en/release-1.10/recipes1.html#overlaying-images-on-the-preview
 def add_overlay(camera):
-  overlay_w = 320
+  overlay_w = 340
   overlay_h = 280
   # Create an array representing a 1280x720 image of
   # a cross through the center of the display. The shape of
