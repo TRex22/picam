@@ -107,11 +107,22 @@ def add_crosshair(camera):
   a[360, :, :] = 0xff
   a[:, 640, :] = 0xff
 
+  # Create image bytes
+  # https://stackoverflow.com/questions/54891829/typeerror-memoryview-a-bytes-like-object-is-required-not-jpegimagefile
+  buf = BytesIO()
+  img = Image.fromarray(a, 'RGB')
+
+  img.save(buf, 'jpeg')
+  buf.seek(0)
+  image_bytes = buf.read()
+  buf.close()
+
   # Broken docs ...
   # o = camera.add_overlay(a.tobytes(), layer=3, alpha=64)
 
   # Image.new("RGB", (320, 240))
-  o = camera.add_overlay(Image.fromarray(a, 'RGB'), size=(320,240), layer=3, alpha=64)
+  # o = camera.add_overlay(Image.fromarray(a, 'RGB'), size=(320,240), layer=3, alpha=64)
+  o = camera.add_overlay(image_bytes, size=(320,240), layer=3, alpha=64)
 
   # camera.remove_overlay(o)
 
