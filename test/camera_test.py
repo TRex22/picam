@@ -126,7 +126,7 @@ def add_overlay(camera):
 
   # Image.new("RGB", (320, 240))
   # o = camera.add_overlay(Image.fromarray(a, 'RGB'), size=(320,240), layer=3, alpha=64)
-  o = camera.add_overlay(image_bytes, size=img.size, layer=3, alpha=64, format="RGB")
+  o = camera.add_overlay(image_bytes, size=img.size, layer=3, alpha=64, format="rgb")
   camera.annotate_text = 'Hello world!'
   # camera.remove_overlay(o)
   return o
