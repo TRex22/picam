@@ -131,8 +131,8 @@ def add_overlay(camera):
   # camera.remove_overlay(o)
   return o
 
-def remove_overlay(camera, overlay):
-  camera.remove_overlay(overlay)
+def remove_overlay(camera):
+  camera.remove_overlay()
   camera.annotate_text = None
 
 # Preview
@@ -162,7 +162,7 @@ def button_callback_2(channel):
   width = 4056
   height = 3040
 
-  remove_overlay(camera, overlay)
+  remove_overlay(camera)
   camera.resolution = (width, height)
 
   start_time = time.time()
@@ -226,7 +226,7 @@ def button_callback_4(channel):
   height = 3040
 
   # camera.stop_preview()
-  remove_overlay(camera, overlay)
+  remove_overlay(camera)
 
   existing_files = glob.glob(f'{dcim_images_path}/*{filetype}')
   filecount = len(existing_files)
