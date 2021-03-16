@@ -1,3 +1,14 @@
+# TODO:
+# - histograms
+# - profiles
+# - logging
+# - Focus assist
+# - Contrast Hist
+# - Edge detect algo
+# - Camera Intrinsics tool
+# - Web control
+# - Motion vectors
+
 # Possibly more than two version before tracking the version number ...
 VERSION = "0.0.3"
 
