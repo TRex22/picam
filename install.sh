@@ -32,6 +32,8 @@ git clone https://github.com/TRex22/Colour_Profiles.git
 git clone https://github.com/tasanakorn/rpi-fbcp.git
 git clone https://github.com/adafruit/Raspberry-Pi-Installer-Scripts.git
 git clone https://github.com/TRex22/picam.git
+# git clone https://github.com/CT83/SmoothStream/
+# git clone https://github.com/jacksonliam/mjpg-streamer.git
 
 pip3 install ~/PyDNG/src/.
 
@@ -52,11 +54,25 @@ cd ~/Raspberry-Pi-Installer-Scripts
 sudo python3 adafruit-pitft.py --display=22 --rotation=90 --install-type=fbcp --reboot=no
 cd ~/
 
+# cd SmoothStream
+# pip3 install -r requirements.txt
+# cd mjpg-streamer/mjpg-streamer-experimental
+# make
+# sudo make install
+# ./mjpg_streamer -o "output_http.so -w ./www" -i "input_raspicam.so"
+# /usr/bin/fbcp & python3 /home/pi/picam/test/camera_test.py | ./mjpg_streamer -o "output_http.so -w ./www"
+# /usr/bin/fbcp & python3 /home/pi/picam/test/camera_test.py & ./mjpg_streamer -o "output_http.so -w ./www"
+# /usr/bin/fbcp & ./mjpg_streamer -o "output_http.so -w ./www" & python3 /home/pi/picam/test/camera_test.py
+
+wget -c https://github.com/joewalnes/websocketd/releases/download/v0.4.1/websocketd-0.4.1-linux_arm.zip
+unzip websocketd-0.4.1-linux_arm.zip
+/usr/bin/fbcp & python3 /home/pi/picam/test/camera_test.py
+websocketd --port=8080 /usr/bin/fbcp & python3 /home/pi/picam/test/camera_test.py
 # User boot
 # picam
 tee -a ~/.bashrc << EOF
 /usr/bin/fbcp &
-python /home/pi/picam/test/camera_test.py
+python3 /home/pi/picam/src/main.py
 EOF
 
 # Hostname
