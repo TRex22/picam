@@ -1,3 +1,5 @@
+import numpy as np
+
 # TODO: Fix overlay memory overflow
 
 # https://picamera.readthedocs.io/en/release-1.10/recipes1.html#overlaying-images-on-the-preview
