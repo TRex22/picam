@@ -1,26 +1,18 @@
 import os
 import json
 
+# TODO: Write a better folder presence checker based off other work
 def check_for_folders(config):
-  try:
-    os.mkdir(config["dcim_images_path"])
-  except OSError as error:
-    print(error)
+  detect_or_create_folder(config["dcim_images_path"])
+  detect_or_create_folder(config["dcim_original_images_path"])
+  detect_or_create_folder(config["dcim_hdr_images_path"])
+  detect_or_create_folder(config["dcim_videos_path"])
 
-  try:
-    os.mkdir(config["dcim_original_images_path"])
-  except OSError as error:
-    print(error)
-
-  try:
-    os.mkdir(config["dcim_hdr_images_path"])
-  except OSError as error:
-    print(error)
-
+def detect_or_create_folder(folder_path, print_error=False):
   try:
     os.mkdir(config["dcim_videos_path"])
   except OSError as error:
-    print(error)
+    if (print_error): print(error)
 
 def load_colour_profile(config):
   json_colour_profile = None

@@ -8,6 +8,10 @@
 # - Camera Intrinsics tool
 # - Web control
 # - Motion vectors
+# - Improve tools
+# - Cleanup test
+# - Write actual tests
+# - Histogram and analysis tools
 
 # Possibly more than two version before tracking the version number ...
 VERSION = "0.0.3"

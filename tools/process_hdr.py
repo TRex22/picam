@@ -5,6 +5,9 @@ import glob
 import cv2
 import numpy as np
 
+# Modules
+import document_handler
+
 # TODO: Need to figure out highspeed capture (~11FPS)
 # TODO: Handle commandline parameters
 # For now look at a static folder
@@ -13,10 +16,7 @@ dcim_hdr_images_path = '/home/pi/DCIM/images/hdr'
 
 filetype = '.png'
 
-try:
-  os.mkdir(dcim_hdr_images_path)
-except OSError as error:
-  print(error)
+document_handler.detect_or_create_folder(dcim_hdr_images_path)
 
 # SEE: https://github.com/KEClaytor/pi-hdr-timelapse
 def compute_exposure_times(nimages):
