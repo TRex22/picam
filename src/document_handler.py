@@ -10,7 +10,7 @@ def check_for_folders(config):
 
 def detect_or_create_folder(folder_path, print_error=False):
   try:
-    os.mkdir(config["dcim_videos_path"])
+    os.mkdir(folder_path)
   except OSError as error:
     if (print_error): print(error)
 
