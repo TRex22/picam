@@ -3,6 +3,7 @@
 
 import sys
 sys.path.insert(1, '../src/')
+sys.path.insert(1, 'src/')
 
 import os
 import time
