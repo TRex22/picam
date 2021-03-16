@@ -34,11 +34,10 @@ original_files = glob.glob(f'{original_files_path}/*')
 for f in original_files:
   print(f)
 
-  with open(f, 'rb') as f_stream:
-    output = RPICAM2DNG().convert(f_stream.tobytes(), json_camera_profile=json_colour_profile)
-    filename = re.sub(original_files_path, raw_file_save_path, f)
+  output = RPICAM2DNG().convert(f, json_camera_profile=json_colour_profile)
+  filename = re.sub(original_files_path, raw_file_save_path, f)
 
-    with open(filename, 'wb') as raw_f_stream:
-      raw_f_stream.write(output)
+  with open(filename, 'wb') as raw_f_stream:
+    raw_f_stream.write(output)
 
 print('Much Success!')
