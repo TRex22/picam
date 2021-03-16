@@ -1,4 +1,5 @@
 import os
+import json
 
 def check_for_folders(config):
   try:
