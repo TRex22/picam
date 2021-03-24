@@ -14,7 +14,7 @@
 # - Histogram and analysis tools
 
 # Possibly more than two version before tracking the version number ...
-VERSION = "0.0.3"
+VERSION = "0.0.4"
 
 import os
 import shutil
@@ -211,7 +211,7 @@ def button_callback_4(channel):
   print("--- %s seconds ---" % (time.time() - start_time))
 
   camera.resolution = (screen_w, screen_h)
-  overlay = overlay = overlay_handler.add_overlay(camera)
+  overlay = overlay_handler.add_overlay(camera)
   # camera.start_preview()
 
 button_1 = 27
