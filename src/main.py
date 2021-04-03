@@ -81,7 +81,7 @@ recording_state = False
 # Start of config dict
 config = {
   "colour_profile_path": "/home/pi/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Neutral Look.json",
-  "convert_raw": True,
+  "convert_raw": False,
   "dcim_images_path_raw": dcim_images_path_raw,
   "dcim_original_images_path": dcim_original_images_path,
   "dcim_hdr_images_path": dcim_hdr_images_path,

@@ -31,6 +31,10 @@ document_handler.detect_or_create_folder(raw_file_save_path)
 
 original_files = glob.glob(f'{original_files_path}/*')
 
+print("Starting to convert original images to RAW with colour profile ...")
+print(f'original_files_path: {original_files_path}')
+print(f'raw_file_save_path: {raw_file_save_path}')
+
 for f in original_files:
   print(f)
 
