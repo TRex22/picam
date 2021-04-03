@@ -90,7 +90,7 @@ for f in original_files:
   colour_profile_name = config["selected_colour_profile"]
 
   # TODO: improve and clean up this code
-  if (colour_profile_name == 'all' || colour_profile_name == "ALL"):
+  if (colour_profile_name == 'all' or colour_profile_name == "ALL"):
     filename = generate_filename(original_files_path, raw_file_save_path, f, config, "neutral_colour_profile")
     convert_file(f, filename, config, "neutral_colour_profile")
 
