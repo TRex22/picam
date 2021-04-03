@@ -40,6 +40,7 @@ document_handler.detect_or_create_folder(original_files_path)
 document_handler.detect_or_create_folder(raw_file_save_path)
 
 original_files = glob.glob(f'{original_files_path}/*')
+print(f'{len(original_files)} files to be processed.\n')
 
 global_start_time = time.time()
 
@@ -54,17 +55,20 @@ for f in original_files:
   start_time = time.time()
   stream = BytesIO()
 
-  with open(f, 'rb') as original_f_stream:
-    stream = BytesIO(original_f_stream.read())
+  try:
+    with open(f, 'rb') as original_f_stream:
+      stream = BytesIO(original_f_stream.read())
 
-  output = RPICAM2DNG().convert(stream, json_camera_profile=json_colour_profile)
-  stream.close()
+    output = RPICAM2DNG().convert(stream, json_camera_profile=json_colour_profile)
+    stream.close()
 
-  with open(filename, 'wb') as raw_f_stream:
-    raw_f_stream.write(output)
+    with open(filename, 'wb') as raw_f_stream:
+      raw_f_stream.write(output)
 
-  # Completed file conversion
-  print(f'({(time.time() - start_time)} seconds)')
+    # Completed file conversion
+    print(f' ({(time.time() - start_time)} seconds)')
+  finally:
+    print(' ... failed, skipping file.')
 
 total_time = (time.time() - global_start_time)
 average_time = total_time / len(original_files)
