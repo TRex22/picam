@@ -1,5 +1,6 @@
 # TODO: Commandline inputs
 # Converts JPEGs with bayer EXIFdata into DNGs with camera profile applied
+VERSION = "0.0.1"
 
 import sys
 sys.path.insert(1, '../src/')
@@ -29,9 +30,9 @@ colour_profile_path = "/home/pi/Colour_Profiles/imx477/Raspberry Pi High Quality
 # colour_profile_path = "/home/pi/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Skin+Sky Look.json"
 # colour_profile_path = "/home/pi/Colour_Profiles/imx477/PyDNG_profile"
 
-print("Starting to convert original images to RAW with colour profile ...")
+print(f'Starting to convert original images to RAW with colour profile (Version: {VERSION})...')
 print(f'original_files_path: {original_files_path}')
-print(f'raw_file_save_path: {raw_file_save_path}')
+print(f'raw_file_save_path: {raw_file_save_path}\n')
 
 json_colour_profile = document_handler.load_colour_profile({ "colour_profile_path": colour_profile_path })
 
@@ -40,14 +41,17 @@ document_handler.detect_or_create_folder(raw_file_save_path)
 
 original_files = glob.glob(f'{original_files_path}/*')
 
+global_start_time = time.time()
+
 for f in original_files:
   filename = re.sub(original_files_path, raw_file_save_path, f)
   filename = re.sub('.jpg', filetype, filename)
   filename = re.sub('.jpeg', filetype, filename)
 
-  print(f'{f} -> {filename}')
+  print(f'{f} -> {filename}', end='')
 
   # Open file as a stream
+  start_time = time.time()
   stream = BytesIO()
 
   with open(f, 'rb') as original_f_stream:
@@ -59,4 +63,8 @@ for f in original_files:
   with open(filename, 'wb') as raw_f_stream:
     raw_f_stream.write(output)
 
+  # Completed file conversion
+  print(f'({(time.time() - global_start_time)} seconds)')
+
+print(f'--- {(time.time() - global_start_time)} total seconds ---')
 print('Much Success!')
