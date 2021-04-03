@@ -5,6 +5,11 @@ from PIL import Image, ImageDraw, ImageFont
 
 # https://picamera.readthedocs.io/en/release-1.10/recipes1.html#overlaying-images-on-the-preview
 def add_overlay(camera):
+  global overlay
+
+  if overlay != None:
+    return overlay
+
   overlay_w = 320
   overlay_h = 280
 
@@ -40,6 +45,6 @@ def add_overlay(camera):
   return o
 
 def remove_overlay(camera, overlay):
-  del overlay
+  # del overlay # Doesnt work
   camera.remove_overlay(overlay)
   camera.annotate_text = None

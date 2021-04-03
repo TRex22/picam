@@ -14,7 +14,7 @@
 # - Histogram and analysis tools
 
 # Possibly more than two version before tracking the version number ...
-VERSION = "0.0.4"
+VERSION = "0.0.5"
 
 import os
 import shutil
@@ -221,6 +221,16 @@ button_4 = 17
 
 bouncetime = 300
 
+# Begin Camera start-up
+camera.resolution = (screen_w, screen_h)
+camera.start_preview()
+
+# camera.framerate = fps
+global overlay
+overlay = None
+overlay = overlay_handler.add_overlay(camera)
+
+# Set button callbacks
 # GPIO.setwarnings(False) # Ignore warning for now
 GPIO.setwarnings(True)
 # GPIO.setmode(GPIO.BOARD) # Use physical pin numbering
@@ -235,13 +245,6 @@ GPIO.add_event_detect(button_1, GPIO.RISING, callback=button_callback_1, bouncet
 GPIO.add_event_detect(button_2, GPIO.RISING, callback=button_callback_2, bouncetime=bouncetime)
 GPIO.add_event_detect(button_3, GPIO.RISING, callback=button_callback_3, bouncetime=bouncetime)
 GPIO.add_event_detect(button_4, GPIO.RISING, callback=button_callback_4, bouncetime=bouncetime)
-
-camera.resolution = (screen_w, screen_h)
-camera.start_preview()
-
-# camera.framerate = fps
-global overlay
-overlay = overlay_handler.add_overlay(camera)
 
 message = input("Press enter to quit\n\n") # Run until someone presses enter
 camera.stop_preview()
