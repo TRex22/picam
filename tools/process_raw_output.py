@@ -39,13 +39,13 @@ document_handler.detect_or_create_folder(raw_file_save_path)
 original_files = glob.glob(f'{original_files_path}/*')
 
 for f in original_files:
-  print(f)
-
-  output = RPICAM2DNG().convert(f, json_camera_profile=json_colour_profile)
   filename = re.sub(original_files_path, raw_file_save_path, f)
   filename = re.sub('.jpg', filetype, filename)
   filename = re.sub('.jpeg', filetype, filename)
-  print(filename)
+
+  print(f'{f} -> {filename}')
+
+  output = RPICAM2DNG().convert(f, json_camera_profile=json_colour_profile)
 
   with open(filename, 'wb') as raw_f_stream:
     raw_f_stream.write(output)
