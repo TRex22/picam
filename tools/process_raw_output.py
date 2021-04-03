@@ -19,10 +19,17 @@ import document_handler
 # Constants
 original_files_path = "/home/pi/DCIM/images/original"
 raw_file_save_path = "/home/pi/DCIM/images/raw"
+filetype = '.dng'
 
 # TODO: List them all
 # Colour profiles:
 colour_profile_path = "/home/pi/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Neutral Look.json"
+# colour_profile_path = "/home/pi/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Skin+Sky Look.json"
+# colour_profile_path = "/home/pi/Colour_Profiles/imx477/PyDNG_profile"
+
+print("Starting to convert original images to RAW with colour profile ...")
+print(f'original_files_path: {original_files_path}')
+print(f'raw_file_save_path: {raw_file_save_path}')
 
 json_colour_profile = document_handler.load_colour_profile({ "colour_profile_path": colour_profile_path })
 
@@ -31,15 +38,14 @@ document_handler.detect_or_create_folder(raw_file_save_path)
 
 original_files = glob.glob(f'{original_files_path}/*')
 
-print("Starting to convert original images to RAW with colour profile ...")
-print(f'original_files_path: {original_files_path}')
-print(f'raw_file_save_path: {raw_file_save_path}')
-
 for f in original_files:
   print(f)
 
   output = RPICAM2DNG().convert(f, json_camera_profile=json_colour_profile)
   filename = re.sub(original_files_path, raw_file_save_path, f)
+  filename = re.sub('.jpg', filetype, filename)
+  filename = re.sub('.jpeg', filetype, filename)
+  print(filename)
 
   with open(filename, 'wb') as raw_f_stream:
     raw_f_stream.write(output)
