@@ -70,7 +70,7 @@ def convert_file(f, filename, config, colour_profile_name):
       raw_f_stream.write(output)
 
     # Completed file conversion
-    print(f' - {colour_profile_name} ({(time.time() - start_time)} seconds)')
+    print(f' ({(time.time() - start_time)} seconds)')
   except:
     print(' ... failed, skipping file.')
 
@@ -86,20 +86,32 @@ print(f'{len(original_files)} files to be processed.\n')
 
 global_start_time = time.time()
 
-for f in original_files:
-  colour_profile_name = config["selected_colour_profile"]
+colour_profile_name = config["selected_colour_profile"]
+if (colour_profile_name == 'all' or colour_profile_name == "ALL"):
+  print("Converting files to all colour profiles...")
+  # TODO: Clean up this code even more
 
-  # TODO: improve and clean up this code
-  if (colour_profile_name == 'all' or colour_profile_name == "ALL"):
+  profile_start_time = time.time()
+  for f in original_files:
     filename = generate_filename(original_files_path, raw_file_save_path, f, config, "neutral_colour_profile")
     convert_file(f, filename, config, "neutral_colour_profile")
+  print(f'--- {(time.time() - profile_start_time)} total profile seconds ---')
 
+  profile_start_time = time.time()
+  for f in original_files:
     filename = generate_filename(original_files_path, raw_file_save_path, f, config, "skin_tone_colour_profile")
     convert_file(f, filename, config, "skin_tone_colour_profile")
+  print(f'--- {(time.time() - profile_start_time)} total profile seconds ---')
 
+  profile_start_time = time.time()
+  for f in original_files:
     filename = generate_filename(original_files_path, raw_file_save_path, f, config, "pydng_colour_profile")
     convert_file(f, filename, config, "pydng_colour_profile")
-  else:
+  print(f'--- {(time.time() - profile_start_time)} total profile seconds ---')
+else:
+  print(f'Converting files to {colour_profile_name}...')
+
+  for f in original_files:
     filename = generate_filename(original_files_path, raw_file_save_path, f, config, colour_profile_name)
     convert_file(f, filename, config, colour_profile_name)
 
