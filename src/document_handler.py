@@ -3,6 +3,8 @@ import json
 
 # TODO: Write a better folder presence checker based off other work
 def check_for_folders(config):
+  detect_or_create_folder(config["dcim_path"])
+  detect_or_create_folder(config["dcim_images_path_raw"])
   detect_or_create_folder(config["dcim_images_path_raw"])
   detect_or_create_folder(config["dcim_original_images_path"])
   detect_or_create_folder(config["dcim_hdr_images_path"])

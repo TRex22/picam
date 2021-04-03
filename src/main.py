@@ -57,6 +57,7 @@ format = 'jpeg'
 
 fps = 60
 
+dcim_path = 'home/pi/DCIM'
 dcim_images_path_raw = '/home/pi/DCIM/images'
 dcim_original_images_path = '/home/pi/DCIM/images/original'
 dcim_hdr_images_path = '/home/pi/DCIM/images/hdr'
@@ -82,6 +83,7 @@ recording_state = False
 config = {
   "colour_profile_path": "/home/pi/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Neutral Look.json",
   "convert_raw": False,
+  "dcim_path": dcim_path,
   "dcim_images_path_raw": dcim_images_path_raw,
   "dcim_original_images_path": dcim_original_images_path,
   "dcim_hdr_images_path": dcim_hdr_images_path,
