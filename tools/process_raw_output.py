@@ -67,7 +67,7 @@ for f in original_files:
 
     # Completed file conversion
     print(f' ({(time.time() - start_time)} seconds)')
-  finally:
+  except:
     print(' ... failed, skipping file.')
 
 total_time = (time.time() - global_start_time)
