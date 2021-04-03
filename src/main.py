@@ -138,7 +138,7 @@ def button_callback_2(channel):
 
   filenames = []
 
-  existing_files = glob.glob(f'{dcim_hdr_images_path}/*{format}')
+  existing_files = glob.glob(f'{dcim_hdr_images_path}/*.{format}')
   filecount = len(existing_files)
   frame_count = filecount
 
@@ -193,11 +193,11 @@ def button_callback_4(channel):
   # camera.stop_preview()
   overlay_handler.remove_overlay(camera, overlay)
 
-  existing_files = glob.glob(f'{dcim_images_path_raw}/*{format}')
+  existing_files = glob.glob(f'{dcim_images_path_raw}/*.{format}')
   filecount = len(existing_files)
   frame_count = filecount
 
-  filename = f'{dcim_images_path_raw}/{frame_count}{format}'
+  filename = f'{dcim_images_path_raw}/{frame_count}.{format}'
   print(filename)
 
   original_filename = f'{dcim_original_images_path}/{frame_count}.{format}'
