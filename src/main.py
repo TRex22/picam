@@ -88,6 +88,8 @@ config = {
   "dcim_videos_path": dcim_videos_path,
 }
 
+document_handler.check_for_folders(config)
+
 # GPIO Config
 button_1 = 27
 button_2 = 23
@@ -228,7 +230,7 @@ def button_callback_4(channel):
 # Start PiCam
 global camera
 
-document_handler.check_for_folders(config)
+# document_handler.check_for_folders(config)
 json_colour_profile = document_handler.load_colour_profile(config)
 
 # Init Camera
