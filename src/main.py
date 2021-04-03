@@ -149,7 +149,7 @@ def button_callback_2(channel):
   # camera.exposure_compensation = original_exposure_compensation
 
   camera.resolution = (screen_w, screen_h)
-  overlay = overlay_handler.add_overlay(camera)
+  overlay = overlay_handler.add_overlay(camera, overlay)
 
   # for file in filenames:
   # shutil.copyfile(src, dst)
@@ -166,7 +166,7 @@ def button_callback_3(channel):
   else:
     camera.zoom = (0.4, 0.4, 0.2, 0.2)
 
-  overlay = overlay_handler.add_overlay(camera)
+  overlay = overlay_handler.add_overlay(camera, overlay)
 
 def button_callback_4(channel):
   print("Button 4: Take shot")
@@ -211,7 +211,7 @@ def button_callback_4(channel):
   print("--- %s seconds ---" % (time.time() - start_time))
 
   camera.resolution = (screen_w, screen_h)
-  overlay = overlay_handler.add_overlay(camera)
+  overlay = overlay_handler.add_overlay(camera, overlay)
   # camera.start_preview()
 
 button_1 = 27
@@ -228,7 +228,7 @@ camera.start_preview()
 # camera.framerate = fps
 global overlay
 overlay = None
-overlay = overlay_handler.add_overlay(camera)
+overlay = overlay_handler.add_overlay(camera, overlay)
 
 # Set button callbacks
 # GPIO.setwarnings(False) # Ignore warning for now

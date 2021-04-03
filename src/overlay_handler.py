@@ -4,9 +4,7 @@ from PIL import Image, ImageDraw, ImageFont
 # TODO: Fix overlay memory overflow
 
 # https://picamera.readthedocs.io/en/release-1.10/recipes1.html#overlaying-images-on-the-preview
-def add_overlay(camera):
-  global overlay
-
+def add_overlay(camera, overlay):
   if overlay != None:
     return overlay
 
