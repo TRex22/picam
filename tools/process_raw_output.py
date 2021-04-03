@@ -35,7 +35,7 @@ config = {
   "neutral_colour_profile_name": "neutral_colour",
   "skin_tone_colour_profile": "/home/pi/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Skin+Sky Look.json",
   "skin_tone_colour_profile_name": "skin_tone",
-  "pydng_colour_profile": "/home/pi/Colour_Profiles/imx477/PyDNG_profile",
+  "pydng_colour_profile": "/home/pi/Colour_Profiles/imx477/PyDNG_profile.json",
   "pydng_colour_profile_name": "pydng",
   "selected_colour_profile": "all" # can be all or neutral_colour_profile, skin_tone_colour_profile, pydng_colour_profile ... others to be added later
 }
