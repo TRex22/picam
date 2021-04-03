@@ -221,6 +221,8 @@ def button_callback_4(channel):
   # camera.start_preview()
 
 # Start PiCam
+global camera
+
 document_handler.check_for_folders(config)
 json_colour_profile = document_handler.load_colour_profile(config)
 
@@ -228,7 +230,6 @@ json_colour_profile = document_handler.load_colour_profile(config)
 camera = PiCamera()
 default_zoom = camera.zoom
 
-global camera
 global overlay
 overlay = None
 
