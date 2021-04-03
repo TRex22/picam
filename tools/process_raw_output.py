@@ -10,6 +10,8 @@ import time
 import glob
 import re
 
+from io import BytesIO
+
 from pydng.core import RPICAM2DNG
 from pydng.core import RAW2DNG, DNGTags, Tag
 
