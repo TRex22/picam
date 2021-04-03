@@ -70,7 +70,7 @@ def convert_file(f, filename, config, colour_profile_name):
       raw_f_stream.write(output)
 
     # Completed file conversion
-    print(f' ({(time.time() - start_time)} seconds)')
+    print(f' - {colour_profile_name} ({(time.time() - start_time)} seconds)')
   except:
     print(' ... failed, skipping file.')
 
