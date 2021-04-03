@@ -45,7 +45,14 @@ for f in original_files:
 
   print(f'{f} -> {filename}')
 
-  output = RPICAM2DNG().convert(f, json_camera_profile=json_colour_profile)
+  # Open file as a stream
+  stream = BytesIO()
+
+  with open(f, 'rb') as original_f_stream:
+    stream = original_f_stream.read()
+
+  output = RPICAM2DNG().convert(stream, json_camera_profile=json_colour_profile)
+  stream.close()
 
   with open(filename, 'wb') as raw_f_stream:
     raw_f_stream.write(output)
