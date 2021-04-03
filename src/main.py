@@ -15,7 +15,7 @@
 # - RAW sensor capture: https://raspberrypi.stackexchange.com/questions/51191/how-can-i-stop-the-overlay-of-images-between-my-pi-camera-and-flir-camera
 
 # Possibly more than two version before tracking the version number ...
-VERSION = "0.0.5"
+VERSION = "0.0.6"
 
 import os
 import shutil
@@ -57,7 +57,7 @@ format = 'jpeg'
 
 fps = 60
 
-dcim_images_path = '/home/pi/DCIM/images'
+dcim_images_path_raw = '/home/pi/DCIM/images'
 dcim_original_images_path = '/home/pi/DCIM/images/original'
 dcim_hdr_images_path = '/home/pi/DCIM/images/hdr'
 dcim_videos_path = '/home/pi/DCIM/videos'
@@ -81,7 +81,8 @@ recording_state = False
 # Start of config dict
 config = {
   "colour_profile_path": "/home/pi/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Neutral Look.json",
-  "dcim_images_path": dcim_images_path,
+  "convert_raw": True,
+  "dcim_images_path_raw": dcim_images_path_raw,
   "dcim_original_images_path": dcim_original_images_path,
   "dcim_hdr_images_path": dcim_hdr_images_path,
   "dcim_videos_path": dcim_videos_path,
@@ -188,11 +189,11 @@ def button_callback_4(channel):
   # camera.stop_preview()
   overlay_handler.remove_overlay(camera, overlay)
 
-  existing_files = glob.glob(f'{dcim_images_path}/*{filetype}')
+  existing_files = glob.glob(f'{dcim_images_path_raw}/*{filetype}')
   filecount = len(existing_files)
   frame_count = filecount
 
-  filename = f'{dcim_images_path}/{frame_count}{filetype}'
+  filename = f'{dcim_images_path_raw}/{frame_count}{filetype}'
   print(filename)
 
   original_filename = f'{dcim_original_images_path}/{frame_count}.{format}'
@@ -209,10 +210,12 @@ def button_callback_4(channel):
 
   # camera.stop_preview()
 
-  output = RPICAM2DNG().convert(stream, json_camera_profile=json_colour_profile)
+  if (config["convert_raw"] == True):
+    print("Begin conversion and save DNG raw ...")
+    output = RPICAM2DNG().convert(stream, json_camera_profile=json_colour_profile)
 
-  with open(filename, 'wb') as f:
-    f.write(output)
+    with open(filename, 'wb') as f:
+      f.write(output)
 
   print("--- %s seconds ---" % (time.time() - start_time))
 
