@@ -95,19 +95,19 @@ if (colour_profile_name == 'all' or colour_profile_name == "ALL"):
   for f in original_files:
     filename = generate_filename(original_files_path, raw_file_save_path, f, config, "neutral_colour_profile")
     convert_file(f, filename, config, "neutral_colour_profile")
-  print(f'--- {(time.time() - profile_start_time)} total profile seconds ---')
+  print(f'--- {(time.time() - profile_start_time)} total profile seconds ---\n')
 
   profile_start_time = time.time()
   for f in original_files:
     filename = generate_filename(original_files_path, raw_file_save_path, f, config, "skin_tone_colour_profile")
     convert_file(f, filename, config, "skin_tone_colour_profile")
-  print(f'--- {(time.time() - profile_start_time)} total profile seconds ---')
+  print(f'--- {(time.time() - profile_start_time)} total profile seconds ---\n')
 
   profile_start_time = time.time()
   for f in original_files:
     filename = generate_filename(original_files_path, raw_file_save_path, f, config, "pydng_colour_profile")
     convert_file(f, filename, config, "pydng_colour_profile")
-  print(f'--- {(time.time() - profile_start_time)} total profile seconds ---')
+  print(f'--- {(time.time() - profile_start_time)} total profile seconds ---\n')
 else:
   print(f'Converting files to {colour_profile_name}...')
 
@@ -118,7 +118,7 @@ else:
 total_time = (time.time() - global_start_time)
 average_time = total_time / len(original_files)
 
-print(f'--- {total_time} total seconds ---')
+print(f'\n--- {total_time} total seconds ---')
 print(f'--- {average_time} average seconds ---')
 
 print('Much Success!')
