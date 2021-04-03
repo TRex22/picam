@@ -64,7 +64,12 @@ for f in original_files:
     raw_f_stream.write(output)
 
   # Completed file conversion
-  print(f'({(time.time() - global_start_time)} seconds)')
+  print(f'({(time.time() - start_time)} seconds)')
 
-print(f'--- {(time.time() - global_start_time)} total seconds ---')
+total_time = (time.time() - global_start_time)
+average_time = total_time / len(original_files)
+
+print(f'--- {total_time} total seconds ---')
+print(f'--- {average_time} average seconds ---')
+
 print('Much Success!')
