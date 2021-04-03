@@ -87,21 +87,24 @@ config = {
   "dcim_videos_path": dcim_videos_path,
 }
 
-document_handler.check_for_folders(config)
-json_colour_profile = document_handler.load_colour_profile(config)
+# GPIO Config
+button_1 = 27
+button_2 = 23
+button_3 = 22
+button_4 = 17
 
-# Init Camera
-camera = PiCamera()
-default_zoom = camera.zoom
+bouncetime = 300
 
 def button_callback_1(channel):
   print("Button 1 was pushed!")
+  global camera
   global overlay
   # print(f"recording_state: {recording_state}")
   # recording_state = True
 
 def button_callback_2(channel):
   print("Button 2: HDR")
+  global camera
   global overlay
 
   # TODO: Need to figure out high-speed capture (~11FPS)
@@ -159,6 +162,7 @@ def button_callback_2(channel):
 
 def button_callback_3(channel):
   print("Button 3: Zoom")
+  global camera
   global overlay
 
   current_zoom = camera.zoom
@@ -171,6 +175,7 @@ def button_callback_3(channel):
 
 def button_callback_4(channel):
   print("Button 4: Take shot")
+  global camera
   global overlay
 
   screen_w = 340
@@ -215,20 +220,23 @@ def button_callback_4(channel):
   overlay = overlay_handler.add_overlay(camera, overlay)
   # camera.start_preview()
 
-button_1 = 27
-button_2 = 23
-button_3 = 22
-button_4 = 17
+# Start PiCam
+document_handler.check_for_folders(config)
+json_colour_profile = document_handler.load_colour_profile(config)
 
-bouncetime = 300
+# Init Camera
+camera = PiCamera()
+default_zoom = camera.zoom
+
+global camera
+global overlay
+overlay = None
 
 # Begin Camera start-up
 camera.resolution = (screen_w, screen_h)
 camera.start_preview()
 
 # camera.framerate = fps
-global overlay
-overlay = None
 overlay = overlay_handler.add_overlay(camera, overlay)
 
 # Set button callbacks
