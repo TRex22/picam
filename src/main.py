@@ -121,7 +121,7 @@ def button_callback_2(channel):
   width = 4056
   height = 3040
 
-  overlay_handler.remove_overlay(camera, overlay)
+  # overlay_handler.remove_overlay(camera, overlay)
   camera.resolution = (width, height)
 
   start_time = time.time()
@@ -196,6 +196,7 @@ def button_callback_4(channel):
   existing_files = glob.glob(f'{dcim_images_path_raw}/*.{format}')
   filecount = len(existing_files)
   frame_count = filecount
+  print(filecount)
 
   filename = f'{dcim_images_path_raw}/{frame_count}.{format}'
   print(filename)
