@@ -70,7 +70,7 @@ colour_profile_path = "/home/pi/Colour_Profiles/imx477/Raspberry Pi High Quality
 # w = 3280
 # h = 2464
 
-screen_w = 340
+screen_w = 320
 screen_h = 240
 
 # 12MP Pi HQ camera
@@ -114,7 +114,7 @@ def button_callback_2(channel):
 
   # TODO: Need to figure out high-speed capture (~11FPS)
 
-  screen_w = 340
+  screen_w = 320
   screen_h = 240
 
   # 12MP Pi HQ camera
@@ -185,7 +185,7 @@ def button_callback_4(channel):
   global camera
   global overlay
 
-  screen_w = 340
+  screen_w = 320
   screen_h = 240
 
   # 12MP Pi HQ camera
