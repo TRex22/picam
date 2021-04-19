@@ -46,5 +46,7 @@ def remove_overlay(camera, overlay):
   camera.remove_overlay(overlay)
   camera.annotate_text = None
 
+  overlay = None
+
   # del overlay # Doesnt work
   # overlay = None # Global variable
