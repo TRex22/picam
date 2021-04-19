@@ -15,7 +15,7 @@
 # - RAW sensor capture: https://raspberrypi.stackexchange.com/questions/51191/how-can-i-stop-the-overlay-of-images-between-my-pi-camera-and-flir-camera
 
 # Possibly more than two version before tracking the version number ...
-VERSION = "0.0.6"
+VERSION = "0.0.7"
 
 import os
 import shutil
@@ -191,7 +191,7 @@ def button_callback_4(channel):
   height = 3040
 
   # camera.stop_preview()
-  overlay_handler.remove_overlay(camera, overlay)
+  # overlay_handler.remove_overlay(camera, overlay)
 
   existing_files = glob.glob(f'{dcim_images_path_raw}/*.{format}')
   filecount = len(existing_files)
