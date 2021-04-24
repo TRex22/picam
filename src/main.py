@@ -1,4 +1,4 @@
-# TODO:
+# TODO List:
 # - histograms
 # - profiles
 # - logging
@@ -20,7 +20,46 @@
 # - Menus
 # - Proper overlay
 # - Audio?
+# - sharpness
+# - Contrast
+# - brightness
+# - saturation
+# - ev compression
+# - exposure mode
+# - awb - auto white balance
+# - image effect
+# - colour effect
+# - metering mode?
+# - roi
+# - dynamic range compression
+# - image statistics
+# - awb gains
+# - sensor input mode??? / video
+# - bitrate
+# - video stabilisation
+# - other video options
+
 # For fixing multi-press See: https://raspberrypi.stackexchange.com/questions/28955/unwanted-multiple-presses-when-using-gpio-button-press-detection
+
+# Supported file types: https://picamera.readthedocs.io/en/release-1.10/api_camera.html#picamera.camera.PiCamera.capture
+# 'jpeg' - Write a JPEG file
+# 'png' - Write a PNG file
+# 'gif' - Write a GIF file
+# 'bmp' - Write a Windows bitmap file
+# 'yuv' - Write the raw image data to a file in YUV420 format
+# 'rgb' - Write the raw image data to a file in 24-bit RGB format
+# 'rgba' - Write the raw image data to a file in 32-bit RGBA format
+# 'bgr' - Write the raw image data to a file in 24-bit BGR format
+# 'bgra' - Write the raw image data to a file in 32-bit BGRA format
+# 'raw' - Deprecated option for raw captures; the format is taken from the deprecated raw_format attribute
+
+# 8MP pi camera v2.1
+# width = 3280
+# height = 2464
+
+# 12MP Pi HQ camera
+# width = 4056
+# height = 3040
 
 VERSION = "0.0.8"
 
@@ -44,26 +83,6 @@ from PIL import Image, ImageDraw, ImageFont
 # Modules
 import document_handler
 import overlay_handler
-
-# Supported file types: https://picamera.readthedocs.io/en/release-1.10/api_camera.html#picamera.camera.PiCamera.capture
-# 'jpeg' - Write a JPEG file
-# 'png' - Write a PNG file
-# 'gif' - Write a GIF file
-# 'bmp' - Write a Windows bitmap file
-# 'yuv' - Write the raw image data to a file in YUV420 format
-# 'rgb' - Write the raw image data to a file in 24-bit RGB format
-# 'rgba' - Write the raw image data to a file in 32-bit RGBA format
-# 'bgr' - Write the raw image data to a file in 24-bit BGR format
-# 'bgra' - Write the raw image data to a file in 32-bit BGRA format
-# 'raw' - Deprecated option for raw captures; the format is taken from the deprecated raw_format attribute
-
-# 8MP pi camera v2.1
-# width = 3280
-# height = 2464
-
-# 12MP Pi HQ camera
-# width = 4056
-# height = 3040
 
 ################################################################################
 ##                                    Config                                  ##
