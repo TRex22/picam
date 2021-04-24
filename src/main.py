@@ -15,6 +15,8 @@
 # - RAW sensor capture: https://raspberrypi.stackexchange.com/questions/51191/how-can-i-stop-the-overlay-of-images-between-my-pi-camera-and-flir-camera
 # - ISO
 # - Shutter Speed
+# - Resolution (FPS as label)
+# - FPS option (wrt resolution)
 # - Menus
 # - Proper overlay
 # - Audio?
@@ -189,7 +191,7 @@ def button_callback_2(channel):
   # camera.exposure_compensation = original_exposure_compensation
 
   camera.resolution = (screen_w, screen_h)
-  overlay = overlay_handler.add_overlay(camera, overlay)
+  overlay = overlay_handler.add_overlay(camera, overlay, config)
 
   # for file in filenames:
   # shutil.copyfile(src, dst)
@@ -209,7 +211,7 @@ def button_callback_3(channel):
   else:
     camera.zoom = (0.4, 0.4, 0.2, 0.2)
 
-  overlay = overlay_handler.add_overlay(camera, overlay)
+  overlay = overlay_handler.add_overlay(camera, overlay, config)
 
 def button_callback_4(channel):
   print("Button 4: Take shot")
@@ -261,7 +263,7 @@ def button_callback_4(channel):
   print("--- %s seconds ---" % (time.time() - start_time))
 
   camera.resolution = (screen_w, screen_h)
-  overlay = overlay_handler.add_overlay(camera, overlay)
+  overlay = overlay_handler.add_overlay(camera, overlay, config)
   # camera.start_preview()
 
 ################################################################################
@@ -284,7 +286,7 @@ camera.resolution = (screen_w, screen_h)
 camera.framerate = screen_fps # fps
 
 camera.start_preview()
-overlay = overlay_handler.add_overlay(camera, overlay)
+overlay = overlay_handler.add_overlay(camera, overlay, config)
 
 # Set button callbacks
 # GPIO.setwarnings(False) # Ignore warning for now
