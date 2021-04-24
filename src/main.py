@@ -104,8 +104,8 @@ config = {
   "bpp": 12,
   "format": 'jpeg',
   "bayer": True,
-  "fps": 60, # 10 fps max at full resolution
-  "screen_fps": 60, #120, # 120 fps at 1012x760
+  "fps": 45, # 60 # 10 fps max at full resolution
+  "screen_fps": 120, # 120 fps at 1012x760
   "screen_w": 1024, # 1012 # 320 screen res # Needs to be 4:3
   "screen_h": 768, #760 # 240 screen res # Needs to be 4:3
   "overlay_w": 320,
@@ -264,14 +264,14 @@ def button_callback_4(channel):
 global camera
 
 # Init Camera
-camera = PiCamera(framerate=90)
+camera = PiCamera()
 
 global overlay
 overlay = None
 
 # Begin Camera start-up
 camera.resolution = (screen_w, screen_h)
-# camera.framerate = screen_fps # fps
+camera.framerate = screen_fps # fps
 
 camera.start_preview()
 overlay = overlay_handler.add_overlay(camera, overlay, config)

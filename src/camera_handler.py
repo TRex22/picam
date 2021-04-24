@@ -42,7 +42,7 @@ def take_single_shot(camera, config):
   stream = BytesIO()
 
   start_time = time.time()
-
+  camera.framerate = config["fps"]
   camera.resolution = (width, height)
   # Set iso
 
@@ -74,4 +74,4 @@ def take_single_shot(camera, config):
   print("--- %s seconds ---" % (time.time() - start_time))
 
   camera.resolution = (screen_w, screen_h)
-  # camera.framerate = config["screen_fps"]
+  camera.framerate = config["screen_fps"]
