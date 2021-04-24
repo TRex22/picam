@@ -4,7 +4,7 @@ RaspberryPi Camera software to be used with a screen module.
 # Requirements
 - opencv-python
 - numpy
-- picamera
+- picamerax
 - libavcodec
 - pip3
 - sudo apt-get install libopencv-dev python-opencv python-picamera

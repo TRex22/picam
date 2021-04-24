@@ -23,7 +23,7 @@ sudo apt update
 sudo apt install -y samba samba-common git build-essential cmake python3 python3-pip python-dev python-rpi.gpio python3-dev python3-rpi.gpio libopencv-dev python-opencv python-picamera python3-picamera libatlas-base-dev libhdf5-dev libhdf5-serial-dev libatlas-base-dev libjasper-dev libqtgui4 libqt4-test libatlas-base-dev libxml2-dev libxslt-dev
 
 pip3 install opencv-contrib-python numpy ExifRead
-pip3 install Pillow
+pip3 install Pillow picamerax
 sudo pip3 install Click==7.0
 sudo pip3 install adafruit-python-shell
 
