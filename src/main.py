@@ -240,6 +240,7 @@ def button_callback_4(channel):
 
   stream = BytesIO()
 
+  camera.fps = config["fps"]
   camera.resolution = (width, height)
   start_time = time.time()
 
@@ -263,6 +264,7 @@ def button_callback_4(channel):
   print("--- %s seconds ---" % (time.time() - start_time))
 
   camera.resolution = (screen_w, screen_h)
+  camera.fps = config["screen_fps"]
   overlay = overlay_handler.add_overlay(camera, overlay, config)
   # camera.start_preview()
 
