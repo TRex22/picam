@@ -268,9 +268,11 @@ def button_callback_4(channel):
   original_filename = f'{dcim_original_images_path}/{frame_count}.{format}'
   print(original_filename)
 
+  print(f'screen: ({screen_w}, {screen_h}), res: ({width}, {height})')
+
   stream = BytesIO()
 
-  camera.framerate = config["fps"]
+  # camera.framerate = config["fps"]
   camera.resolution = (width, height)
   start_time = time.time()
 
@@ -292,7 +294,7 @@ def button_callback_4(channel):
   print("--- %s seconds ---" % (time.time() - start_time))
 
   camera.resolution = (screen_w, screen_h)
-  camera.framerate = config["screen_fps"]
+  # camera.framerate = config["screen_fps"]
   overlay = overlay_handler.add_overlay(camera, overlay, config)
 
 ################################################################################
