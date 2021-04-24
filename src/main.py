@@ -266,7 +266,7 @@ overlay = None
 
 # Begin Camera start-up
 camera.resolution = (screen_w, screen_h)
-camera.framerate = screen_fps # fps
+# camera.framerate = screen_fps # fps
 
 camera.start_preview()
 overlay = overlay_handler.add_overlay(camera, overlay, config)

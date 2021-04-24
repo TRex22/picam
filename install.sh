@@ -71,6 +71,8 @@ websocketd --port=8080 /usr/bin/fbcp & python3 /home/pi/picam/test/camera_test.p
 # User boot
 # picam
 tee -a ~/.bashrc << EOF
+alias camera=python3 /home/pi/picam/src/main.py
+
 /usr/bin/fbcp &
 python3 /home/pi/picam/src/main.py
 EOF
