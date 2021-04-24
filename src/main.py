@@ -249,7 +249,12 @@ def button_callback_4(channel):
   global overlay
   global config
 
-  camera_handler.take_single_shot(camera, overlay, config)
+  overlay_handler.remove_overlay(camera, overlay)
+  overlay = None
+
+  camera_handler.take_single_shot(camera, config)
+
+  overlay = overlay_handler.add_overlay(camera, overlay, config)
 
 ################################################################################
 #                                  Main Loop                                   #
@@ -259,7 +264,7 @@ def button_callback_4(channel):
 global camera
 
 # Init Camera
-camera = PiCamera()
+camera = PiCamera(framerate=90)
 
 global overlay
 overlay = None

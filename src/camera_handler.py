@@ -13,10 +13,8 @@ from pydng.core import RPICAM2DNG
 from pydng.core import RAW2DNG, DNGTags, Tag
 
 import document_handler
-import overlay_handler
 
-def take_single_shot(camera, overlay, config):
-  global overlay
+def take_single_shot(camera, config):
   screen_w = config["screen_w"]
   screen_h = config["screen_h"]
 
@@ -33,9 +31,6 @@ def take_single_shot(camera, overlay, config):
   format = config["format"]
   bayer = config["bayer"]
 
-  overlay_handler.remove_overlay(camera, overlay)
-  overlay = None
-
   existing_files = glob.glob(f'{dcim_original_images_path}/*.{format}')
   filecount = len(existing_files)
   frame_count = filecount
@@ -48,7 +43,6 @@ def take_single_shot(camera, overlay, config):
 
   start_time = time.time()
 
-  camera.framerate = 60 # config["fps"]
   camera.resolution = (width, height)
   # Set iso
 
@@ -81,4 +75,3 @@ def take_single_shot(camera, overlay, config):
 
   camera.resolution = (screen_w, screen_h)
   # camera.framerate = config["screen_fps"]
-  overlay = overlay_handler.add_overlay(camera, overlay, config)
