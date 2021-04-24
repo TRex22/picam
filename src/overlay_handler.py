@@ -9,27 +9,7 @@ def add_overlay(camera, overlay, config):
   overlay_w = config["screen_w"] # 320
   overlay_h = config["screen_h"] # 280
 
-  # Create an array representing a wxh image of
-  # a cross through the center of the display. The shape of
-  # the array must be of the form (height, width, color)
-  a = np.zeros((overlay_h, overlay_w, 4), dtype=np.uint8)
-  half_height = int(overlay_h/2)
-  half_width = int(overlay_w/2)
-
-  a[half_height, :][0] = 0xff
-  a[:, half_width][0] = 0xff
-
-  a[half_height, :][1] = 0xff
-  a[:, half_width][1] = 0xff
-
-  a[half_height, :][2] = 0xff
-  a[:, half_width][2] = 0xff
-
-  a[half_height, :][3] = 0
-  a[:, half_width][3] = 0
-
-  # Create image bytes
-  img = Image.fromarray(a, 'RGBA')
+  img = generate_overlay_image(overlay_h, overlay_w)
   image_bytes = img.tobytes()
 
   # Broken docs ...
@@ -48,3 +28,28 @@ def remove_overlay(camera, overlay):
 
   # del overlay # Doesnt work
   # overlay = None # Global variable
+
+def generate_overlay_image(overlay_h, overlay_w):
+  # Create an array representing a wxh image of
+  # a cross through the center of the display. The shape of
+  # the array must be of the form (height, width, color)
+  a = np.zeros((overlay_h, overlay_w, 4), dtype=np.uint8)
+  half_height = int(overlay_h/2)
+  half_width = int(overlay_w/2)
+
+  a[half_height, :, :] = 0xff
+  a[:, half_width, :] = 0xff
+
+  # a[half_height, :][0] = 0xff
+  # a[:, half_width][0] = 0xff
+
+  # a[half_height, :][1] = 0xff
+  # a[:, half_width][1] = 0xff
+
+  # a[half_height, :][2] = 0xff
+  # a[:, half_width][2] = 0xff
+
+  # a[half_height, :][3] = 0
+  # a[:, half_width][3] = 0
+
+  return Image.fromarray(a, 'RGBA')

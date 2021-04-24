@@ -4,7 +4,6 @@ from ina219 import INA219
 from ina219 import DeviceRangeError
 SHUNT_OHMS = 0.05
 
-
 def read():
     """Define method to read information from coulometer."""
     ina = INA219(SHUNT_OHMS)
