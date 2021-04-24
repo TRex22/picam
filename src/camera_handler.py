@@ -16,6 +16,7 @@ import document_handler
 import overlay_handler
 
 def take_single_shot(camera, overlay, config):
+  global overlay
   screen_w = config["screen_w"]
   screen_h = config["screen_h"]
 
