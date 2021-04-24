@@ -2,7 +2,7 @@ import os
 import time
 import glob
 
-from picamera import PiCamera
+from picamerax import PiCamera
 
 # Supported file types: https://picamera.readthedocs.io/en/release-1.10/api_camera.html#picamera.camera.PiCamera.capture
 # 'jpeg' - Write a JPEG file

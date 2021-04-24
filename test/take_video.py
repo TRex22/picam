@@ -1,7 +1,7 @@
 import time
 import glob
 
-from picamera import PiCamera
+from picamerax import PiCamera
 
 filetype = '.mp4'
 dcim_images_path = '/home/pi/DCIM/images'

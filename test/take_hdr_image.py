@@ -5,7 +5,7 @@ import glob
 import cv2
 import numpy as np
 
-from picamera import PiCamera
+from picamerax import PiCamera
 
 # Supported file types: https://picamera.readthedocs.io/en/release-1.10/api_camera.html#picamera.camera.PiCamera.capture
 # 'jpeg' - Write a JPEG file
@@ -127,4 +127,3 @@ cv2.imwrite(f'{dcim_hdr_images_path}/{frame_count}_fusion_mertens_{filetype}', r
 # cal_robertson = cv2.createCalibrateRobertson()
 # crf_robertson = cal_robertson.process(img_list, times=exposure_times)
 # hdr_robertson = merge_robertson.process(img_list, times=exposure_times.copy(), response=crf_robertson.copy())
-

@@ -7,7 +7,7 @@ import struct
 
 import numpy as np
 
-from picamera import PiCamera
+from picamerax import PiCamera
 
 from pydng.core import RPICAM2DNG
 from pydng.core import RAW2DNG, DNGTags, Tag
