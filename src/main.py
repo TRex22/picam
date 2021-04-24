@@ -101,6 +101,7 @@ config = {
   "filetype": '.dng',
   "bpp": 12,
   "format": 'jpeg',
+  "bayer": True,
   "fps": 60, # 10 fps max at full resolution
   "screen_fps": 60, #120, # 120 fps at 1012x760
   "screen_w": 1024, # 1012 # 320 screen res # Needs to be 4:3
@@ -118,7 +119,7 @@ config = {
 
 filetype = config["filetype"]
 bpp = config["bpp"]
-format = config["format"]
+# format = config["format"]
 
 fps = config["fps"]
 screen_fps = config["screen_fps"]
@@ -276,7 +277,7 @@ def button_callback_4(channel):
   camera.resolution = (width, height)
   start_time = time.time()
 
-  camera.capture(stream, format, bayer=True)
+  camera.capture(stream, config["format"], bayer=config["bayer"])
 
   with open(original_filename, 'wb') as f:
     f.write(stream.getbuffer())
