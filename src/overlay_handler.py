@@ -40,16 +40,4 @@ def generate_overlay_image(overlay_h, overlay_w):
   a[half_height, :, :] = 0xff
   a[:, half_width, :] = 0xff
 
-  # a[half_height, :][0] = 0xff
-  # a[:, half_width][0] = 0xff
-
-  # a[half_height, :][1] = 0xff
-  # a[:, half_width][1] = 0xff
-
-  # a[half_height, :][2] = 0xff
-  # a[:, half_width][2] = 0xff
-
-  # a[half_height, :][3] = 0
-  # a[:, half_width][3] = 0
-
-  return Image.fromarray(a, 'RGBA')
+  return Image.fromarray(a)
