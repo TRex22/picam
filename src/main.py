@@ -333,6 +333,7 @@ GPIO.add_event_detect(button_2, GPIO.RISING, callback=button_callback_2, bouncet
 GPIO.add_event_detect(button_3, GPIO.RISING, callback=button_callback_3, bouncetime=bouncetime)
 GPIO.add_event_detect(button_4, GPIO.RISING, callback=button_callback_4, bouncetime=bouncetime)
 
+print(f'screen: ({screen_w}, {screen_h}), res: ({width}, {height})')
 message = input("Press enter to quit\n\n") # Run until someone presses enter
 camera.stop_preview()
 GPIO.cleanup() # Clean up
