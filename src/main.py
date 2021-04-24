@@ -38,6 +38,7 @@
 # - bitrate
 # - video stabilisation
 # - other video options
+# - Add zoom to config
 
 # For fixing multi-press See: https://raspberrypi.stackexchange.com/questions/28955/unwanted-multiple-presses-when-using-gpio-button-press-detection
 
@@ -122,14 +123,13 @@ format = config["format"]
 fps = config["fps"]
 screen_fps = config["screen_fps"]
 
-dcim_path = config["dcim_path"]
-dcim_images_path_raw = ["dcim_images_path_raw"]
-dcim_original_images_path = ["dcim_original_images_path"]
-dcim_hdr_images_path = ["dcim_hdr_images_path"]
-dcim_videos_path = ["dcim_videos_path"]
-dcim_tmp_path = ["dcim_tmp_path"]
+dcim_images_path_raw = config["dcim_images_path_raw"]
+dcim_original_images_path = config["dcim_original_images_path"]
+dcim_hdr_images_path = config["dcim_hdr_images_path"]
+dcim_videos_path = config["dcim_videos_path"]
+dcim_tmp_path = config["dcim_tmp_path"]
 
-colour_profile_path = "/home/pi/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Neutral Look.json"
+colour_profile_path = config["colour_profile_path"]
 
 screen_w = config["screen_w"]
 screen_h = config["screen_h"]
@@ -170,6 +170,13 @@ def button_callback_2(channel):
 
   width = config["width"]
   height = config["height"]
+
+  dcim_path = config["dcim_path"]
+  dcim_images_path_raw = config["dcim_images_path_raw"]
+  dcim_original_images_path = config["dcim_original_images_path"]
+  dcim_hdr_images_path = config["dcim_hdr_images_path"]
+  dcim_videos_path = config["dcim_videos_path"]
+  dcim_tmp_path = config["dcim_tmp_path"]
 
   overlay_handler.remove_overlay(camera, overlay)
   overlay = None
@@ -223,7 +230,6 @@ def button_callback_3(channel):
   global overlay
   global config
 
-  # TODO: Add zoom to config
   current_zoom = camera.zoom
   if (current_zoom == (0.4, 0.4, 0.2, 0.2)):
     camera.zoom = (0.0, 0.0, 1.0, 1.0)
@@ -244,7 +250,13 @@ def button_callback_4(channel):
   width = config["width"]
   height = config["height"]
 
-  # camera.stop_preview()
+  dcim_path = config["dcim_path"]
+  dcim_images_path_raw = config["dcim_images_path_raw"]
+  dcim_original_images_path = config["dcim_original_images_path"]
+  dcim_hdr_images_path = config["dcim_hdr_images_path"]
+  dcim_videos_path = config["dcim_videos_path"]
+  dcim_tmp_path = config["dcim_tmp_path"]
+
   overlay_handler.remove_overlay(camera, overlay)
   overlay = None
 
@@ -267,8 +279,6 @@ def button_callback_4(channel):
 
   with open(original_filename, 'wb') as f:
     f.write(stream.getbuffer())
-
-  # camera.stop_preview()
 
   if (config["convert_raw"] == True):
     print("Begin conversion and save DNG raw ...")
