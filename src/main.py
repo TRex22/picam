@@ -104,7 +104,7 @@ config = {
   "bpp": 12,
   "format": 'jpeg',
   "bayer": True,
-  "fps": 45, # 60 # 10 fps max at full resolution
+  "fps": 40, # 60 # 10 fps max at full resolution
   "screen_fps": 120, # 120 fps at 1012x760
   "screen_w": 1024, # 1012 # 320 screen res # Needs to be 4:3
   "screen_h": 768, #760 # 240 screen res # Needs to be 4:3
