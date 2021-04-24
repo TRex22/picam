@@ -264,7 +264,7 @@ def button_callback_4(channel):
 global camera
 
 # Init Camera
-camera = PiCamera(framerate=40)
+camera = PiCamera(framerate=11)
 
 global overlay
 overlay = None
