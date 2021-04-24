@@ -43,13 +43,23 @@ def take_single_shot(camera, overlay, config):
   original_filename = f'{dcim_original_images_path}/{frame_count}.{format}'
   print(original_filename)
 
-  print(f'screen: ({screen_w}, {screen_h}), res: ({width}, {height})')
-
   stream = BytesIO()
+
+  start_time = time.time()
 
   # camera.framerate = config["fps"]
   camera.resolution = (width, height)
-  start_time = time.time()
+  # Set iso
+
+  # Fix other settings
+  # Now fix the values
+  camera.shutter_speed = camera.exposure_speed
+  camera.exposure_mode = 'off'
+  g = camera.awb_gains
+  camera.awb_mode = 'off'
+  camera.awb_gains = g
+
+  print(f'screen: ({screen_w}, {screen_h}), res: ({width}, {height}), shutter_speed: {camera.shutter_speed}')
 
   camera.capture(stream, format, bayer=bayer)
 
