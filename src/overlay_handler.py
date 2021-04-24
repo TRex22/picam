@@ -25,8 +25,8 @@ def add_overlay(camera, overlay, config):
   a[half_height, :][2] = 0xff
   a[:, half_width][2] = 0xff
 
-  a[half_height, :][3] = 0xff
-  a[:, half_width][3] = 0xff
+  a[half_height, :][3] = 0
+  a[:, half_width][3] = 0
 
   # Create image bytes
   img = Image.fromarray(a, 'RGBA')
