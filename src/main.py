@@ -103,8 +103,8 @@ config = {
   "format": 'jpeg',
   "fps": 60, # 10 fps max at full resolution
   "screen_fps": 120, # 120 fps at 1012x760
-  "screen_w": 1012, # 320 screen res
-  "screen_h": 760 ,# 240 screen res
+  "screen_w": 1024, # 1012 # 320 screen res # Needs to be 4:3
+  "screen_h": 768, #760 # 240 screen res # Needs to be 4:3
   "width": 4056, # Image width
   "height": 3040, # Image height
   "gpio": {
