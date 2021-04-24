@@ -265,9 +265,8 @@ def button_callback_4(channel):
   frame_count = filecount
 
   filename = f'{dcim_images_path_raw}/{frame_count}.{format}'
-  print(filename)
-
   original_filename = f'{dcim_original_images_path}/{frame_count}.{format}'
+  print(original_filename)
 
   stream = BytesIO()
 
