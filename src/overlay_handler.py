@@ -20,11 +20,14 @@ def add_overlay(camera, overlay, config):
   overlay = camera.add_overlay(image_bytes, size=img.size, layer=3, alpha=64, format="rgba")
   camera.annotate_text = 'Photo mode' # TODO: Cleanup
 
+  camera.framerate = config["screen_fps"]
+
   return overlay
 
-def remove_overlay(camera, overlay):
+def remove_overlay(camera, overlay, config):
   camera.remove_overlay(overlay)
   camera.annotate_text = None
+  camera.framerate = config["fps"]
 
   # del overlay # Doesnt work
   # overlay = None # Global variable
