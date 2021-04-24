@@ -13,9 +13,14 @@
 # - Write actual tests
 # - Histogram and analysis tools
 # - RAW sensor capture: https://raspberrypi.stackexchange.com/questions/51191/how-can-i-stop-the-overlay-of-images-between-my-pi-camera-and-flir-camera
+# - ISO
+# - Shutter Speed
+# - Menus
+# - Proper overlay
+# - Audio?
+# For fixing multi-press See: https://raspberrypi.stackexchange.com/questions/28955/unwanted-multiple-presses-when-using-gpio-button-press-detection
 
-# Possibly more than two version before tracking the version number ...
-VERSION = "0.0.7"
+VERSION = "0.0.8"
 
 import os
 import shutil
@@ -25,7 +30,7 @@ import json
 
 from io import BytesIO
 from picamera import PiCamera
-# from gpiozero import Button
+
 import RPi.GPIO as GPIO
 
 from pydng.core import RPICAM2DNG
@@ -50,76 +55,100 @@ import overlay_handler
 # 'bgra' - Write the raw image data to a file in 32-bit BGRA format
 # 'raw' - Deprecated option for raw captures; the format is taken from the deprecated raw_format attribute
 
-# TODO: Config
-filetype = '.dng'
-bpp = 12
-format = 'jpeg'
-
-fps = 60
-
-dcim_path = 'home/pi/DCIM'
-dcim_images_path_raw = '/home/pi/DCIM/images'
-dcim_original_images_path = '/home/pi/DCIM/images/original'
-dcim_hdr_images_path = '/home/pi/DCIM/images/hdr'
-dcim_videos_path = '/home/pi/DCIM/videos'
-dcim_tmp_path = '/home/pi/DCIM/tmp'
-
-colour_profile_path = "/home/pi/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Neutral Look.json"
-
 # 8MP pi camera v2.1
-# w = 3280
-# h = 2464
-
-screen_w = 320
-screen_h = 240
+# width = 3280
+# height = 2464
 
 # 12MP Pi HQ camera
-width = 4056
-height = 3040
+# width = 4056
+# height = 3040
 
-recording_state = False
-
-# Start of config dict
+################################################################################
+##                                    Config                                  ##
+################################################################################
+global config
 config = {
   "colour_profile_path": "/home/pi/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Neutral Look.json",
   "convert_raw": False,
-  "dcim_path": dcim_path,
-  "dcim_images_path_raw": dcim_images_path_raw,
-  "dcim_original_images_path": dcim_original_images_path,
-  "dcim_hdr_images_path": dcim_hdr_images_path,
-  "dcim_videos_path": dcim_videos_path,
+  "dcim_path": 'home/pi/DCIM',
+  "dcim_images_path_raw": '/home/pi/DCIM/images',
+  "dcim_original_images_path": '/home/pi/DCIM/images/original',
+  "dcim_hdr_images_path": '/home/pi/DCIM/images/hdr',
+  "dcim_videos_path": '/home/pi/DCIM/videos',
+  "dcim_tmp_path": '/home/pi/DCIM/tmp',
+  "filetype": '.dng',
+  "bpp": 12,
+  "format": 'jpeg',
+  "fps": 60, # 10 fps max at full resolution
+  "screen_fps": 120, # 120 fps at 1012x760
+  "screen_w": 1012, # 320 screen res
+  "screen_h": 760 ,# 240 screen res
+  "width": 4056, # Image width
+  "height": 3040, # Image height
+  "gpio": {
+    "button_1": 27,
+    "button_2": 23,
+    "button_3": 22,
+    "button_4": 17,
+    "bouncetime": 300
+  }
 }
+
+filetype = config["filetype"]
+bpp = config["bpp"]
+format = config["format"]
+
+fps = config["fps"]
+screen_fps = config["screen_fps"]
+
+dcim_path = config["dcim_path"]
+dcim_images_path_raw = ["dcim_images_path_raw"]
+dcim_original_images_path = ["dcim_original_images_path"]
+dcim_hdr_images_path = ["dcim_hdr_images_path"]
+dcim_videos_path = ["dcim_videos_path"]
+dcim_tmp_path = ["dcim_tmp_path"]
+
+colour_profile_path = "/home/pi/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Neutral Look.json"
+
+screen_w = config["screen_w"]
+screen_h = config["screen_h"]
+
+width = config["width"]
+height = config["height"]
+
+# GPIO Config
+button_1 = config["gpio"]["button_1"]
+button_2 = config["gpio"]["button_2"]
+button_3 = config["gpio"]["button_3"]
+button_4 = config["gpio"]["button_4"]
+
+bouncetime = config["gpio"]["bouncetime"]
+
+################################################################################
 
 document_handler.check_for_folders(config)
 
-# GPIO Config
-button_1 = 27
-button_2 = 23
-button_3 = 22
-button_4 = 17
-
-bouncetime = 300
+################################################################################
+#                                  Callbacks                                   #
+################################################################################
 
 def button_callback_1(channel):
   print("Button 1 was pushed!")
   global camera
   global overlay
-  # print(f"recording_state: {recording_state}")
-  # recording_state = True
+  global config
 
 def button_callback_2(channel):
   print("Button 2: HDR")
   global camera
   global overlay
+  global config
 
-  # TODO: Need to figure out high-speed capture (~11FPS)
+  screen_w = config["screen_w"]
+  screen_h = config["screen_h"]
 
-  screen_w = 320
-  screen_h = 240
-
-  # 12MP Pi HQ camera
-  width = 4056
-  height = 3040
+  width = config["width"]
+  height = config["height"]
 
   overlay_handler.remove_overlay(camera, overlay)
   overlay = None
@@ -171,7 +200,9 @@ def button_callback_3(channel):
   print("Button 3: Zoom")
   global camera
   global overlay
+  global config
 
+  # TODO: Add zoom to config
   current_zoom = camera.zoom
   if (current_zoom == (0.4, 0.4, 0.2, 0.2)):
     camera.zoom = (0.0, 0.0, 1.0, 1.0)
@@ -184,13 +215,13 @@ def button_callback_4(channel):
   print("Button 4: Take shot")
   global camera
   global overlay
+  global config
 
-  screen_w = 320
-  screen_h = 240
+  screen_w = config["screen_w"]
+  screen_h = config["screen_h"]
 
-  # 12MP Pi HQ camera
-  width = 4056
-  height = 3040
+  width = config["width"]
+  height = config["height"]
 
   # camera.stop_preview()
   overlay_handler.remove_overlay(camera, overlay)
@@ -219,6 +250,7 @@ def button_callback_4(channel):
 
   if (config["convert_raw"] == True):
     print("Begin conversion and save DNG raw ...")
+    json_colour_profile = document_handler.load_colour_profile(config)
     output = RPICAM2DNG().convert(stream, json_camera_profile=json_colour_profile)
 
     with open(filename, 'wb') as f:
@@ -232,24 +264,26 @@ def button_callback_4(channel):
   overlay = overlay_handler.add_overlay(camera, overlay)
   # camera.start_preview()
 
+################################################################################
+
+################################################################################
+#                                  Main Loop                                   #
+################################################################################
+
 # Start PiCam
 global camera
 
-# document_handler.check_for_folders(config)
-json_colour_profile = document_handler.load_colour_profile(config)
-
 # Init Camera
 camera = PiCamera()
-default_zoom = camera.zoom
 
 global overlay
 overlay = None
 
 # Begin Camera start-up
 camera.resolution = (screen_w, screen_h)
-camera.start_preview()
+camera.framerate = screen_fps # fps
 
-# camera.framerate = fps
+camera.start_preview()
 overlay = overlay_handler.add_overlay(camera, overlay)
 
 # Set button callbacks
@@ -272,5 +306,3 @@ message = input("Press enter to quit\n\n") # Run until someone presses enter
 camera.stop_preview()
 GPIO.cleanup() # Clean up
 overlay_handler.remove_overlay(camera, overlay)
-
-# For fixing multi-press See: https://raspberrypi.stackexchange.com/questions/28955/unwanted-multiple-presses-when-using-gpio-button-press-detection
