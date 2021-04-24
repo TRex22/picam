@@ -183,7 +183,7 @@ def button_callback_2(channel):
   dcim_videos_path = config["dcim_videos_path"]
   dcim_tmp_path = config["dcim_tmp_path"]
 
-  overlay_handler.remove_overlay(camera, overlay)
+  overlay_handler.remove_overlay(camera, overlay, config)
   overlay = None
 
   camera.resolution = (width, height)
@@ -249,7 +249,7 @@ def button_callback_4(channel):
   global overlay
   global config
 
-  overlay_handler.remove_overlay(camera, overlay)
+  overlay_handler.remove_overlay(camera, overlay, config)
   overlay = None
 
   camera_handler.take_single_shot(camera, config)
@@ -264,7 +264,7 @@ def button_callback_4(channel):
 global camera
 
 # Init Camera
-camera = PiCamera()
+camera = PiCamera(framerate=45)
 
 global overlay
 overlay = None
@@ -296,4 +296,4 @@ print(f'screen: ({screen_w}, {screen_h}), res: ({width}, {height})')
 message = input("Press enter to quit\n\n") # Run until someone presses enter
 camera.stop_preview()
 GPIO.cleanup() # Clean up
-overlay_handler.remove_overlay(camera, overlay)
+overlay_handler.remove_overlay(camera, overlay, config)
