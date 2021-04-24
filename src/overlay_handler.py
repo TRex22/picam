@@ -6,8 +6,8 @@ def add_overlay(camera, overlay, config):
   if overlay != None:
     return overlay
 
-  overlay_w = config["screen_w"] # 320
-  overlay_h = config["screen_h"] # 280
+  overlay_w = config["overlay_w"] # 320
+  overlay_h = config["overlay_h"] # 280
 
   img = generate_overlay_image(overlay_h, overlay_w)
   image_bytes = img.tobytes()

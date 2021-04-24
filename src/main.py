@@ -106,6 +106,8 @@ config = {
   "screen_fps": 60, #120, # 120 fps at 1012x760
   "screen_w": 1024, # 1012 # 320 screen res # Needs to be 4:3
   "screen_h": 768, #760 # 240 screen res # Needs to be 4:3
+  "overlay_w": 320,
+  "overlay_h": 240,
   "width": 4056, # Image width
   "height": 3040, # Image height
   "gpio": {
@@ -258,6 +260,9 @@ def button_callback_4(channel):
   dcim_videos_path = config["dcim_videos_path"]
   dcim_tmp_path = config["dcim_tmp_path"]
 
+  format = config["format"]
+  bayer = config["bayer"]
+
   overlay_handler.remove_overlay(camera, overlay)
   overlay = None
 
@@ -277,7 +282,7 @@ def button_callback_4(channel):
   camera.resolution = (width, height)
   start_time = time.time()
 
-  camera.capture(stream, config["format"], bayer=config["bayer"])
+  camera.capture(stream, format, bayer=bayer)
 
   with open(original_filename, 'wb') as f:
     f.write(stream.getbuffer())
