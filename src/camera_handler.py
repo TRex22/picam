@@ -48,7 +48,7 @@ def take_single_shot(camera, overlay, config):
 
   start_time = time.time()
 
-  # camera.framerate = config["fps"]
+  camera.framerate = 60 # config["fps"]
   camera.resolution = (width, height)
   # Set iso
 
