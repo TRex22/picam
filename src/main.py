@@ -40,6 +40,7 @@
 # - other video options
 # - Add zoom to config
 # - Lens shading control https://github.com/waveform80/picamera/pull/470
+# - Other engines like raspistill and then new gpu pipeline
 
 # For fixing multi-press See: https://raspberrypi.stackexchange.com/questions/28955/unwanted-multiple-presses-when-using-gpio-button-press-detection
 
