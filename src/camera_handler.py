@@ -48,7 +48,10 @@ def take_single_shot(camera, config):
   # Fix other settings
   # Now fix the values
   camera.shutter_speed = 150000 #camera.exposure_speed
-  camera.exposure_mode = 'off'
+  # camera.exposure_mode = 'off'
+  # off, auto, night, nightpreview, backlight, spotlight, sports, snow, beach,
+  # verylong, fixedfps, antishake, fireworks
+  camera.exposure_mode = 'auto'
   g = camera.awb_gains
   camera.awb_mode = 'off'
   camera.awb_gains = g
