@@ -65,7 +65,7 @@
 # width = 4056
 # height = 3040
 
-VERSION = "0.0.8"
+VERSION = "0.0.9"
 
 import os
 import shutil
@@ -114,6 +114,22 @@ config = {
   "overlay_h": 240,
   "width": 4056, # Image width
   "height": 3040, # Image height
+  "exposure_mode": 'auto',
+  "available_exposure_modes": [
+    "off",
+    "auto",
+    "night",
+    "nightpreview",
+    "backlight",
+    "spotlight",
+    "sports",
+    "snow",
+    "beach",
+    "verylong",
+    "fixedfps",
+    "antishake",
+    "fireworks"
+  ],
   "gpio": {
     "button_1": 27,
     "button_2": 23,
@@ -161,11 +177,14 @@ document_handler.check_for_folders(config)
 ################################################################################
 
 def button_callback_1(channel):
-  print("Button 1 was pushed!")
+  print("Button 1: Exposure")
   global camera
   global overlay
   global config
 
+  camera_handler.adjust_exposure_mode(camera, config)
+
+# TODO: Video
 def button_callback_2(channel):
   print("Button 2: HDR")
   global camera
@@ -267,7 +286,10 @@ global camera
 
 # Init Camera
 camera = PiCamera(framerate=config["fps"])
-camera.exposure_mode = 'auto'
+camera.exposure_mode = config["exposure_mode"]
+
+# Sane option?
+camera.iso = 200
 
 global overlay
 overlay = None

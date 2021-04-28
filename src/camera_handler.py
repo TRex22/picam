@@ -14,6 +14,27 @@ from pydng.core import RAW2DNG, DNGTags, Tag
 
 import document_handler
 
+def adjust_exposure_mode(camera, config):
+  # Fix other settings
+  # Now fix the values
+  # camera.shutter_speed = 150000 #camera.exposure_speed
+  # # camera.exposure_mode = 'off'
+  # # off, auto, night, nightpreview, backlight, spotlight, sports, snow, beach,
+  # # verylong, fixedfps, antishake, fireworks
+  # camera.exposure_mode = 'auto'
+  # g = camera.awb_gains
+  # camera.awb_mode = 'off'
+  # camera.awb_gains = g
+
+  idex = config["available_exposure_modes"].index(config["exposure_mode"])
+
+  if idex < len(config["available_exposure_modes"]):
+    camera.exposure_mode = config["available_exposure_modes"][idex]
+  else
+    camera.exposure_mode = 'off'
+
+  camera.annotate_text = f'{camera.annotate_text} - {camera.exposure_mode}'
+
 def take_single_shot(camera, config):
   screen_w = config["screen_w"]
   screen_h = config["screen_h"]
@@ -43,18 +64,6 @@ def take_single_shot(camera, config):
 
   start_time = time.time()
   camera.resolution = (width, height)
-  # Set iso
-
-  # Fix other settings
-  # Now fix the values
-  camera.shutter_speed = 150000 #camera.exposure_speed
-  # camera.exposure_mode = 'off'
-  # off, auto, night, nightpreview, backlight, spotlight, sports, snow, beach,
-  # verylong, fixedfps, antishake, fireworks
-  camera.exposure_mode = 'auto'
-  g = camera.awb_gains
-  camera.awb_mode = 'off'
-  camera.awb_gains = g
 
   print(f'screen: ({screen_w}, {screen_h}), res: ({width}, {height}), shutter_speed: {camera.shutter_speed}')
 
