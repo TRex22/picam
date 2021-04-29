@@ -1,14 +1,5 @@
 import camera_handler
 
-
-
-
-"available_menu_items"
-"menu_item"
-
-menu_handler.select_menu_item(camera, config)
-menu_handler.select_option(camera, config)
-
 def select_menu_item(camera, config):
   idex = config["available_menu_items"].index(config["menu_item"]) + 1
 
