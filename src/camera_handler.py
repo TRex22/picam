@@ -33,7 +33,7 @@ def adjust_exposure_mode(camera, config):
   if idex < len(config["available_exposure_modes"]):
     camera.exposure_mode = config["available_exposure_modes"][idex]
   else:
-    camera.exposure_mode = 'off'
+    camera.exposure_mode = config["default_exposure_mode"]
 
   overlay_handler.display_text(camera, 'Photo Mode', config)
 
@@ -46,12 +46,29 @@ def adjust_iso(camera, config):
   if idex < len(config["available_isos"]):
     camera.iso = config["available_isos"][idex]
   else:
-    camera.iso = 0
+    camera.iso = config["default_iso"]
 
   overlay_handler.display_text(camera, 'Photo Mode', config)
 
   config["iso"] = camera.iso
   print(f'iso: {config["iso"]}')
+
+def set_hdr(camera, config):
+  config["hdr"] = not config["hdr"]
+
+def set_video(camera, config):
+  config["video"] = not config["video"]
+
+def adjust_encoding(camera, config):
+  config["encoding"] = not config["encoding"]
+
+def zoom(camera, config):
+  current_zoom = camera.zoom
+
+  if (current_zoom == config["max_zoom"]):
+    camera.zoom = config["default_zoom"]
+  else:
+    camera.zoom = config["max_zoom"]
 
 def take_hdr_shot(camera, config):
   screen_w = config["screen_w"]

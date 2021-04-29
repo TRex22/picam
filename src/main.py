@@ -1,48 +1,4 @@
-# TODO List:
-# - histograms
-# - profiles
-# - logging
-# - Focus assist
-# - Contrast Hist
-# - Edge detect algo
-# - Camera Intrinsics tool
-# - Web control
-# - Motion vectors
-# - Improve tools
-# - Cleanup test
-# - Write actual tests
-# - Histogram and analysis tools
-# - RAW sensor capture: https://raspberrypi.stackexchange.com/questions/51191/how-can-i-stop-the-overlay-of-images-between-my-pi-camera-and-flir-camera
-# - ISO
-# - Shutter Speed
-# - Resolution (FPS as label)
-# - FPS option (wrt resolution)
-# - Menus
-# - Proper overlay
-# - Audio?
-# - sharpness
-# - Contrast
-# - brightness
-# - saturation
-# - ev compression
-# - exposure mode
-# - awb - auto white balance
-# - image effect
-# - colour effect
-# - metering mode?
-# - roi
-# - dynamic range compression
-# - image statistics
-# - awb gains
-# - sensor input mode??? / video
-# - bitrate
-# - video stabilisation
-# - other video options
-# - Add zoom to config
-# - Lens shading control https://github.com/waveform80/picamera/pull/470
-# - Other engines like raspistill and then new gpu pipeline
-# - Camera reinitialize and better preview fps
-
+# Notes:
 # For fixing multi-press See: https://raspberrypi.stackexchange.com/questions/28955/unwanted-multiple-presses-when-using-gpio-button-press-detection
 
 # Supported file types: https://picamera.readthedocs.io/en/release-1.10/api_camera.html#picamera.camera.PiCamera.capture
@@ -65,7 +21,7 @@
 # width = 4056
 # height = 3040
 
-VERSION = "0.0.9"
+VERSION = "0.0.11"
 
 import os
 import shutil
@@ -88,6 +44,7 @@ from PIL import Image, ImageDraw, ImageFont
 import document_handler
 import overlay_handler
 import camera_handler
+import menu_handler
 
 ################################################################################
 ##                                    Config                                  ##
@@ -115,6 +72,9 @@ config = {
   "width": 4056, # Image width
   "height": 3040, # Image height
   "exposure_mode": 'auto',
+  "default_exposure_mode": 'auto',
+  "default_zoom": (0.0, 0.0, 1.0, 1.0),
+  "max_zoom": (0.4, 0.4, 0.2, 0.2),
   "available_exposure_modes": [
     "off",
     "auto",
@@ -130,8 +90,16 @@ config = {
     "antishake",
     "fireworks"
   ],
-  "available_isos": [0, 100, 200, 320, 400, 500, 640, 800], # 0 is auto
-  "iso": 800, # should shift to 0 - auto
+  "available_isos": [0, 100, 200, 320, 400, 500, 640, 800, 1600, 3200, 6400], # 0 is auto
+  "iso": 6400, # 800 / should shift to 0 - auto
+  "default_iso": 0,
+  "available_menu_items": ["auto", "exposure_mode", "iso", "hdr", "video", "encoding"],
+  "menu_item": "auto",
+  "default_menu_item": "auto",
+  "hdr": False,
+  "video": False,
+  "recording": True,
+  "encoding": False, # TODO
   "gpio": {
     "button_1": 27,
     "button_2": 23,
@@ -170,8 +138,6 @@ button_4 = config["gpio"]["button_4"]
 
 bouncetime = config["gpio"]["bouncetime"]
 
-################################################################################
-
 document_handler.check_for_folders(config)
 
 ################################################################################
@@ -179,21 +145,20 @@ document_handler.check_for_folders(config)
 ################################################################################
 
 def button_callback_1(channel):
-  print("Button 1: Exposure")
+  print("Button 1: Menu")
   global camera
   global overlay
   global config
 
-  camera_handler.adjust_exposure_mode(camera, config)
+  menu_handler.select_menu_item(camera, config)
 
-# TODO: Video
 def button_callback_2(channel):
-  print("Button 2: ISO")
+  print("Button 2: Option")
   global camera
   global overlay
   global config
 
-  camera_handler.adjust_iso(camera, config)
+  menu_handler.select_option(camera, config)
 
 def button_callback_3(channel):
   print("Button 3: Zoom")
@@ -201,12 +166,7 @@ def button_callback_3(channel):
   global overlay
   global config
 
-  current_zoom = camera.zoom
-  if (current_zoom == (0.4, 0.4, 0.2, 0.2)):
-    camera.zoom = (0.0, 0.0, 1.0, 1.0)
-  else:
-    camera.zoom = (0.4, 0.4, 0.2, 0.2)
-
+  camera_handler.zoom(camera, config)
   overlay = overlay_handler.add_overlay(camera, overlay, config)
 
 def button_callback_4(channel):
@@ -218,7 +178,10 @@ def button_callback_4(channel):
   overlay_handler.remove_overlay(camera, overlay, config)
   overlay = None
 
-  camera_handler.take_single_shot(camera, config)
+  if config["hdr"]:
+    camera_handler.take_hdr_shot(camera, config)
+  else:
+    camera_handler.take_single_shot(camera, config)
 
   overlay = overlay_handler.add_overlay(camera, overlay, config)
 

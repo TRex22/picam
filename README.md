@@ -40,3 +40,50 @@ https://torger.se/anders/dcamprof.html#download
 ./dcamprof.exe dcp2json "C:/development/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Skin+Sky Look.dcp" "C:/development/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Skin+Sky Look.json"
 ./dcamprof.exe dcp2json "C:/development/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Neutral Look.dcp" "C:/development/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Neutral Look.json"
 ```
+
+# TODO List:
+  - histograms
+  - profiles
+  - logging
+  - Focus assist
+  - Astral-photography modes
+  - Face detection
+  - Contrast Hist
+  - Edge detect algo
+  - Camera Intrinsics tool
+  - Web control
+  - Motion vectors
+  - Improve tools
+  - Cleanup test
+  - Write actual tests
+  - Histogram and analysis tools
+  - RAW sensor capture: https://raspberrypi.stackexchange.com/questions/51191/how-can-i-stop-the-overlay-of-images-between-my-pi-camera-and-flir-camera
+  - ISO
+  - Shutter Speed
+  - Resolution (FPS as label)
+  - FPS option (wrt resolution)
+  - Menus
+  - Proper overlay
+  - Audio?
+  - sharpness
+  - Contrast
+  - brightness
+  - saturation
+  - ev compression
+  - exposure mode
+  - awb - auto white balance
+  - image effect
+  - colour effect
+  - metering mode?
+  - roi
+  - dynamic range compression
+  - image statistics
+  - awb gains
+  - sensor input mode??? / video
+  - bitrate
+  - video stabilisation
+  - other video options
+  - Add zoom to config
+  - Lens shading control https://github.com/waveform80/picamera/pull/470
+  - Other engines like raspistill and then new gpu pipeline
+  - Camera reinitialize and better preview fps
