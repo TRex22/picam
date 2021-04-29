@@ -12,7 +12,9 @@ import RPi.GPIO as GPIO
 from pydng.core import RPICAM2DNG
 from pydng.core import RAW2DNG, DNGTags, Tag
 
+# Modules
 import document_handler
+import overlay_handler
 
 def adjust_exposure_mode(camera, config):
   # Fix other settings
