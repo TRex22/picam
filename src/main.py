@@ -208,6 +208,7 @@ camera.framerate = screen_fps # fps
 
 camera.start_preview()
 overlay = overlay_handler.add_overlay(camera, overlay, config)
+overlay_handler.display_text(camera, '', config)
 
 # Set button callbacks
 # GPIO.setwarnings(False) # Ignore warning for now

@@ -1,3 +1,4 @@
+import overlay_handler
 import camera_handler
 
 def select_menu_item(camera, config):

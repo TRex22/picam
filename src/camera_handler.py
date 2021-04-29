@@ -35,7 +35,7 @@ def adjust_exposure_mode(camera, config):
   else:
     camera.exposure_mode = config["default_exposure_mode"]
 
-  overlay_handler.display_text(camera, 'Photo Mode', config)
+  overlay_handler.display_text(camera, '', config)
 
   config["exposure_mode"] = camera.exposure_mode
   print(f'exposure_mode: {config["exposure_mode"]}')
@@ -48,7 +48,7 @@ def adjust_iso(camera, config):
   else:
     camera.iso = config["default_iso"]
 
-  overlay_handler.display_text(camera, 'Photo Mode', config)
+  overlay_handler.display_text(camera, '', config)
 
   config["iso"] = camera.iso
   print(f'iso: {config["iso"]}')
