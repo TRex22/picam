@@ -55,12 +55,18 @@ def adjust_iso(camera, config):
 
 def set_hdr(camera, config):
   config["hdr"] = not config["hdr"]
+  overlay_handler.display_text(camera, '', config)
+  print(f'hdr: {config["hdr"]}')
 
 def set_video(camera, config):
   config["video"] = not config["video"]
+  overlay_handler.display_text(camera, '', config)
+  print(f'video: {config["video"]}')
 
 def adjust_encoding(camera, config):
   config["encoding"] = not config["encoding"]
+  overlay_handler.display_text(camera, '', config)
+  print(f'encoding: {config["encoding"]}')
 
 def zoom(camera, config):
   current_zoom = camera.zoom
