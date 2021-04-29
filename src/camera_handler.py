@@ -26,7 +26,7 @@ def adjust_exposure_mode(camera, config):
   # camera.awb_mode = 'off'
   # camera.awb_gains = g
 
-  idex = config["available_exposure_modes"].index(config["exposure_mode"])
+  idex = config["available_exposure_modes"].index(config["exposure_mode"]) + 1
 
   if idex < len(config["available_exposure_modes"]):
     camera.exposure_mode = config["available_exposure_modes"][idex]
