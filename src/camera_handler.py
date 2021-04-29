@@ -33,7 +33,9 @@ def adjust_exposure_mode(camera, config):
   else:
     camera.exposure_mode = 'off'
 
-  camera.annotate_text = f'{camera.annotate_text} - {camera.exposure_mode}'
+  # camera.annotate_text = f'{camera.annotate_text} - {camera.exposure_mode}'
+  camera.annotate_text = f'Photo Mode - {camera.exposure_mode}'
+  config["exposure_mode"] = camera.exposure_mode
 
 def take_single_shot(camera, config):
   screen_w = config["screen_w"]
