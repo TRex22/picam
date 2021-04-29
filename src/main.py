@@ -98,7 +98,7 @@ config = {
   "default_menu_item": "auto",
   "hdr": False,
   "video": False,
-  "recording": True,
+  "recording": False,
   "encoding": False, # TODO
   "gpio": {
     "button_1": 27,

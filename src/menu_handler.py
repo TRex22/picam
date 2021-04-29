@@ -8,7 +8,7 @@ def select_menu_item(camera, config):
   else:
     config["menu_item"] = config["default_menu_item"]
 
-  overlay_handler.display_text(camera, f'{camera.annotate_text}\n', config)
+  overlay_handler.display_text(camera, '', config)
 
   config["iso"] = camera.iso
   print(f'iso: {config["iso"]}')
