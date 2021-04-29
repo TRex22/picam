@@ -84,9 +84,6 @@ def take_hdr_shot(camera, config):
   dcim_videos_path = config["dcim_videos_path"]
   dcim_tmp_path = config["dcim_tmp_path"]
 
-  overlay_handler.remove_overlay(camera, overlay, config)
-  overlay = None
-
   camera.resolution = (width, height)
 
   start_time = time.time()
@@ -123,7 +120,6 @@ def take_hdr_shot(camera, config):
   # camera.exposure_compensation = original_exposure_compensation
 
   camera.resolution = (screen_w, screen_h)
-  overlay = overlay_handler.add_overlay(camera, overlay, config)
 
   # for file in filenames:
   # shutil.copyfile(src, dst)
