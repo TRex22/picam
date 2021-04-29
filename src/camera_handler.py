@@ -16,6 +16,12 @@ from pydng.core import RAW2DNG, DNGTags, Tag
 import document_handler
 import overlay_handler
 
+def auto_mode(camera, config):
+  camera.iso = config["default_iso"]
+  camera.exposure_mode = config["default_exposure_mode"]
+  overlay_handler.display_text(camera, '', config)
+  print(f'auto mode!')
+
 def adjust_exposure_mode(camera, config):
   # Fix other settings
   # Now fix the values

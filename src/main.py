@@ -195,9 +195,7 @@ global camera
 # Init Camera
 # camera = PiCamera(framerate=config["fps"])
 camera = PiCamera(framerate=config["fps"])
-# camera.exposure_mode = config["exposure_mode"]
-camera_handler.adjust_exposure_mode(camera, config)
-camera_handler.adjust_iso(camera, config)
+camera_handler.auto_mode(camera, config)
 
 global overlay
 overlay = None
