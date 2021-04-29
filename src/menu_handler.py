@@ -10,9 +10,7 @@ def select_menu_item(camera, config):
     config["menu_item"] = config["default_menu_item"]
 
   overlay_handler.display_text(camera, '', config)
-
-  config["iso"] = camera.iso
-  print(f'iso: {config["iso"]}')
+  print(f'menu_item: {config["menu_item"]}')
 
 def select_option(camera, config):
   if config["menu_item"] == "auto":
