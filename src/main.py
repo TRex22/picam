@@ -90,8 +90,8 @@ config = {
     "antishake",
     "fireworks"
   ],
-  "available_isos": [0, 100, 200, 320, 400, 500, 640, 800, 1600, 3200, 6400], # 0 is auto
-  "iso": 6400, # 800 / should shift to 0 - auto
+  "available_isos": [0, 100, 200, 320, 400, 500, 640, 800, 1600], # 0 is auto / 3200, 6400
+  "iso": 1600, # 800 / should shift to 0 - auto
   "default_iso": 0,
   "available_menu_items": ["auto", "exposure_mode", "iso", "hdr", "video", "encoding"],
   "menu_item": "auto",
