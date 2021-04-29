@@ -16,6 +16,8 @@ def select_option(camera, config):
   if config["menu_item"] == "auto":
     camera.iso = config["default_iso"]
     camera.exposure_mode = config["default_exposure_mode"]
+    overlay_handler.display_text(camera, '', config)
+    print(f'auto mode!')
   if config["menu_item"] == "exposure_mode":
     camera_handler.adjust_exposure_mode(camera, config)
   if config["menu_item"] == "iso":
