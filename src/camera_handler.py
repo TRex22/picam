@@ -30,7 +30,7 @@ def adjust_exposure_mode(camera, config):
 
   if idex < len(config["available_exposure_modes"]):
     camera.exposure_mode = config["available_exposure_modes"][idex]
-  else
+  else:
     camera.exposure_mode = 'off'
 
   camera.annotate_text = f'{camera.annotate_text} - {camera.exposure_mode}'
