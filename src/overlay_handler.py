@@ -1,7 +1,7 @@
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
-def display_text(camera, text = '', config):
+def display_text(camera, text, config):
   # camera.annotate_text = f'{camera.annotate_text} - {camera.exposure_mode}'
   if config["video"]:
     mode = "Photo Mode"
@@ -9,7 +9,7 @@ def display_text(camera, text = '', config):
     mode = "Video Mode"
 
   menu_item = config["menu_item"]
-  camera.annotate_text = f'{mode} - exposure mode: {camera.exposure_mode}, iso: {camera.iso}, hdr: {config["hdr"]}\nSelected Menu Item: {config["menu_item"]}'
+  camera.annotate_text = f'{mode} - exposure mode: {camera.exposure_mode}, iso: {camera.iso}, hdr: {config["hdr"]}\nSelected Menu Item: {config["menu_item"]}\n{text}'
 
 # https://picamera.readthedocs.io/en/release-1.10/recipes1.html#overlaying-images-on-the-preview
 def add_overlay(camera, overlay, config):
