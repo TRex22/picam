@@ -130,6 +130,8 @@ config = {
     "antishake",
     "fireworks"
   ],
+  "available_isos": [0, 100, 200, 320, 400, 500, 640, 800], # 0 is auto
+  "iso": 800, # should shift to 0 - auto
   "gpio": {
     "button_1": 27,
     "button_2": 23,
@@ -186,69 +188,12 @@ def button_callback_1(channel):
 
 # TODO: Video
 def button_callback_2(channel):
-  print("Button 2: HDR")
+  print("Button 2: ISO")
   global camera
   global overlay
   global config
 
-  screen_w = config["screen_w"]
-  screen_h = config["screen_h"]
-
-  width = config["width"]
-  height = config["height"]
-
-  dcim_path = config["dcim_path"]
-  dcim_images_path_raw = config["dcim_images_path_raw"]
-  dcim_original_images_path = config["dcim_original_images_path"]
-  dcim_hdr_images_path = config["dcim_hdr_images_path"]
-  dcim_videos_path = config["dcim_videos_path"]
-  dcim_tmp_path = config["dcim_tmp_path"]
-
-  overlay_handler.remove_overlay(camera, overlay, config)
-  overlay = None
-
-  camera.resolution = (width, height)
-
-  start_time = time.time()
-  available_exposure_compensations = [-25, -20, -15, -10, -5, 0, 5, 10, 15, 20, 25] # TODO
-
-  # SEE: https://github.com/KEClaytor/pi-hdr-timelapse
-  nimages = 5 #10 #2160
-  exposure_min = 10
-  exposure_max = 80 #90
-  exp_step = 5
-
-  exp_step = (exposure_max - exposure_min) / (nimages - 1.0)
-  exposure_times = range(exposure_min, exposure_max + 1, int(exp_step))
-
-  filenames = []
-
-  existing_files = glob.glob(f'{dcim_hdr_images_path}/*.{format}')
-  filecount = len(existing_files)
-  frame_count = filecount
-
-  original_brightness = camera.brightness
-  # original_exposure_compensation = camera.exposure_compensation
-
-  for step in exposure_times: # available_exposure_compensations:
-    filename = f'{dcim_hdr_images_path}/{frame_count}_{step}_HDR.{format}'
-    # filename = f'{dcim_tmp_path}/{frame_count}_{step}_HDR.{format}'
-
-    camera.brightness = step
-    # camera.exposure_compensation = step
-
-    camera.capture(filename, format, bayer=True)
-
-  camera.brightness = original_brightness
-  # camera.exposure_compensation = original_exposure_compensation
-
-  camera.resolution = (screen_w, screen_h)
-  overlay = overlay_handler.add_overlay(camera, overlay, config)
-
-  # for file in filenames:
-  # shutil.copyfile(src, dst)
-
-  print("--- %s seconds ---" % (time.time() - start_time))
+  camera_handler.adjust_iso(camera, config)
 
 def button_callback_3(channel):
   print("Button 3: Zoom")
@@ -285,11 +230,11 @@ def button_callback_4(channel):
 global camera
 
 # Init Camera
+# camera = PiCamera(framerate=config["fps"])
 camera = PiCamera(framerate=config["fps"])
-camera.exposure_mode = config["exposure_mode"]
-
-# Sane option?
-camera.iso = 200
+# camera.exposure_mode = config["exposure_mode"]
+camera_handler.adjust_exposure_mode(camera, config)
+camera_handler.adjust_iso(camera, config)
 
 global overlay
 overlay = None
