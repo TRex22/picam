@@ -28,7 +28,7 @@ def add_overlay(camera, overlay, config):
   # Image.new("RGB", (320, 240))
   # overlay = camera.add_overlay(Image.fromarray(a, 'RGB'), size=(320,240), layer=3, alpha=64)
   overlay = camera.add_overlay(image_bytes, size=img.size, layer=3, alpha=64, format="rgba")
-  camera.annotate_text = 'Photo mode' # TODO: Cleanup
+  display_text(camera, '', config)
 
   camera.framerate = config["screen_fps"]
 
