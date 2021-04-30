@@ -62,7 +62,7 @@ config = {
   "filetype": '.dng',
   "bpp": 12,
   "format": 'jpeg',
-  "video_format": 'mp4',
+  "video_format": 'h264',
   "bayer": True,
   "fps": 40, # 60 # 10 fps max at full resolution
   "screen_fps": 40, # 120 fps at 1012x760
