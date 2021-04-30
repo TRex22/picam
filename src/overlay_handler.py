@@ -15,7 +15,8 @@ def display_text(camera, text, config):
     mode = "Photo Mode"
 
   menu_item = config["menu_item"]
-  text = f'{text}\nShutter Speed: {compute_shutter_speed_from_us(config['shutter_speed'])}'
+  shutter_speed_text = compute_shutter_speed_from_us(config["shutter_speed"])
+  text = f'{text}\nShutter Speed: {shutter_speed_text}'
   camera.annotate_text = f'{mode} - exposure mode: {camera.exposure_mode}, iso: {camera.iso}, hdr: {config["hdr"]}\nSelected Menu Item: {config["menu_item"]}\n{text}'
 
 # https://picamera.readthedocs.io/en/release-1.10/recipes1.html#overlaying-images-on-the-preview
