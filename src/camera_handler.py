@@ -63,13 +63,13 @@ def adjust_shutter_speed(camera, config):
   idex = config["available_shutter_speeds"].index(config["shutter_speed"]) + 1
 
   if idex < len(config["available_shutter_speeds"]):
-    camera.shutter_speed = config["available_shutter_speeds"][idex]
+    config["shutter_speed"] = config["available_shutter_speeds"][idex]
   else:
-    camera.shutter_speed = config["default_shutter_speed"]
+    config["shutter_speed"] = config["default_shutter_speed"]
 
   overlay_handler.display_text(camera, '', config)
 
-  config["shutter_speed"] = camera.shutter_speed
+  camera.shutter_speed = config["shutter_speed"]
   print(f'shutter_speed: {config["shutter_speed"]}')
 
 def set_hdr(camera, config):
