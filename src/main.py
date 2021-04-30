@@ -77,8 +77,8 @@ config = {
   "default_zoom": (0.0, 0.0, 1.0, 1.0),
   "max_zoom": (0.4, 0.4, 0.2, 0.2),
   "available_exposure_modes": [
+    "auto", # default has to be first in the list
     "off",
-    "auto",
     "night",
     "nightpreview",
     "backlight",
@@ -97,7 +97,7 @@ config = {
   "available_shutter_speeds": [0, 1000, 2000, 4000, 8000, 16667, 33333, 66667, 125000, 250000, 500000, 1000000, 2000000, 5000000, 10000000, 15000000, 20000000, 25000000, 30000000, 35000000, 40000000],
   "shutter_speed": 0,
   "default_shutter_speed": 0,
-  "available_menu_items": ["auto", "off", "exposure_mode", "iso", "shutter_speed", "hdr", "video", "resolution", "encoding"],
+  "available_menu_items": ["auto", "exposure_mode", "iso", "shutter_speed", "hdr", "video", "resolution", "encoding"],
   "menu_item": "auto",
   "default_menu_item": "auto",
   "hdr": False,
