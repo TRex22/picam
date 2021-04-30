@@ -62,7 +62,7 @@ config = {
   "filetype": '.dng',
   "bpp": 12,
   "format": 'jpeg',
-  "video_format": 'h264',
+  "video_format": 'mjpeg', # h264
   "bayer": True,
   "fps": 40, # 60 # 10 fps max at full resolution
   "screen_fps": 40, # 120 fps at 1012x760
@@ -72,6 +72,8 @@ config = {
   "overlay_h": 240,
   "width": 4056, # Image width
   "height": 3040, # Image height
+  "video_width": 4056,
+  "video_height": 3040,
   "exposure_mode": 'auto',
   "default_exposure_mode": 'auto',
   "default_zoom": (0.0, 0.0, 1.0, 1.0),

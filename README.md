@@ -90,3 +90,6 @@ https://torger.se/anders/dcamprof.html#download
   - https://raspberrypi.stackexchange.com/questions/61427/can-i-set-the-cameras-shutter-speed-for-video
   - Motion MMAL https://www.raspberrypi.org/forums/viewtopic.php?f=43&t=44966&p=1116392&hilit=motion+mmal#p1116392
   - metering modes (average,spot,backlit,matrix)
+  - continuous shot
+  - stop motion mode
+  - astro-photography mode
