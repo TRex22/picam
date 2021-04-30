@@ -1,6 +1,24 @@
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
+def compute_shutter_speed_from_us(us):
+  if us == 0:
+    return 'auto'
+
+  return f'1/{1000000/us} ({us} us.)'
+
+def display_text(camera, text, config):
+  # camera.annotate_text = f'{camera.annotate_text} - {camera.exposure_mode}'
+  if config["video"]:
+    mode = "Video Mode"
+  else:
+    mode = "Photo Mode"
+
+  menu_item = config["menu_item"]
+  shutter_speed_text = compute_shutter_speed_from_us(config["shutter_speed"])
+  text = f'{text}\nShutter Speed: {shutter_speed_text}, set: {camera.shutter_speed}'
+  camera.annotate_text = f'{mode} - exposure mode: {camera.exposure_mode}, iso: {camera.iso}, hdr: {config["hdr"]}\nSelected Menu Item: {config["menu_item"]}\n{text}'
+
 # https://picamera.readthedocs.io/en/release-1.10/recipes1.html#overlaying-images-on-the-preview
 def add_overlay(camera, overlay, config):
   if overlay != None:
@@ -18,7 +36,7 @@ def add_overlay(camera, overlay, config):
   # Image.new("RGB", (320, 240))
   # overlay = camera.add_overlay(Image.fromarray(a, 'RGB'), size=(320,240), layer=3, alpha=64)
   overlay = camera.add_overlay(image_bytes, size=img.size, layer=3, alpha=64, format="rgba")
-  camera.annotate_text = 'Photo mode' # TODO: Cleanup
+  display_text(camera, '', config)
 
   camera.framerate = config["screen_fps"]
 

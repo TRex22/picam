@@ -1,48 +1,4 @@
-# TODO List:
-# - histograms
-# - profiles
-# - logging
-# - Focus assist
-# - Contrast Hist
-# - Edge detect algo
-# - Camera Intrinsics tool
-# - Web control
-# - Motion vectors
-# - Improve tools
-# - Cleanup test
-# - Write actual tests
-# - Histogram and analysis tools
-# - RAW sensor capture: https://raspberrypi.stackexchange.com/questions/51191/how-can-i-stop-the-overlay-of-images-between-my-pi-camera-and-flir-camera
-# - ISO
-# - Shutter Speed
-# - Resolution (FPS as label)
-# - FPS option (wrt resolution)
-# - Menus
-# - Proper overlay
-# - Audio?
-# - sharpness
-# - Contrast
-# - brightness
-# - saturation
-# - ev compression
-# - exposure mode
-# - awb - auto white balance
-# - image effect
-# - colour effect
-# - metering mode?
-# - roi
-# - dynamic range compression
-# - image statistics
-# - awb gains
-# - sensor input mode??? / video
-# - bitrate
-# - video stabilisation
-# - other video options
-# - Add zoom to config
-# - Lens shading control https://github.com/waveform80/picamera/pull/470
-# - Other engines like raspistill and then new gpu pipeline
-# - Camera reinitialize and better preview fps
-
+# Notes:
 # For fixing multi-press See: https://raspberrypi.stackexchange.com/questions/28955/unwanted-multiple-presses-when-using-gpio-button-press-detection
 
 # Supported file types: https://picamera.readthedocs.io/en/release-1.10/api_camera.html#picamera.camera.PiCamera.capture
@@ -65,7 +21,7 @@
 # width = 4056
 # height = 3040
 
-VERSION = "0.0.8"
+VERSION = "0.0.12"
 
 import os
 import shutil
@@ -88,6 +44,7 @@ from PIL import Image, ImageDraw, ImageFont
 import document_handler
 import overlay_handler
 import camera_handler
+import menu_handler
 
 ################################################################################
 ##                                    Config                                  ##
@@ -105,6 +62,7 @@ config = {
   "filetype": '.dng',
   "bpp": 12,
   "format": 'jpeg',
+  "video_format": 'h264', # mjpeg, h264 TODO: Make into an option
   "bayer": True,
   "fps": 40, # 60 # 10 fps max at full resolution
   "screen_fps": 40, # 120 fps at 1012x760
@@ -114,6 +72,40 @@ config = {
   "overlay_h": 240,
   "width": 4056, # Image width
   "height": 3040, # Image height
+  "video_width": 4056,
+  "video_height": 3040,
+  "exposure_mode": 'auto',
+  "default_exposure_mode": 'auto',
+  "default_zoom": (0.0, 0.0, 1.0, 1.0),
+  "max_zoom": (0.4, 0.4, 0.2, 0.2),
+  "available_exposure_modes": [
+    "auto", # default has to be first in the list
+    "off",
+    "night",
+    "nightpreview",
+    "backlight",
+    "spotlight",
+    "sports",
+    "snow",
+    "beach",
+    "verylong",
+    "fixedfps",
+    "antishake",
+    "fireworks"
+  ],
+  "available_isos": [0, 100, 200, 320, 400, 500, 640, 800, 1600], # 0 is auto / 3200, 6400
+  "iso": 0, # 800 / should shift to 0 - auto
+  "default_iso": 0,
+  "available_shutter_speeds": [0, 100, 500, 1000, 2000, 4000, 8000, 16667, 33333, 66667, 125000, 250000, 500000, 1000000, 2000000, 5000000, 10000000, 15000000, 20000000, 25000000, 30000000, 35000000, 40000000],
+  "shutter_speed": 0,
+  "default_shutter_speed": 0,
+  "available_menu_items": ["auto", "exposure_mode", "iso", "shutter_speed", "hdr", "video", "resolution", "encoding"],
+  "menu_item": "auto",
+  "default_menu_item": "auto",
+  "hdr": False,
+  "video": False,
+  "recording": False,
+  "encoding": False, # TODO
   "gpio": {
     "button_1": 27,
     "button_2": 23,
@@ -152,8 +144,6 @@ button_4 = config["gpio"]["button_4"]
 
 bouncetime = config["gpio"]["bouncetime"]
 
-################################################################################
-
 document_handler.check_for_folders(config)
 
 ################################################################################
@@ -161,75 +151,20 @@ document_handler.check_for_folders(config)
 ################################################################################
 
 def button_callback_1(channel):
-  print("Button 1 was pushed!")
+  print("Button 1: Menu")
   global camera
   global overlay
   global config
+
+  menu_handler.select_menu_item(camera, config)
 
 def button_callback_2(channel):
-  print("Button 2: HDR")
+  print("Button 2: Option")
   global camera
   global overlay
   global config
 
-  screen_w = config["screen_w"]
-  screen_h = config["screen_h"]
-
-  width = config["width"]
-  height = config["height"]
-
-  dcim_path = config["dcim_path"]
-  dcim_images_path_raw = config["dcim_images_path_raw"]
-  dcim_original_images_path = config["dcim_original_images_path"]
-  dcim_hdr_images_path = config["dcim_hdr_images_path"]
-  dcim_videos_path = config["dcim_videos_path"]
-  dcim_tmp_path = config["dcim_tmp_path"]
-
-  overlay_handler.remove_overlay(camera, overlay, config)
-  overlay = None
-
-  camera.resolution = (width, height)
-
-  start_time = time.time()
-  available_exposure_compensations = [-25, -20, -15, -10, -5, 0, 5, 10, 15, 20, 25] # TODO
-
-  # SEE: https://github.com/KEClaytor/pi-hdr-timelapse
-  nimages = 5 #10 #2160
-  exposure_min = 10
-  exposure_max = 80 #90
-  exp_step = 5
-
-  exp_step = (exposure_max - exposure_min) / (nimages - 1.0)
-  exposure_times = range(exposure_min, exposure_max + 1, int(exp_step))
-
-  filenames = []
-
-  existing_files = glob.glob(f'{dcim_hdr_images_path}/*.{format}')
-  filecount = len(existing_files)
-  frame_count = filecount
-
-  original_brightness = camera.brightness
-  # original_exposure_compensation = camera.exposure_compensation
-
-  for step in exposure_times: # available_exposure_compensations:
-    filename = f'{dcim_hdr_images_path}/{frame_count}_{step}_HDR.{format}'
-    # filename = f'{dcim_tmp_path}/{frame_count}_{step}_HDR.{format}'
-
-    camera.brightness = step
-    # camera.exposure_compensation = step
-
-    camera.capture(filename, format, bayer=True)
-
-  camera.brightness = original_brightness
-  # camera.exposure_compensation = original_exposure_compensation
-
-  camera.resolution = (screen_w, screen_h)
-  overlay = overlay_handler.add_overlay(camera, overlay, config)
-
-  # for file in filenames:
-  # shutil.copyfile(src, dst)
-
-  print("--- %s seconds ---" % (time.time() - start_time))
+  menu_handler.select_option(camera, config)
 
 def button_callback_3(channel):
   print("Button 3: Zoom")
@@ -237,12 +172,7 @@ def button_callback_3(channel):
   global overlay
   global config
 
-  current_zoom = camera.zoom
-  if (current_zoom == (0.4, 0.4, 0.2, 0.2)):
-    camera.zoom = (0.0, 0.0, 1.0, 1.0)
-  else:
-    camera.zoom = (0.4, 0.4, 0.2, 0.2)
-
+  camera_handler.zoom(camera, config)
   overlay = overlay_handler.add_overlay(camera, overlay, config)
 
 def button_callback_4(channel):
@@ -254,7 +184,13 @@ def button_callback_4(channel):
   overlay_handler.remove_overlay(camera, overlay, config)
   overlay = None
 
-  camera_handler.take_single_shot(camera, config)
+  if config["video"]:
+    camera_handler.trigger_video(camera, config)
+  else:
+    if config["hdr"]:
+      camera_handler.take_hdr_shot(camera, config)
+    else:
+      camera_handler.take_single_shot(camera, config)
 
   overlay = overlay_handler.add_overlay(camera, overlay, config)
 
@@ -266,8 +202,9 @@ def button_callback_4(channel):
 global camera
 
 # Init Camera
+# camera = PiCamera(framerate=config["fps"])
 camera = PiCamera(framerate=config["fps"])
-camera.exposure_mode = 'auto'
+camera_handler.auto_mode(camera, config)
 
 global overlay
 overlay = None
@@ -278,6 +215,7 @@ camera.framerate = screen_fps # fps
 
 camera.start_preview()
 overlay = overlay_handler.add_overlay(camera, overlay, config)
+overlay_handler.display_text(camera, '', config)
 
 # Set button callbacks
 # GPIO.setwarnings(False) # Ignore warning for now
