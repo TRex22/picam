@@ -234,4 +234,4 @@ def trigger_video(camera, config):
     print(f'screen: ({screen_w}, {screen_h}), res: ({width}, {height}), shutter_speed: {camera.shutter_speed}')
 
     config["recording"] = True
-    camera.start_recording(stream, format)
+    camera.start_recording(original_filename, format)
