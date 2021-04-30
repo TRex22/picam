@@ -19,6 +19,8 @@ import overlay_handler
 def auto_mode(camera, config):
   camera.iso = config["default_iso"]
   camera.exposure_mode = config["default_exposure_mode"]
+  camera.shutter_speed = config["default_shutter_speed"]
+
   overlay_handler.display_text(camera, '', config)
   print(f'auto mode!')
 
@@ -67,9 +69,8 @@ def adjust_shutter_speed(camera, config):
   else:
     config["shutter_speed"] = config["default_shutter_speed"]
 
-  overlay_handler.display_text(camera, '', config)
-
   camera.shutter_speed = config["shutter_speed"]
+  overlay_handler.display_text(camera, '', config)
   print(f'shutter_speed: {config["shutter_speed"]}')
 
 def set_hdr(camera, config):
