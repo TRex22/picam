@@ -9,7 +9,7 @@ def display_text(camera, text, config):
     mode = "Photo Mode"
 
   menu_item = config["menu_item"]
-  camera.annotate_text = f'{mode} - exposure mode: {camera.exposure_mode}, iso: {camera.iso}, hdr: {config["hdr"]}\nSelected Menu Item: {config["menu_item"]}\n{text}'
+  camera.annotate_text = f'{mode} - exposure mode: {camera.exposure_mode}, iso: {camera.iso}, shutter: {camera.shutter_speed}, hdr: {config["hdr"]}\nSelected Menu Item: {config["menu_item"]}\n{text}'
 
 # https://picamera.readthedocs.io/en/release-1.10/recipes1.html#overlaying-images-on-the-preview
 def add_overlay(camera, overlay, config):

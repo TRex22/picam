@@ -59,6 +59,19 @@ def adjust_iso(camera, config):
   config["iso"] = camera.iso
   print(f'iso: {config["iso"]}')
 
+def adjust_shutter_speed(camera, config):
+  idex = config["available_shutter_speeds"].index(config["shutter_speed"]) + 1
+
+  if idex < len(config["available_shutter_speeds"]):
+    camera.shutter_speed = config["available_shutter_speeds"][idex]
+  else:
+    camera.shutter_speed = config["default_shutter_speed"]
+
+  overlay_handler.display_text(camera, '', config)
+
+  config["shutter_speed"] = camera.shutter_speed
+  print(f'shutter_speed: {config["shutter_speed"]}')
+
 def set_hdr(camera, config):
   config["hdr"] = not config["hdr"]
   overlay_handler.display_text(camera, '', config)
@@ -188,3 +201,37 @@ def take_single_shot(camera, config):
   print("--- %s seconds ---" % (time.time() - start_time))
 
   camera.resolution = (screen_w, screen_h)
+
+def trigger_video(camera, config):
+  if config["recording"]:
+    camera.stop_recording()
+    config["recording"] = False
+  else:
+    screen_w = config["screen_w"]
+    screen_h = config["screen_h"]
+
+    width = config["width"]
+    height = config["height"]
+
+    dcim_path = config["dcim_path"]
+    dcim_images_path_raw = config["dcim_images_path_raw"]
+    dcim_original_images_path = config["dcim_original_images_path"]
+    dcim_hdr_images_path = config["dcim_hdr_images_path"]
+    dcim_videos_path = config["dcim_videos_path"]
+    dcim_tmp_path = config["dcim_tmp_path"]
+
+    format = config["video_format"]
+
+    existing_files = glob.glob(f'{dcim_videos_path}/*.{format}')
+    filecount = len(existing_files)
+
+    original_filename = f'{dcim_videos_path}/{filecount}.{format}'
+    print(original_filename)
+
+    # start_time = time.time()
+    camera.resolution = (width, height)
+
+    print(f'screen: ({screen_w}, {screen_h}), res: ({width}, {height}), shutter_speed: {camera.shutter_speed}')
+
+    config["recording"] = True
+    camera.start_recording(stream, format)

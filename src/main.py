@@ -21,7 +21,7 @@
 # width = 4056
 # height = 3040
 
-VERSION = "0.0.11"
+VERSION = "0.0.12"
 
 import os
 import shutil
@@ -62,6 +62,7 @@ config = {
   "filetype": '.dng',
   "bpp": 12,
   "format": 'jpeg',
+  "video_format": 'mp4',
   "bayer": True,
   "fps": 40, # 60 # 10 fps max at full resolution
   "screen_fps": 40, # 120 fps at 1012x760
@@ -93,7 +94,10 @@ config = {
   "available_isos": [0, 100, 200, 320, 400, 500, 640, 800, 1600], # 0 is auto / 3200, 6400
   "iso": 1600, # 800 / should shift to 0 - auto
   "default_iso": 0,
-  "available_menu_items": ["auto", "exposure_mode", "iso", "hdr", "video", "encoding"],
+  "available_shutter_speeds": [0, 1000, 2000, 4000, 8000, 16667, 33333, 66667, 125000, 250000, 500000, 1000000, 2000000, 5000000, 10000000, 15000000, 20000000, 25000000, 30000000, 35000000, 40000000],
+  "shutter_speed": 0,
+  "default_shutter_speed": 0,
+  "available_menu_items": ["auto", "exposure_mode", "iso", "shutter_speed", "hdr", "video", "resolution", "encoding"],
   "menu_item": "auto",
   "default_menu_item": "auto",
   "hdr": False,
@@ -178,10 +182,13 @@ def button_callback_4(channel):
   overlay_handler.remove_overlay(camera, overlay, config)
   overlay = None
 
-  if config["hdr"]:
-    camera_handler.take_hdr_shot(camera, config)
+  if config["video"]:
+    camera_handler.trigger_video(camera, config)
   else:
-    camera_handler.take_single_shot(camera, config)
+    if config["hdr"]:
+      camera_handler.take_hdr_shot(camera, config)
+    else:
+      camera_handler.take_single_shot(camera, config)
 
   overlay = overlay_handler.add_overlay(camera, overlay, config)
 
