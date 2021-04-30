@@ -92,7 +92,7 @@ config = {
     "fireworks"
   ],
   "available_isos": [0, 100, 200, 320, 400, 500, 640, 800, 1600], # 0 is auto / 3200, 6400
-  "iso": 100, # 800 / should shift to 0 - auto
+  "iso": 0, # 800 / should shift to 0 - auto
   "default_iso": 0,
   "available_shutter_speeds": [0, 1000, 2000, 4000, 8000, 16667, 33333, 66667, 125000, 250000, 500000, 1000000, 2000000, 5000000, 10000000, 15000000, 20000000, 25000000, 30000000, 35000000, 40000000],
   "shutter_speed": 0,
