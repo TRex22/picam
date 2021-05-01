@@ -1,5 +1,10 @@
-# picam
-RaspberryPi Camera software to be used with a screen module.
+# PiCam
+RaspberryPi Camera project to create a software and hardware stack to build your own professional style camera.
+My test model of the platform is called JankyCam.
+
+I hope that this project will inspire others to help contribute and eventually make something everyone can use to gain access to the world of photography and lenses beyond just mobile phones. Also for this to be used as a platform for computational photography and experimentation/learning.
+
+This is still early days and requires a lot of work before its easy to use.
 
 # Requirements
 - opencv-python
@@ -33,11 +38,12 @@ pip3 install src/.
 git clone https://github.com/trex22/Colour_Profiles.git
 ```
 
-# dcamprof
+# dcamprof dcp to json conversion
 https://torger.se/anders/dcamprof.html#download
 
 ```
 ./dcamprof.exe dcp2json "C:/development/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Skin+Sky Look.dcp" "C:/development/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Skin+Sky Look.json"
+
 ./dcamprof.exe dcp2json "C:/development/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Neutral Look.dcp" "C:/development/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Neutral Look.json"
 ```
 
@@ -90,3 +96,9 @@ https://torger.se/anders/dcamprof.html#download
   - continuous shot
   - stop motion mode
   - astro-photography mode
+  - Lens exif data tool
+  - Improve tools to be cli
+  - python module
+  - pyton requirements.txt
+  - EXIF copyright info
+  - Image watermark tool
