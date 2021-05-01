@@ -1,5 +1,5 @@
 import numpy as np
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image
 
 def compute_shutter_speed_from_us(us):
   if us == 0:
@@ -15,9 +15,14 @@ def display_text(camera, text, config):
     mode = "Photo Mode"
 
   menu_item = config["menu_item"]
-  shutter_speed_text = compute_shutter_speed_from_us(config["shutter_speed"])
-  text = f'{text}\nShutter Speed: {shutter_speed_text}, set: {camera.shutter_speed}'
-  camera.annotate_text = f'{mode} - exposure mode: {camera.exposure_mode}, iso: {camera.iso}, hdr: {config["hdr"]}\nSelected Menu Item: {config["menu_item"]}\n{text}'
+
+  selected_item = f'Selected Menu Item: {config["menu_item"]}'
+  camera_settings = f"exposure mode: {camera.exposure_mode}, iso: {camera.iso}, awb mode: {config['awb_mode']}"
+
+  shutter_speed = compute_shutter_speed_from_us(config["shutter_speed"])
+  shutter_text = f'Shutter Speed: {shutter_speed}, set: {camera.shutter_speed}'
+
+  camera.annotate_text = f'{mode} - {camera_settings}\nhdr: {config["hdr"]}\n{selected_item}\n{shutter_text}\n{text}'
 
 # https://picamera.readthedocs.io/en/release-1.10/recipes1.html#overlaying-images-on-the-preview
 def add_overlay(camera, overlay, config):

@@ -58,8 +58,6 @@ https://torger.se/anders/dcamprof.html#download
   - Write actual tests
   - Histogram and analysis tools
   - RAW sensor capture: https://raspberrypi.stackexchange.com/questions/51191/how-can-i-stop-the-overlay-of-images-between-my-pi-camera-and-flir-camera
-  - ISO
-  - Shutter Speed
   - Resolution (FPS as label)
   - FPS option (wrt resolution)
   - Menus
@@ -70,7 +68,6 @@ https://torger.se/anders/dcamprof.html#download
   - brightness
   - saturation
   - ev compression
-  - exposure mode
   - awb - auto white balance
   - image effect
   - colour effect

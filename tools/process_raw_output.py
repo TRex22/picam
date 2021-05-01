@@ -6,7 +6,6 @@ import sys
 sys.path.insert(1, '../src/')
 sys.path.insert(1, 'src/')
 
-import os
 import time
 import glob
 import re
@@ -14,7 +13,6 @@ import re
 from io import BytesIO
 
 from pydng.core import RPICAM2DNG
-from pydng.core import RAW2DNG, DNGTags, Tag
 
 # Modules
 import document_handler
