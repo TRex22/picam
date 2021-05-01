@@ -17,7 +17,7 @@ def display_text(camera, text, config):
   menu_item = config["menu_item"]
 
   selected_item = f'Selected Menu Item: {config["menu_item"]}'
-  camera_settings = f"exposure mode: {camera.exposure_mode}, iso: {camera.iso}\n{selected_item}, awb: {config['awb']}"
+  camera_settings = f"exposure mode: {camera.exposure_mode}, iso: {camera.iso}\n{selected_item}, awb mode: {config['awb_mode']}"
 
   shutter_speed = compute_shutter_speed_from_us(config["shutter_speed"])
   shutter_text = f'Shutter Speed: {shutter_speed}, set: {camera.shutter_speed}'
