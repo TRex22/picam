@@ -1,5 +1,5 @@
 import numpy as np
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image
 
 def compute_shutter_speed_from_us(us):
   if us == 0:

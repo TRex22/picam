@@ -13,6 +13,8 @@
 # 'bgra' - Write the raw image data to a file in 32-bit BGRA format
 # 'raw' - Deprecated option for raw captures; the format is taken from the deprecated raw_format attribute
 
+# available_exposure_compensations = [-25, -20, -15, -10, -5, 0, 5, 10, 15, 20, 25]
+
 # 8MP pi camera v2.1
 # width = 3280
 # height = 2464
@@ -21,24 +23,14 @@
 # width = 4056
 # height = 3040
 
-VERSION = "0.0.12"
+VERSION = "0.0.13"
 
-import os
-import shutil
 import time
 import glob
-import json
 
-from io import BytesIO
 from picamerax import PiCamera
 
 import RPi.GPIO as GPIO
-
-from pydng.core import RPICAM2DNG
-from pydng.core import RAW2DNG, DNGTags, Tag
-
-import numpy as np
-from PIL import Image, ImageDraw, ImageFont
 
 # Modules
 import document_handler
@@ -118,20 +110,20 @@ config = {
   }
 }
 
-filetype = config["filetype"]
-bpp = config["bpp"]
+# filetype = config["filetype"]
+# bpp = config["bpp"]
 # format = config["format"]
 
 fps = config["fps"]
 screen_fps = config["screen_fps"]
 
-dcim_images_path_raw = config["dcim_images_path_raw"]
-dcim_original_images_path = config["dcim_original_images_path"]
-dcim_hdr_images_path = config["dcim_hdr_images_path"]
-dcim_videos_path = config["dcim_videos_path"]
-dcim_tmp_path = config["dcim_tmp_path"]
+# dcim_images_path_raw = config["dcim_images_path_raw"]
+# dcim_original_images_path = config["dcim_original_images_path"]
+# dcim_hdr_images_path = config["dcim_hdr_images_path"]
+# dcim_videos_path = config["dcim_videos_path"]
+# dcim_tmp_path = config["dcim_tmp_path"]
 
-colour_profile_path = config["colour_profile_path"]
+# colour_profile_path = config["colour_profile_path"]
 
 screen_w = config["screen_w"]
 screen_h = config["screen_h"]
