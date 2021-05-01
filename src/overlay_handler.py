@@ -17,12 +17,12 @@ def display_text(camera, text, config):
   menu_item = config["menu_item"]
 
   selected_item = f'Selected Menu Item: {config["menu_item"]}'
-  camera_settings = f"exposure mode: {camera.exposure_mode}, iso: {camera.iso}\n{selected_item}, awb mode: {config['awb_mode']}"
+  camera_settings = f"exposure mode: {camera.exposure_mode}, iso: {camera.iso}, awb mode: {config['awb_mode']}"
 
   shutter_speed = compute_shutter_speed_from_us(config["shutter_speed"])
   shutter_text = f'Shutter Speed: {shutter_speed}, set: {camera.shutter_speed}'
 
-  camera.annotate_text = f'{mode} - {camera_settings}\nhdr: {config["hdr"]}\n{shutter_text}\n{text}'
+  camera.annotate_text = f'{mode} - {camera_settings}\nhdr: {config["hdr"]}\n{selected_item}\n{shutter_text}\n{text}'
 
 # https://picamera.readthedocs.io/en/release-1.10/recipes1.html#overlaying-images-on-the-preview
 def add_overlay(camera, overlay, config):
