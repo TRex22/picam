@@ -19,17 +19,6 @@ def auto_mode(camera, config):
   print(f'auto mode!')
 
 def adjust_exposure_mode(camera, config):
-  # Fix other settings
-  # Now fix the values
-  # camera.shutter_speed = 150000 #camera.exposure_speed
-  # # camera.exposure_mode = 'off'
-  # # off, auto, night, nightpreview, backlight, spotlight, sports, snow, beach,
-  # # verylong, fixedfps, antishake, fireworks
-  # camera.exposure_mode = 'auto'
-  # g = camera.awb_gains
-  # camera.awb_mode = 'off'
-  # camera.awb_gains = g
-
   idex = config["available_exposure_modes"].index(config["exposure_mode"]) + 1
 
   if idex < len(config["available_exposure_modes"]):
