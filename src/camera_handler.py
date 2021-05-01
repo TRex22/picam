@@ -20,6 +20,7 @@ def auto_mode(camera, config):
   camera.iso = config["default_iso"]
   camera.exposure_mode = config["default_exposure_mode"]
   camera.shutter_speed = config["default_shutter_speed"]
+  camera.awb = config["default_awb"]
 
   overlay_handler.display_text(camera, '', config)
   print(f'auto mode!')
@@ -72,6 +73,18 @@ def adjust_shutter_speed(camera, config):
   camera.shutter_speed = config["shutter_speed"]
   overlay_handler.display_text(camera, '', config)
   print(f'shutter_speed: {config["shutter_speed"]}')
+
+def adjust_awb(camera, config):
+  idex = config["available_awb"].index(config["awb"]) + 1
+
+  if idex < len(config["available_awb"]):
+    config["awb"] = config["available_awb"][idex]
+  else:
+    config["awb"] = config["default_awb"]
+
+  camera.awb = config["awb"]
+  overlay_handler.display_text(camera, '', config)
+  print(f'awb: {config["awb"]}')
 
 def set_hdr(camera, config):
   config["hdr"] = not config["hdr"]
