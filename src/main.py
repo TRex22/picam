@@ -70,7 +70,7 @@ config = {
   "default_exposure_mode": 'auto',
   "default_zoom": (0.0, 0.0, 1.0, 1.0),
   "max_zoom": (0.4, 0.4, 0.2, 0.2),
-  "max_zoom_2": (0.45, 0.45, 0.1, 0.1),
+  "max_zoom_2": (0.4499885557335775, 0.4499885557335775, 0.09999237048905166, 0.09999237048905166),
   "max_zoom_3": (0.5, 0.5, 0.05, 0.05),
   "available_exposure_modes": [
     "auto", # default has to be first in the list

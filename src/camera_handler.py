@@ -93,7 +93,7 @@ def zoom(camera, config):
   elif (current_zoom == config["max_zoom"]):
     print("Set Zoom to max_zoom_2")
     camera.zoom = config["max_zoom_2"]
-  elif (current_zoom == (0.4499885557335775, 0.4499885557335775, 0.09999237048905166, 0.09999237048905166)):
+  elif (current_zoom == config["max_zoom_2"]):
     print("Set Zoom to max_zoom_3")
     camera.zoom = config["max_zoom_3"]
   else:
