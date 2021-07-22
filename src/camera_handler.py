@@ -90,6 +90,8 @@ def zoom(camera, config):
     camera.zoom = config["max_zoom"]
   elif (current_zoom == config["max_zoom"]):
     camera.zoom = config["max_zoom_2"]
+  elif (current_zoom == config["max_zoom_2"]):
+    camera.zoom = config["max_zoom_3"]
   else:
     camera.zoom = config["default_zoom"]
 
