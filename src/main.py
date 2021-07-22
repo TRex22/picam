@@ -23,7 +23,7 @@
 # width = 4056
 # height = 3040
 
-VERSION = "0.0.13"
+VERSION = "0.0.14"
 
 import time
 import glob
@@ -70,6 +70,7 @@ config = {
   "default_exposure_mode": 'auto',
   "default_zoom": (0.0, 0.0, 1.0, 1.0),
   "max_zoom": (0.4, 0.4, 0.2, 0.2),
+  "max_zoom_2": (0.8, 0.8, 0.4, 0.4),
   "available_exposure_modes": [
     "auto", # default has to be first in the list
     "off",
