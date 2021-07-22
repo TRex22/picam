@@ -238,7 +238,7 @@ def start_preview(camera, config):
   bayer = config["bayer"]
 
   # options are: "built-in" "continuous_shot"
-  if config["preview_mode"] == continuous_shot:
+  if config["preview_mode"] == "continuous_shot":
     # for frame in camera.capture_continuous(rawCapture, format=format, bayer=bayer, use_video_port=True):
     # TODO:
     time.sleep(0.1)
