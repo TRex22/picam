@@ -228,3 +228,25 @@ def trigger_video(camera, config):
 
     config["recording"] = True
     camera.start_recording(original_filename, format)
+
+def start_preview(camera, config):
+  config["preview"] = True
+
+  format = config["format"]
+  bayer = config["bayer"]
+
+  # options are: "built-in" "continuous_shot"
+  if config["preview_mode"] == continuous_shot:
+    # for frame in camera.capture_continuous(rawCapture, format=format, bayer=bayer, use_video_port=True):
+    # TODO:
+    time.sleep(0.1)
+  else: # default
+    camera.start_preview()
+    message = input("Press enter to quit\n\n") # Run until someone presses enter
+
+def stop_preview(camera, config):
+  # Just set the variable. The loop in the other thread will halt on next iteration
+  config["preview"] = False
+
+  if config["preview_mode"] == config["default_preview_mode"]:
+    camera.stop_preview()

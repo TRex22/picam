@@ -98,6 +98,9 @@ config = {
   "menu_item": "auto",
   "default_menu_item": "auto",
   "hdr": False,
+  "preview": True,
+  "preview_mode": "built-in", # "built-in" "continuous_shot"
+  "default_preview_mode": 'built-in',
   "video": False,
   "recording": False,
   "encoding": False, # TODO
@@ -204,14 +207,6 @@ camera_handler.auto_mode(camera, config)
 global overlay
 overlay = None
 
-# Begin Camera start-up
-camera.resolution = (screen_w, screen_h)
-camera.framerate = screen_fps # fps
-
-camera.start_preview()
-overlay = overlay_handler.add_overlay(camera, overlay, config)
-overlay_handler.display_text(camera, '', config)
-
 # Set button callbacks
 # GPIO.setwarnings(False) # Ignore warning for now
 GPIO.setwarnings(True)
@@ -228,8 +223,17 @@ GPIO.add_event_detect(button_2, GPIO.RISING, callback=button_callback_2, bouncet
 GPIO.add_event_detect(button_3, GPIO.RISING, callback=button_callback_3, bouncetime=bouncetime)
 GPIO.add_event_detect(button_4, GPIO.RISING, callback=button_callback_4, bouncetime=bouncetime)
 
+# Begin Camera start-up
+camera.resolution = (screen_w, screen_h)
+camera.framerate = screen_fps # fps
+
+overlay = overlay_handler.add_overlay(camera, overlay, config)
+overlay_handler.display_text(camera, '', config)
 print(f'screen: ({screen_w}, {screen_h}), res: ({width}, {height})')
-message = input("Press enter to quit\n\n") # Run until someone presses enter
-camera.stop_preview()
+
+camera_handler.start_preview(camera, config) # Runs main camera loop
+camera_handler.stop_preview(camera, config)
+
 GPIO.cleanup() # Clean up
 overlay_handler.remove_overlay(camera, overlay, config)
+camera.close()

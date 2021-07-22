@@ -102,3 +102,6 @@ https://torger.se/anders/dcamprof.html#download
   - pyton requirements.txt
   - EXIF copyright info
   - Image watermark tool
+  - Photo Viewer
+  - 60fps bpp 10 Full
+  - DOL-HDR
