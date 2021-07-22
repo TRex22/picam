@@ -86,12 +86,12 @@ def adjust_encoding(camera, config):
 def zoom(camera, config):
   current_zoom = camera.zoom
 
-  if (current_zoom == config["max_zoom_2"]):
-    camera.zoom = config["default_zoom"]
+  if (current_zoom == config["default_zoom"]):
+    camera.zoom = config["max_zoom"]
   elif (current_zoom == config["max_zoom"]):
     camera.zoom = config["max_zoom_2"]
   else:
-    camera.zoom = config["max_zoom"]
+    camera.zoom = config["default_zoom"]
 
 def take_hdr_shot(camera, config):
   screen_w = config["screen_w"]
