@@ -87,12 +87,16 @@ def zoom(camera, config):
   current_zoom = camera.zoom
 
   if (current_zoom == config["default_zoom"]):
+    print("Set Zoom to max_zoom")
     camera.zoom = config["max_zoom"]
   elif (current_zoom == config["max_zoom"]):
+    print("Set Zoom to max_zoom_2")
     camera.zoom = config["max_zoom_2"]
   elif (current_zoom == config["max_zoom_2"]):
+    print("Set Zoom to max_zoom_3")
     camera.zoom = config["max_zoom_3"]
   else:
+    print("Reset Zoom")
     camera.zoom = config["default_zoom"]
 
 def take_hdr_shot(camera, config):
