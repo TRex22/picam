@@ -23,7 +23,7 @@
 # width = 4056
 # height = 3040
 
-VERSION = "0.0.14"
+VERSION = "0.0.15"
 
 import time
 import glob
@@ -90,7 +90,8 @@ config = {
   "available_isos": [0, 100, 200, 320, 400, 500, 640, 800, 1600], # 0 is auto / 3200, 6400
   "iso": 0, # 800 / should shift to 0 - auto
   "default_iso": 0,
-  "available_shutter_speeds": [0, 100, 500, 1000, 2000, 4000, 8000, 16667, 33333, 66667, 125000, 250000, 500000, 1000000, 2000000, 5000000, 10000000, 15000000, 20000000, 25000000, 30000000, 35000000, 40000000],
+  "available_shutter_speeds": [0, 100, 500, 1000, 2000, 4000, 8000, 16667, 33333, 66667, 125000, 250000, 500000, 1000000],
+  "available_long_shutter_speeds": [2000000, 5000000, 10000000, 15000000, 20000000, 25000000, 30000000, 35000000, 40000000, 200000000],
   "shutter_speed": 0,
   "default_shutter_speed": 0,
   "available_awb_mode": ['auto', 'off', 'sunlight', 'cloudy', 'shade', 'tungsten', 'fluorescent', 'incandescent', 'flash', 'horizon'],
@@ -200,14 +201,7 @@ def button_callback_4(channel):
 
 # Start PiCam
 global camera
-
-# Init Camera
-# camera = PiCamera(framerate=config["fps"])
-camera = PiCamera(framerate=config["fps"])
-camera_handler.auto_mode(camera, config)
-
 global overlay
-overlay = None
 
 # Set button callbacks
 # GPIO.setwarnings(False) # Ignore warning for now
@@ -226,16 +220,12 @@ GPIO.add_event_detect(button_3, GPIO.RISING, callback=button_callback_3, bouncet
 GPIO.add_event_detect(button_4, GPIO.RISING, callback=button_callback_4, bouncetime=bouncetime)
 
 # Begin Camera start-up
-camera.resolution = (screen_w, screen_h)
-camera.framerate = screen_fps # fps
+# Init Camera
+# camera = PiCamera(framerate=config["fps"])
+camera = None
+overlay = None
 
-overlay = overlay_handler.add_overlay(camera, overlay, config)
-overlay_handler.display_text(camera, '', config)
-print(f'screen: ({screen_w}, {screen_h}), res: ({width}, {height})')
-
-camera_handler.start_preview(camera, config) # Runs main camera loop
-camera_handler.stop_preview(camera, config)
+camera_handler.start_camera(camera, overlay, config)
+camera_handler.stop_camera(camera, overlay, config)
 
 GPIO.cleanup() # Clean up
-overlay_handler.remove_overlay(camera, overlay, config)
-camera.close()

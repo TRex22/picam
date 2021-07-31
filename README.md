@@ -105,3 +105,11 @@ https://torger.se/anders/dcamprof.html#download
   - Photo Viewer
   - 60fps bpp 10 Full
   - DOL-HDR
+  - FOM: https://www.raspberrypi.org/forums/viewtopic.php?f=43&t=273804
+  - long exposures: https://www.raspberrypi.org/forums/viewtopic.php?t=277689
+  - https://www.raspberrypi.org/forums/viewtopic.php?t=275962
+  - https://www.raspberrypi.org/forums/viewtopic.php?t=275962
+  - https://www.raspberrypi.org/forums/viewtopic.php?t=279752
+  - Star Eater: https://photo.stackexchange.com/questions/116765/new-pi-camera-any-good-for-astrophotography
+  - https://www.raspberrypi.org/forums/viewtopic.php?f=43&t=277768
+  - https://github.com/raspberrypi/userland/blob/3fd8527eefd8790b4e8393458efc5f94eb21a615/interface/mmal/mmal_parameters_camera.h

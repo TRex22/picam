@@ -259,3 +259,22 @@ def stop_preview(camera, config):
 
   if config["preview_mode"] == config["default_preview_mode"]:
     camera.stop_preview()
+
+def start_camera(camera, overlay, config):
+  camera = PiCamera(framerate=config["fps"])
+  auto_mode(camera, config)
+  overlay = None
+
+  camera.resolution = (screen_w, screen_h)
+  camera.framerate = screen_fps # fps
+
+  overlay = overlay_handler.add_overlay(camera, overlay, config)
+  overlay_handler.display_text(camera, '', config)
+  print(f'screen: ({screen_w}, {screen_h}), res: ({width}, {height})')
+
+  start_preview(camera, config) # Runs main camera loop
+
+def stop_camera(camera, overlay, config):
+  stop_preview(camera, config)
+  overlay_handler.remove_overlay(camera, overlay, config)
+  camera.close()

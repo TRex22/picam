@@ -18,8 +18,8 @@ from pydng.core import RPICAM2DNG
 import document_handler
 
 # Constants
-original_files_path = "/mnt/c/tmp/original"
-raw_file_save_path = "/mnt/c/tmp/raw"
+original_files_path = "/mnt/g/tmp/original"
+raw_file_save_path = "/mnt/g/tmp/raw"
 filetype = '.dng'
 
 # TODO: List them all
@@ -35,7 +35,7 @@ config = {
   "skin_tone_colour_profile_name": "skin_tone",
   "pydng_colour_profile": "../Colour_Profiles/imx477/PyDNG_profile.json",
   "pydng_colour_profile_name": "pydng",
-  "selected_colour_profile": "all" # can be all or neutral_colour_profile, skin_tone_colour_profile, pydng_colour_profile ... others to be added later
+  "selected_colour_profile": "neutral_colour_profile" #"all" # can be all or neutral_colour_profile, skin_tone_colour_profile, pydng_colour_profile ... others to be added later
 }
 
 def generate_filename(original_files_path, raw_file_save_path, f, config, colour_profile_name):
