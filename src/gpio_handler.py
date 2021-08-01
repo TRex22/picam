@@ -50,7 +50,7 @@ def button_callback_4(channel):
 
   overlay = overlay_handler.add_overlay(camera, overlay, config)
 
-def start_button_listen(config):
+def start_button_listen():
   # Set Globals to be used by the callbacks - I know this is very ugly
   global config
   global camera
