@@ -262,6 +262,13 @@ def stop_preview(camera, config):
     camera.stop_preview()
 
 def start_camera(camera, overlay, config):
+  # Config Variables
+  screen_w = config["screen_w"]
+  screen_h = config["screen_h"]
+  width = config["width"]
+  height = config["height"]
+
+  # Init
   camera = PiCamera(framerate=config["fps"])
   auto_mode(camera, config)
   overlay = None
