@@ -185,6 +185,8 @@ global overlay
 camera = None
 overlay = None
 
+camera_handler.start_camera(config)
+
 # Set button callbacks
 # GPIO.setwarnings(False) # Ignore warning for now
 GPIO.setwarnings(True)
@@ -202,7 +204,7 @@ GPIO.add_event_detect(button_3, GPIO.RISING, callback=button_callback_3, bouncet
 GPIO.add_event_detect(button_4, GPIO.RISING, callback=button_callback_4, bouncetime=bouncetime)
 
 # Begin Camera start-up
-camera_handler.start_camera(config)
+camera_handler.start_preview(camera, config) # Runs main camera loop
 camera_handler.stop_camera(camera, overlay, config)
 
 GPIO.cleanup() # Clean up
