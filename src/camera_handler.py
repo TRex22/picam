@@ -133,7 +133,7 @@ def zoom(camera, config):
     print("Reset Zoom")
     camera.zoom = config["default_zoom"]
 
-def take_hdr_shot(camera, config):
+def take_hdr_shot(camera, overlay, config):
   screen_w = config["screen_w"]
   screen_h = config["screen_h"]
 
@@ -185,7 +185,7 @@ def take_hdr_shot(camera, config):
   gpio_handler.stop_button_listen()
   gpio_handler.start_button_listen(camera, overlay, config)
 
-def take_single_shot(camera, config):
+def take_single_shot(camera, overlay, config):
   screen_w = config["screen_w"]
   screen_h = config["screen_h"]
 
@@ -236,7 +236,7 @@ def take_single_shot(camera, config):
   gpio_handler.stop_button_listen()
   gpio_handler.start_button_listen(camera, overlay, config)
 
-def trigger_video(camera, config):
+def trigger_video(camera, overlay, config):
   if config["recording"]:
     camera.stop_recording()
     config["recording"] = False

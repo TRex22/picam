@@ -26,12 +26,12 @@ def button_callback_4(camera, overlay, config):
   overlay = None
 
   if config["video"]:
-    camera_handler.trigger_video(camera, config)
+    camera_handler.trigger_video(camera, overlay, config)
   else:
     if config["hdr"]:
-      camera_handler.take_hdr_shot(camera, config)
+      camera_handler.take_hdr_shot(camera, overlay, config)
     else:
-      camera_handler.take_single_shot(camera, config)
+      camera_handler.take_single_shot(camera, overlay, config)
 
   overlay = overlay_handler.add_overlay(camera, overlay, config)
 
