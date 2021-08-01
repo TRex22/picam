@@ -108,12 +108,7 @@ def take_hdr_shot(camera, config):
   width = config["width"]
   height = config["height"]
 
-  # dcim_path = config["dcim_path"]
-  # dcim_images_path_raw = config["dcim_images_path_raw"]
-  # dcim_original_images_path = config["dcim_original_images_path"]
   dcim_hdr_images_path = config["dcim_hdr_images_path"]
-  # dcim_videos_path = config["dcim_videos_path"]
-  # dcim_tmp_path = config["dcim_tmp_path"]
 
   camera.resolution = (width, height)
 
@@ -161,12 +156,8 @@ def take_single_shot(camera, config):
   width = config["width"]
   height = config["height"]
 
-  # dcim_path = config["dcim_path"]
   dcim_images_path_raw = config["dcim_images_path_raw"]
   dcim_original_images_path = config["dcim_original_images_path"]
-  # dcim_hdr_images_path = config["dcim_hdr_images_path"]
-  # dcim_videos_path = config["dcim_videos_path"]
-  # dcim_tmp_path = config["dcim_tmp_path"]
 
   format = config["format"]
   bayer = config["bayer"]
@@ -216,12 +207,7 @@ def trigger_video(camera, config):
     width = config["width"]
     height = config["height"]
 
-    # dcim_path = config["dcim_path"]
-    # dcim_images_path_raw = config["dcim_images_path_raw"]
-    # dcim_original_images_path = config["dcim_original_images_path"]
-    # dcim_hdr_images_path = config["dcim_hdr_images_path"]
     dcim_videos_path = config["dcim_videos_path"]
-    # dcim_tmp_path = config["dcim_tmp_path"]
 
     format = config["video_format"]
 
@@ -231,9 +217,7 @@ def trigger_video(camera, config):
     original_filename = f'{dcim_videos_path}/{filecount}.{format}'
     print(original_filename)
 
-    # start_time = time.time()
     camera.resolution = (width, height)
-
     print(f'screen: ({screen_w}, {screen_h}), res: ({width}, {height}), shutter_speed: {camera.shutter_speed}')
 
     config["recording"] = True
