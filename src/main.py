@@ -39,7 +39,6 @@ VERSION = "0.0.18"
 # Modules
 import document_handler
 import camera_handler
-import gpio_handler
 
 ################################################################################
 ##                                    Config                                  ##
@@ -136,5 +135,6 @@ camera = None
 overlay = None
 
 # Begin Camera start-up
-camera, overlay = camera_handler.start_camera(config) # Runs main camera loop
+camera, overlay = camera_handler.start_camera(config)
+# camera_handler.start_preview(camera, config) # Runs main camera loop
 camera_handler.stop_camera(camera, overlay, config)
