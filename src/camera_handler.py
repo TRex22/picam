@@ -250,7 +250,7 @@ def start_camera(config):
   global overlay
 
   if camera != None:
-    stop_camera(config)
+    stop_camera(camera, overlay, config)
 
   # Force globals to be blanked
   camera = None
@@ -279,10 +279,7 @@ def start_camera(config):
 
   start_preview(camera, config) # Runs main camera loop
 
-def stop_camera(config):
-  global camera
-  global overlay
-
+def stop_camera(camera, overlay, config):
   stop_preview(camera, config)
   overlay_handler.remove_overlay(camera, overlay, config)
   camera.close()

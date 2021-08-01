@@ -24,6 +24,7 @@ sudo apt install -y samba samba-common git build-essential cmake python3 python3
 
 pip3 install opencv-contrib-python numpy ExifRead
 pip3 install Pillow picamerax
+pip3 install pi-ina219
 sudo pip3 install Click==7.0
 sudo pip3 install adafruit-python-shell
 

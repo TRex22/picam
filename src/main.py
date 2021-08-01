@@ -181,6 +181,10 @@ def button_callback_4(channel):
 global camera
 global overlay
 
+# Init Variables
+camera = None
+overlay = None
+
 # Set button callbacks
 # GPIO.setwarnings(False) # Ignore warning for now
 GPIO.setwarnings(True)
@@ -197,12 +201,8 @@ GPIO.add_event_detect(button_2, GPIO.RISING, callback=button_callback_2, bouncet
 GPIO.add_event_detect(button_3, GPIO.RISING, callback=button_callback_3, bouncetime=bouncetime)
 GPIO.add_event_detect(button_4, GPIO.RISING, callback=button_callback_4, bouncetime=bouncetime)
 
-# Init Variables
-camera = None
-overlay = None
-
 # Begin Camera start-up
 camera_handler.start_camera(config)
-camera_handler.stop_camera(config)
+camera_handler.stop_camera(camera, overlay, config)
 
 GPIO.cleanup() # Clean up
