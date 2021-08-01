@@ -202,7 +202,7 @@ camera = None
 overlay = None
 
 # Begin Camera start-up
-camera_handler.start_camera(camera, overlay, config)
-camera_handler.stop_camera(camera, overlay, config)
+camera_handler.start_camera(config)
+camera_handler.stop_camera(config)
 
 GPIO.cleanup() # Clean up

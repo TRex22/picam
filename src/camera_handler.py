@@ -245,12 +245,12 @@ def stop_preview(camera, config):
   if config["preview_mode"] == config["default_preview_mode"]:
     camera.stop_preview()
 
-def start_camera(camera, overlay, config):
+def start_camera(config):
   global camera
   global overlay
 
   if camera != None:
-    stop_camera(camera, overlay, config)
+    stop_camera(config)
 
   # Force globals to be blanked
   camera = None
@@ -279,7 +279,7 @@ def start_camera(camera, overlay, config):
 
   start_preview(camera, config) # Runs main camera loop
 
-def stop_camera(camera, overlay, config):
+def stop_camera(config):
   global camera
   global overlay
 
