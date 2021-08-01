@@ -1,3 +1,4 @@
+import os
 import time
 import glob
 
@@ -110,7 +111,7 @@ def set_dpc(camera, config):
 
   # Set DPC Mode
   # TODO: Add to MMAL interface here: https://github.com/labthings/picamerax/blob/master/picamerax/mmal.py
-  system(f'sudo vcdbg set imx477_dpc {current_dpc}') # TODO: Security risk here!
+  os.system(f'sudo vcdbg set imx477_dpc {current_dpc}') # TODO: Security risk here!
 
   # Start Camera
   camera, overlay = start_camera(config)
