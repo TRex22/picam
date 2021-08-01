@@ -185,7 +185,7 @@ global overlay
 camera = None
 overlay = None
 
-camera_handler.start_camera(config)
+camera, overlay = camera_handler.start_camera(config)
 
 # Set button callbacks
 # GPIO.setwarnings(False) # Ignore warning for now

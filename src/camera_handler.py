@@ -274,6 +274,8 @@ def start_camera(config):
   overlay_handler.display_text(camera, '', config)
   print(f'screen: ({screen_w}, {screen_h}), res: ({width}, {height})')
 
+  return [camera, overlay]
+
 def stop_camera(camera, overlay, config):
   stop_preview(camera, config)
   overlay_handler.remove_overlay(camera, overlay, config)
