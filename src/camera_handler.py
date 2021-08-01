@@ -262,7 +262,16 @@ def stop_preview(camera, config):
     camera.stop_preview()
 
 def start_camera(camera, overlay, config):
+  if camera != None:
+    stop_camera(camera, overlay, config)
+
+  camera = None
+  overlay = None
+
   # Config Variables
+  fps = config["fps"]
+  screen_fps = config["screen_fps"]
+
   screen_w = config["screen_w"]
   screen_h = config["screen_h"]
   width = config["width"]

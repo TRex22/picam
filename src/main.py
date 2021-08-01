@@ -23,7 +23,7 @@
 # width = 4056
 # height = 3040
 
-VERSION = "0.0.15"
+VERSION = "0.0.16"
 
 import time
 import glob
@@ -116,33 +116,11 @@ config = {
   }
 }
 
-# filetype = config["filetype"]
-# bpp = config["bpp"]
-# format = config["format"]
-
-fps = config["fps"]
-screen_fps = config["screen_fps"]
-
-# dcim_images_path_raw = config["dcim_images_path_raw"]
-# dcim_original_images_path = config["dcim_original_images_path"]
-# dcim_hdr_images_path = config["dcim_hdr_images_path"]
-# dcim_videos_path = config["dcim_videos_path"]
-# dcim_tmp_path = config["dcim_tmp_path"]
-
-# colour_profile_path = config["colour_profile_path"]
-
-screen_w = config["screen_w"]
-screen_h = config["screen_h"]
-
-width = config["width"]
-height = config["height"]
-
 # GPIO Config
 button_1 = config["gpio"]["button_1"]
 button_2 = config["gpio"]["button_2"]
 button_3 = config["gpio"]["button_3"]
 button_4 = config["gpio"]["button_4"]
-
 bouncetime = config["gpio"]["bouncetime"]
 
 document_handler.check_for_folders(config)
@@ -220,11 +198,6 @@ GPIO.add_event_detect(button_3, GPIO.RISING, callback=button_callback_3, bouncet
 GPIO.add_event_detect(button_4, GPIO.RISING, callback=button_callback_4, bouncetime=bouncetime)
 
 # Begin Camera start-up
-# Init Camera
-# camera = PiCamera(framerate=config["fps"])
-camera = None
-overlay = None
-
 camera_handler.start_camera(camera, overlay, config)
 camera_handler.stop_camera(camera, overlay, config)
 
