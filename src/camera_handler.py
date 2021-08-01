@@ -265,6 +265,7 @@ def start_camera(camera, overlay, config):
   if camera != None:
     stop_camera(camera, overlay, config)
 
+  # Force globals to be blanked
   camera = None
   overlay = None
 
