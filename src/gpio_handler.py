@@ -55,7 +55,10 @@ def button_callback_4(channel):
 
   overlay = overlay_handler.add_overlay(camera, overlay, config)
 
-def start_button_listen():
+def start_button_listen(config):
+  global camera
+  global overlay
+
   # GPIO Config
   button_1 = config["gpio"]["button_1"]
   button_2 = config["gpio"]["button_2"]

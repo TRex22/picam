@@ -311,7 +311,7 @@ def start_camera(config, skip_auto=False):
   overlay_handler.display_text(camera, '', config)
   print(f'screen: ({screen_w}, {screen_h}), res: ({width}, {height})')
 
-  gpio_handler.start_button_listen()
+  gpio_handler.start_button_listen(config)
   start_preview(camera, config) # Needs to be done after the global has been set
 
   return [camera, overlay]
