@@ -114,7 +114,7 @@ def set_dpc(camera, config):
   os.system(f'sudo vcdbg set imx477_dpc {current_dpc}') # TODO: Security risk here!
 
   # Start Camera
-  camera, overlay = start_camera(config)
+  camera, overlay = start_camera(config, skip_auto=True)
   start_preview(camera, config) # Runs main camera loop
 
 def zoom(camera, config):
@@ -278,7 +278,7 @@ def stop_preview(camera, config):
   if config["preview_mode"] == config["default_preview_mode"]:
     camera.stop_preview()
 
-def start_camera(config):
+def start_camera(config, skip_auto=False):
   global camera
   global overlay
 
@@ -297,7 +297,10 @@ def start_camera(config):
 
   # Init
   camera = PiCamera(framerate=config["fps"])
-  auto_mode(camera, config)
+
+  if skip_auto == False:
+    auto_mode(camera, config)
+
   overlay = None
 
   camera.resolution = (screen_w, screen_h)
