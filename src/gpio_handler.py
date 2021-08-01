@@ -5,11 +5,6 @@ import overlay_handler
 import camera_handler
 import menu_handler
 
-# Set Globals to be used by the callbacks - I know this is very ugly
-global config
-global camera
-global overlay
-
 # GPIO Stuff - Needs to be in the same context as camera
 def button_callback_1(channel):
   print("Button 1: Menu")
@@ -56,6 +51,11 @@ def button_callback_4(channel):
   overlay = overlay_handler.add_overlay(camera, overlay, config)
 
 def start_button_listen(config):
+  # Set Globals to be used by the callbacks - I know this is very ugly
+  global config
+  global camera
+  global overlay
+
   # GPIO Config
   button_1 = config["gpio"]["button_1"]
   button_2 = config["gpio"]["button_2"]
