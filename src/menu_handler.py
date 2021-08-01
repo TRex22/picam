@@ -12,9 +12,9 @@ def select_menu_item(camera, config):
   overlay_handler.display_text(camera, '', config)
   print(f'menu_item: {config["menu_item"]}')
 
-def select_option(camera, config):
+def select_option(camera, overlay, config):
   if config["menu_item"] == "auto":
-    camera_handler.auto_mode(camera, config)
+    camera_handler.auto_mode(camera, overlay, config)
   if config["menu_item"] == "exposure_mode":
     camera_handler.adjust_exposure_mode(camera, config)
   if config["menu_item"] == "iso":

@@ -5,42 +5,22 @@ import overlay_handler
 import camera_handler
 import menu_handler
 
-# Set Globals to be used by the callbacks - I know this is very ugly
-global config
-global camera
-global overlay
-
 # GPIO Stuff - Needs to be in the same context as camera
-def button_callback_1(channel):
+def button_callback_1(camera, overlay, config):
   print("Button 1: Menu")
-  global camera
-  global overlay
-  global config
-
   menu_handler.select_menu_item(camera, config)
 
-def button_callback_2(channel):
+def button_callback_2(camera, overlay, config):
   print("Button 2: Option")
-  global camera
-  global overlay
-  global config
+  menu_handler.select_option(camera, overlay, config)
 
-  menu_handler.select_option(camera, config)
-
-def button_callback_3(channel):
+def button_callback_3(camera, overlay, config):
   print("Button 3: Zoom")
-  global camera
-  global overlay
-  global config
-
   camera_handler.zoom(camera, config)
   overlay = overlay_handler.add_overlay(camera, overlay, config)
 
-def button_callback_4(channel):
+def button_callback_4(camera, overlay, config):
   print("Button 4: Take shot")
-  global camera
-  global overlay
-  global config
 
   overlay_handler.remove_overlay(camera, overlay, config)
   overlay = None
@@ -55,10 +35,7 @@ def button_callback_4(channel):
 
   overlay = overlay_handler.add_overlay(camera, overlay, config)
 
-def start_button_listen(config):
-  global camera
-  global overlay
-
+def start_button_listen(camera, overlay, config):
   # GPIO Config
   button_1 = config["gpio"]["button_1"]
   button_2 = config["gpio"]["button_2"]
@@ -77,10 +54,10 @@ def start_button_listen(config):
   GPIO.setup(button_3, GPIO.IN, pull_up_down=GPIO.PUD_UP)
   GPIO.setup(button_4, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
-  GPIO.add_event_detect(button_1, GPIO.RISING, callback=button_callback_1, bouncetime=bouncetime)
-  GPIO.add_event_detect(button_2, GPIO.RISING, callback=button_callback_2, bouncetime=bouncetime)
-  GPIO.add_event_detect(button_3, GPIO.RISING, callback=button_callback_3, bouncetime=bouncetime)
-  GPIO.add_event_detect(button_4, GPIO.RISING, callback=button_callback_4, bouncetime=bouncetime)
+  GPIO.add_event_detect(button_1, GPIO.RISING, callback=lambda x: button_callback_1(camera, overlay, config), bouncetime=bouncetime)
+  GPIO.add_event_detect(button_2, GPIO.RISING, callback=lambda x: button_callback_2(camera, overlay, config), bouncetime=bouncetime)
+  GPIO.add_event_detect(button_3, GPIO.RISING, callback=lambda x: button_callback_3(camera, overlay, config), bouncetime=bouncetime)
+  GPIO.add_event_detect(button_4, GPIO.RISING, callback=lambda x: button_callback_4(camera, overlay, config), bouncetime=bouncetime)
 
 def stop_button_listen():
   GPIO.cleanup() # Clean up

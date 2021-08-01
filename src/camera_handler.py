@@ -12,14 +12,14 @@ import document_handler
 import overlay_handler
 import gpio_handler
 
-def auto_mode(camera, config):
+def auto_mode(camera, overlay, config):
   config['dpc'] = 3
   camera.iso = config["default_iso"]
   camera.exposure_mode = config["default_exposure_mode"]
   camera.shutter_speed = config["default_shutter_speed"]
   camera.awb_mode = config["default_awb_mode"]
 
-  set_dpc(camera, config)
+  set_dpc(camera, overlay, config)
 
   overlay_handler.display_text(camera, '', config)
   print(f'auto mode!')
@@ -101,9 +101,7 @@ def adjust_encoding(camera, config):
   overlay_handler.display_text(camera, '', config)
   print(f'encoding: {config["encoding"]}')
 
-def set_dpc(camera, config):
-  global overlay
-
+def set_dpc(camera, overlay, config):
   current_dpc = config["dpc"]
   print(f'current_dpc: {current_dpc}')
 
@@ -280,10 +278,7 @@ def stop_preview(camera, config):
     camera.stop_preview()
 
 def start_camera(config, skip_auto=False):
-  global camera
-  global overlay
-
-  # Force globals to be blanked
+  # Force variables to be blanked
   camera = None
   overlay = None
 
@@ -300,7 +295,7 @@ def start_camera(config, skip_auto=False):
   camera = PiCamera(framerate=config["fps"])
 
   if skip_auto == False:
-    auto_mode(camera, config)
+    auto_mode(camera, overlay, config)
 
   overlay = None
 
@@ -311,7 +306,7 @@ def start_camera(config, skip_auto=False):
   overlay_handler.display_text(camera, '', config)
   print(f'screen: ({screen_w}, {screen_h}), res: ({width}, {height})')
 
-  gpio_handler.start_button_listen(config)
+  gpio_handler.start_button_listen(camera, overlay, config)
 
   return [camera, overlay]
 
