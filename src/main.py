@@ -39,6 +39,7 @@ VERSION = "0.0.18"
 # Modules
 import document_handler
 import camera_handler
+import gpio_handler
 
 ################################################################################
 ##                                    Config                                  ##
