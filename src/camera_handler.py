@@ -181,6 +181,10 @@ def take_hdr_shot(camera, config):
 
   print("--- %s seconds ---" % (time.time() - start_time))
 
+  # Reset callbacks
+  gpio_handler.stop_button_listen()
+  gpio_handler.start_button_listen(camera, overlay, config)
+
 def take_single_shot(camera, config):
   screen_w = config["screen_w"]
   screen_h = config["screen_h"]
@@ -227,6 +231,10 @@ def take_single_shot(camera, config):
   print("--- %s seconds ---" % (time.time() - start_time))
 
   camera.resolution = (screen_w, screen_h)
+
+  # Reset callbacks
+  gpio_handler.stop_button_listen()
+  gpio_handler.start_button_listen(camera, overlay, config)
 
 def trigger_video(camera, config):
   if config["recording"]:
