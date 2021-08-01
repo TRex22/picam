@@ -310,8 +310,12 @@ def start_camera(config):
 
 def stop_camera(camera, overlay, config):
   stop_preview(camera, config)
-  overlay_handler.remove_overlay(camera, overlay, config)
-  camera.close()
+
+  if overlay != None:
+    overlay_handler.remove_overlay(camera, overlay, config)
+
+  if camera != None:
+    camera.close()
 
   camera = None
   overlay = None
