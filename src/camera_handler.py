@@ -100,6 +100,8 @@ def adjust_encoding(camera, config):
   print(f'encoding: {config["encoding"]}')
 
 def set_dpc(camera, config):
+  global overlay
+
   current_dpc = config["dpc"]
   print(f'current_dpc: {current_dpc}')
 
