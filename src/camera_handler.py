@@ -10,6 +10,7 @@ from pydng.core import RPICAM2DNG
 # Modules
 import document_handler
 import overlay_handler
+import gpio_handler
 
 def auto_mode(camera, config):
   config['dpc'] = 3
@@ -310,6 +311,9 @@ def start_camera(config, skip_auto=False):
   overlay_handler.display_text(camera, '', config)
   print(f'screen: ({screen_w}, {screen_h}), res: ({width}, {height})')
 
+  gpio_handler.start_button_listen(config)
+  start_preview(camera, config)
+
   return [camera, overlay]
 
 def stop_camera(camera, overlay, config):
@@ -323,3 +327,5 @@ def stop_camera(camera, overlay, config):
 
   camera = None
   overlay = None
+
+  gpio_handler.stop_button_listen()
