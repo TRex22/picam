@@ -246,6 +246,9 @@ def stop_preview(camera, config):
     camera.stop_preview()
 
 def start_camera(camera, overlay, config):
+  global camera
+  global overlay
+
   if camera != None:
     stop_camera(camera, overlay, config)
 
@@ -277,6 +280,12 @@ def start_camera(camera, overlay, config):
   start_preview(camera, config) # Runs main camera loop
 
 def stop_camera(camera, overlay, config):
+  global camera
+  global overlay
+
   stop_preview(camera, config)
   overlay_handler.remove_overlay(camera, overlay, config)
   camera.close()
+
+  camera = None
+  overlay = None
