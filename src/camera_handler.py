@@ -3,6 +3,7 @@ import glob
 
 from io import BytesIO
 
+from picamerax import PiCamera
 from pydng.core import RPICAM2DNG
 
 # Modules
