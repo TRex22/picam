@@ -129,7 +129,14 @@ document_handler.check_for_folders(config)
 ################################################################################
 
 # Start PiCam
+global camera
+global overlay
+
+# Init Variables
+camera = None
+overlay = None
+
 # Begin Camera start-up
 camera, overlay = camera_handler.start_camera(config)
-# camera_handler.start_preview(camera, config) # Runs main camera loop
+camera_handler.start_preview(camera, config) # Runs main camera loop
 camera_handler.stop_camera(camera, overlay, config)
