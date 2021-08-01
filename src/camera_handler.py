@@ -330,6 +330,9 @@ def stop_camera(camera, overlay, config):
 
   stop_button_listen()
 
+global camera
+global overlay
+
 # GPIO Stuff - Needs to be in the same context as camera
 def button_callback_1(channel):
   print("Button 1: Menu")
