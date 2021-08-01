@@ -23,7 +23,7 @@
 # width = 4056
 # height = 3040
 
-VERSION = "0.0.16"
+VERSION = "0.0.17"
 
 import time
 import glob
