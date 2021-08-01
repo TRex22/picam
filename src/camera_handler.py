@@ -11,10 +11,13 @@ import document_handler
 import overlay_handler
 
 def auto_mode(camera, config):
+  config['dpc'] = 3
   camera.iso = config["default_iso"]
   camera.exposure_mode = config["default_exposure_mode"]
   camera.shutter_speed = config["default_shutter_speed"]
   camera.awb_mode = config["default_awb_mode"]
+
+  set_dpc(camera, config)
 
   overlay_handler.display_text(camera, '', config)
   print(f'auto mode!')
@@ -95,6 +98,21 @@ def adjust_encoding(camera, config):
   config["encoding"] = not config["encoding"]
   overlay_handler.display_text(camera, '', config)
   print(f'encoding: {config["encoding"]}')
+
+def set_dpc(camera, config):
+  current_dpc = config["dpc"]
+  print(f'current_dpc: {current_dpc}')
+
+  # Turn off Camera
+  stop_camera(camera, overlay, config)
+
+  # Set DPC Mode
+  # TODO: Add to MMAL interface here: https://github.com/labthings/picamerax/blob/master/picamerax/mmal.py
+  system(f'sudo vcdbg set imx477_dpc {current_dpc}') # TODO: Security risk here!
+
+  # Start Camera
+  camera, overlay = start_camera(config)
+  start_preview(camera, config) # Runs main camera loop
 
 def zoom(camera, config):
   current_zoom = camera.zoom

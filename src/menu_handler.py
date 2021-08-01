@@ -31,3 +31,5 @@ def select_option(camera, config):
     camera_handler.set_video(camera, config)
   if config["menu_item"] == "encoding":
     camera_handler.adjust_encoding(camera, config)
+  if config["menu_item"] == "dpc - star eater":
+    camera_handler.set_dpc(camera, config)

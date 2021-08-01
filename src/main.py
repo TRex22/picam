@@ -15,6 +15,17 @@
 
 # available_exposure_compensations = [-25, -20, -15, -10, -5, 0, 5, 10, 15, 20, 25]
 
+# HQ Camera on-sensor defective pixel correction (DPC)
+# https://www.raspberrypi.org/forums/viewtopic.php?f=43&t=277768
+# 0 - All DPC disabled.
+# 1 - Enable mapped on-sensor DPC.
+# 2 - Enable dynamic on-sensor DPC.
+# 3 - Enable mapped and dynamic on-sensor DPC.
+
+# The default is (3). It would be useful to get feedback from users who do astrophotography if disabling DPC actually makes a difference or not.
+
+# Note that this does not disable the ISP defective pixel correction that will still be active, so you will likely only see changes in the RAW image.
+
 # 8MP pi camera v2.1
 # width = 3280
 # height = 2464
@@ -23,7 +34,7 @@
 # width = 4056
 # height = 3040
 
-VERSION = "0.0.17"
+VERSION = "0.0.18"
 
 import time
 import glob
@@ -97,7 +108,9 @@ config = {
   "available_awb_mode": ['auto', 'off', 'sunlight', 'cloudy', 'shade', 'tungsten', 'fluorescent', 'incandescent', 'flash', 'horizon'],
   "awb_mode": 'auto',
   "default_awb_mode": 'auto', # "awb_gains": 0.0 - 8.0 (),
-  "available_menu_items": ["auto", "exposure_mode", "iso", "shutter_speed", "long_shutter_speed", "awb_mode", "hdr", "video", "resolution", "encoding"],
+  "dpc": 3,
+  "available_dpc_options": [0, 1, 2, 3], #https://www.raspberrypi.org/forums/viewtopic.php?f=43&t=277768
+  "available_menu_items": ["auto", "exposure_mode", "iso", "shutter_speed", "long_shutter_speed", "awb_mode", "hdr", "video", "resolution", "encoding", "dpc - star eater"],
   "menu_item": "auto",
   "default_menu_item": "auto",
   "hdr": False,
