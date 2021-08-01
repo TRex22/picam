@@ -57,6 +57,18 @@ def adjust_shutter_speed(camera, config):
   overlay_handler.display_text(camera, '', config)
   print(f'shutter_speed: {config["shutter_speed"]}')
 
+def long_shutter_speed(camera, config):
+  idex = config["available_long_shutter_speeds"].index(config["shutter_speed"]) + 1
+
+  if idex < len(config["available_long_shutter_speeds"]):
+    config["shutter_speed"] = config["available_long_shutter_speeds"][idex]
+  else:
+    config["shutter_speed"] = config["default_shutter_speed"]
+
+  camera.shutter_speed = config["shutter_speed"]
+  overlay_handler.display_text(camera, '', config)
+  print(f'shutter_speed: {config["shutter_speed"]}')
+
 def adjust_awb_mode(camera, config):
   idex = config["available_awb_mode"].index(config["awb_mode"]) + 1
 

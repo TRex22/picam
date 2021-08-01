@@ -97,7 +97,7 @@ config = {
   "available_awb_mode": ['auto', 'off', 'sunlight', 'cloudy', 'shade', 'tungsten', 'fluorescent', 'incandescent', 'flash', 'horizon'],
   "awb_mode": 'auto',
   "default_awb_mode": 'auto', # "awb_gains": 0.0 - 8.0 (),
-  "available_menu_items": ["auto", "exposure_mode", "iso", "shutter_speed", "awb_mode", "hdr", "video", "resolution", "encoding"],
+  "available_menu_items": ["auto", "exposure_mode", "iso", "shutter_speed", "long_shutter_speed", "awb_mode", "hdr", "video", "resolution", "encoding"],
   "menu_item": "auto",
   "default_menu_item": "auto",
   "hdr": False,

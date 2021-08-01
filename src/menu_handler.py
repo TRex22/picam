@@ -21,6 +21,8 @@ def select_option(camera, config):
     camera_handler.adjust_iso(camera, config)
   if config["menu_item"] == "shutter_speed":
     camera_handler.adjust_shutter_speed(camera, config)
+  if config["menu_item"] == "long_shutter_speed":
+    camera_handler.long_shutter_speed(camera, config)
   if config["menu_item"] == "awb_mode":
     camera_handler.adjust_awb_mode(camera, config)
   if config["menu_item"] == "hdr":
