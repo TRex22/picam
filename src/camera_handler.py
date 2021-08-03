@@ -10,8 +10,160 @@ from pydng.core import RPICAM2DNG
 # Modules
 import document_handler
 import overlay_handler
-import gpio_handler
+import menu_handler
 
+################################################################################
+##                                Camera Instance                             ##
+################################################################################
+def start_preview(camera, config):
+  config["preview"] = True
+
+  format = config["format"]
+  bayer = config["bayer"]
+
+  # options are: "built-in" "continuous_shot"
+  if config["preview_mode"] == "continuous_shot":
+    # for frame in camera.capture_continuous(rawCapture, format=format, bayer=bayer, use_video_port=True):
+    # TODO:
+    time.sleep(0.1)
+  else: # default
+    camera.start_preview()
+    message = input("Press enter to quit\n\n") # Run until someone presses enter
+
+def stop_preview(camera, config):
+  # Just set the variable. The loop in the other thread will halt on next iteration
+  config["preview"] = False
+
+  if config["preview_mode"] == config["default_preview_mode"]:
+    camera.stop_preview()
+
+def start_camera(config, skip_auto=False):
+  global camera
+  global overlay
+
+  # Force variables to be blanked
+  camera = None
+  overlay = None
+
+  # Config Variables
+  fps = config["fps"]
+  screen_fps = config["screen_fps"]
+
+  screen_w = config["screen_w"]
+  screen_h = config["screen_h"]
+  width = config["width"]
+  height = config["height"]
+
+  # Init
+  camera = PiCamera(framerate=config["fps"])
+
+  if skip_auto == False:
+    auto_mode(camera, overlay, config)
+
+  overlay = None
+
+  camera.resolution = (screen_w, screen_h)
+  camera.framerate = screen_fps # fps
+
+  overlay = overlay_handler.add_overlay(camera, overlay, config)
+  overlay_handler.display_text(camera, '', config)
+  print(f'screen: ({screen_w}, {screen_h}), res: ({width}, {height})')
+
+  start_button_listen(camera, overlay, config)
+
+  return [camera, overlay]
+
+def stop_camera(camera, overlay, config):
+  stop_preview(camera, config)
+
+  if overlay != None:
+    overlay_handler.remove_overlay(camera, overlay, config)
+
+  if camera != None:
+    camera.close()
+
+  camera = None
+  overlay = None
+
+  stop_button_listen()
+
+################################################################################
+##                                  GPIO Stuff                                ##
+################################################################################
+def button_callback_1():
+  global camera
+  global overlay
+  global config
+
+  print("Button 1: Menu")
+  menu_handler.select_menu_item(camera, config)
+
+def button_callback_2():
+  global camera
+  global overlay
+  global config
+
+  print("Button 2: Option")
+  menu_handler.select_option(camera, overlay, config)
+
+def button_callback_3():
+  global camera
+  global overlay
+  global config
+
+  print("Button 3: Zoom")
+  camera_handler.zoom(camera, config)
+  overlay = overlay_handler.add_overlay(camera, overlay, config)
+
+def button_callback_4():
+  global camera
+  global overlay
+  global config
+
+  print("Button 4: Take shot")
+
+  overlay_handler.remove_overlay(camera, overlay, config)
+
+  if config["video"]:
+    camera_handler.trigger_video(camera, overlay, config)
+  else:
+    if config["hdr"]:
+      camera_handler.take_hdr_shot(camera, overlay, config)
+    else:
+      camera_handler.take_single_shot(camera, overlay, config)
+
+  overlay = overlay_handler.add_overlay(camera, overlay, config)
+
+def start_button_listen(camera, overlay, config):
+  # GPIO Config
+  button_1 = config["gpio"]["button_1"]
+  button_2 = config["gpio"]["button_2"]
+  button_3 = config["gpio"]["button_3"]
+  button_4 = config["gpio"]["button_4"]
+  bouncetime = config["gpio"]["bouncetime"]
+
+  # Set button callbacks
+  # GPIO.setwarnings(False) # Ignore warning for now
+  GPIO.setwarnings(True)
+  # GPIO.setmode(GPIO.BOARD) # Use physical pin numbering
+  GPIO.setmode(GPIO.BCM)
+
+  GPIO.setup(button_1, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+  GPIO.setup(button_2, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+  GPIO.setup(button_3, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+  GPIO.setup(button_4, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+
+  GPIO.add_event_detect(button_1, GPIO.RISING, callback=lambda x: button_callback_1(), bouncetime=bouncetime)
+  GPIO.add_event_detect(button_2, GPIO.RISING, callback=lambda x: button_callback_2(), bouncetime=bouncetime)
+  GPIO.add_event_detect(button_3, GPIO.RISING, callback=lambda x: button_callback_3(), bouncetime=bouncetime)
+  GPIO.add_event_detect(button_4, GPIO.RISING, callback=lambda x: button_callback_4(), bouncetime=bouncetime)
+
+def stop_button_listen():
+  GPIO.cleanup() # Clean up
+
+################################################################################
+##                                Camera Actions                              ##
+################################################################################
 def auto_mode(camera, overlay, config):
   config['dpc'] = 3
   camera.iso = config["default_iso"]
@@ -182,8 +334,8 @@ def take_hdr_shot(camera, overlay, config):
   print("--- %s seconds ---" % (time.time() - start_time))
 
   # Reset callbacks
-  gpio_handler.stop_button_listen()
-  gpio_handler.start_button_listen(camera, overlay, config)
+  stop_button_listen()
+  start_button_listen(camera, overlay, config)
 
 def take_single_shot(camera, overlay, config):
   screen_w = config["screen_w"]
@@ -233,8 +385,8 @@ def take_single_shot(camera, overlay, config):
   camera.resolution = (screen_w, screen_h)
 
   # Reset callbacks
-  gpio_handler.stop_button_listen()
-  gpio_handler.start_button_listen(camera, overlay, config)
+  stop_button_listen()
+  start_button_listen(camera, overlay, config)
 
 def trigger_video(camera, overlay, config):
   if config["recording"]:
@@ -262,75 +414,3 @@ def trigger_video(camera, overlay, config):
 
     config["recording"] = True
     camera.start_recording(original_filename, format)
-
-def start_preview(camera, config):
-  config["preview"] = True
-
-  format = config["format"]
-  bayer = config["bayer"]
-
-  # options are: "built-in" "continuous_shot"
-  if config["preview_mode"] == "continuous_shot":
-    # for frame in camera.capture_continuous(rawCapture, format=format, bayer=bayer, use_video_port=True):
-    # TODO:
-    time.sleep(0.1)
-  else: # default
-    camera.start_preview()
-    message = input("Press enter to quit\n\n") # Run until someone presses enter
-
-def stop_preview(camera, config):
-  # Just set the variable. The loop in the other thread will halt on next iteration
-  config["preview"] = False
-
-  if config["preview_mode"] == config["default_preview_mode"]:
-    camera.stop_preview()
-
-def start_camera(config, skip_auto=False):
-  global camera
-  global overlay
-
-  # Force variables to be blanked
-  camera = None
-  overlay = None
-
-  # Config Variables
-  fps = config["fps"]
-  screen_fps = config["screen_fps"]
-
-  screen_w = config["screen_w"]
-  screen_h = config["screen_h"]
-  width = config["width"]
-  height = config["height"]
-
-  # Init
-  camera = PiCamera(framerate=config["fps"])
-
-  if skip_auto == False:
-    auto_mode(camera, overlay, config)
-
-  overlay = None
-
-  camera.resolution = (screen_w, screen_h)
-  camera.framerate = screen_fps # fps
-
-  overlay = overlay_handler.add_overlay(camera, overlay, config)
-  overlay_handler.display_text(camera, '', config)
-  print(f'screen: ({screen_w}, {screen_h}), res: ({width}, {height})')
-
-  gpio_handler.start_button_listen(camera, overlay, config)
-
-  return [camera, overlay]
-
-def stop_camera(camera, overlay, config):
-  stop_preview(camera, config)
-
-  if overlay != None:
-    overlay_handler.remove_overlay(camera, overlay, config)
-
-  if camera != None:
-    camera.close()
-
-  camera = None
-  overlay = None
-
-  gpio_handler.stop_button_listen()
