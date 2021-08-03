@@ -12,6 +12,7 @@ import RPi.GPIO as GPIO
 import document_handler
 import overlay_handler
 import menu_handler
+from thread_writer import ThreadWriter
 
 ################################################################################
 ##                                Camera Instance                             ##
@@ -371,8 +372,13 @@ def take_single_shot(camera, overlay, config):
 
   camera.capture(stream, format, bayer=bayer)
 
-  with open(original_filename, 'wb') as f:
-    f.write(stream.getbuffer())
+  # with open(original_filename, 'wb') as f:
+  #   f.write(stream.getbuffer())
+
+  #use it like ordinary open like this:
+  w = SafeWriter(original_filename, "wb")
+  w.write(stream.getbuffer())
+  w.close() #it is really important to close or the program would not end
 
   if (config["raw_convert"] == True):
     print("Begin conversion and save DNG raw ...")
