@@ -38,13 +38,15 @@ def stop_preview(camera, config):
   if config["preview_mode"] == config["default_preview_mode"]:
     camera.stop_preview()
 
-def start_camera(config, skip_auto=False):
+def start_camera(original_config, skip_auto=False):
   global camera
   global overlay
+  global config
 
   # Force variables to be blanked
   camera = None
   overlay = None
+  config = original_config
 
   # Config Variables
   fps = config["fps"]
