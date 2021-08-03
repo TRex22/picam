@@ -23,7 +23,7 @@ def display_text(camera, text, config):
 
   shutter_text = f'Shutter Speed: {shutter_speed}, set: {camera.shutter_speed}'
   boolean_text =f'hdr: {config["hdr"]}, raw_convert: {config["raw_convert"]}, dpc: {config["dpc"]}'
-  output_text = f'{mode} - {camera_settings}\n{boolean_text}\n{selected_item}\n{shutter_text}\n{text}'
+  output_text = f'{mode}\n{camera_settings}\n{boolean_text}\n{selected_item}\n{shutter_text}\n{text}'
 
   camera.annotate_text_size = config["annotate_text_size"]
   camera.annotate_text = output_text
