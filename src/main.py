@@ -43,6 +43,7 @@ import camera_handler
 ################################################################################
 ##                                    Config                                  ##
 ################################################################################
+global config
 config = {
   "colour_profile_path": "/home/pi/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Neutral Look.json",
   "convert_raw": False,
@@ -126,5 +127,7 @@ document_handler.check_for_folders(config)
 ################################################################################
 
 # Begin Camera start-up
+global camera
+global overlay
 camera, overlay = camera_handler.start_camera(config) # Runs main camera loop
 camera_handler.stop_camera(camera, overlay, config)

@@ -286,6 +286,9 @@ def stop_preview(camera, config):
     camera.stop_preview()
 
 def start_camera(config, skip_auto=False):
+  global camera
+  global overlay
+
   # Force variables to be blanked
   camera = None
   overlay = None
@@ -318,7 +321,11 @@ def start_camera(config, skip_auto=False):
 
   return [camera, overlay]
 
-def stop_camera(camera, overlay, config):
+def stop_camera():
+  global camera
+  global overlay
+  global config
+
   stop_preview(camera, config)
 
   if overlay != None:
