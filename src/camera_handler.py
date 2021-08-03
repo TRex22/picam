@@ -330,9 +330,9 @@ def take_hdr_shot(camera, overlay, config):
   start_time = time.time()
 
   # SEE: https://github.com/KEClaytor/pi-hdr-timelapse
-  nimages = 10 #5 #2160
-  exposure_min = 10
-  exposure_max = 90
+  nimages = 5
+  exposure_min = 25
+  exposure_max = 75
   exp_step = 5
 
   exp_step = (exposure_max - exposure_min) / (nimages - 1.0)
