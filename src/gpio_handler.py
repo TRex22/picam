@@ -5,6 +5,10 @@ import overlay_handler
 import camera_handler
 import menu_handler
 
+global camera
+global overlay
+global config
+
 # GPIO Stuff - Needs to be in the same context as camera
 def button_callback_1():
   global camera
@@ -39,7 +43,6 @@ def button_callback_4():
   print("Button 4: Take shot")
 
   overlay_handler.remove_overlay(camera, overlay, config)
-  overlay = None
 
   if config["video"]:
     camera_handler.trigger_video(camera, overlay, config)

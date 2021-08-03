@@ -53,8 +53,8 @@ def remove_overlay(camera, overlay, config):
     camera.annotate_text = None
     camera.framerate = config["fps"]
 
-  # del overlay # Doesnt work
-  # overlay = None # Global variable
+    del overlay
+    overlay = None
 
 def generate_overlay_image(overlay_h, overlay_w):
   # Create an array representing a wxh image of
