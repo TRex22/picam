@@ -40,6 +40,10 @@ global config
 global camera
 global overlay
 
+config = None
+camera = None
+overlay = None
+
 # Modules
 import document_handler
 import camera_handler

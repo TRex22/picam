@@ -5,10 +5,6 @@ import overlay_handler
 import camera_handler
 import menu_handler
 
-global camera
-global overlay
-global config
-
 # GPIO Stuff - Needs to be in the same context as camera
 def button_callback_1():
   global camera
