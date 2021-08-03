@@ -301,6 +301,9 @@ def take_hdr_shot(camera, overlay, config):
   width = config["width"]
   height = config["height"]
 
+  format = config["format"]
+  bayer = config["bayer"]
+
   dcim_hdr_images_path = config["dcim_hdr_images_path"]
 
   camera.resolution = (width, height)
@@ -308,9 +311,9 @@ def take_hdr_shot(camera, overlay, config):
   start_time = time.time()
 
   # SEE: https://github.com/KEClaytor/pi-hdr-timelapse
-  nimages = 5 #10 #2160
+  nimages = 10 #5 #2160
   exposure_min = 10
-  exposure_max = 80 #90
+  exposure_max = 90
   exp_step = 5
 
   exp_step = (exposure_max - exposure_min) / (nimages - 1.0)
@@ -330,7 +333,9 @@ def take_hdr_shot(camera, overlay, config):
     camera.brightness = step
     # camera.exposure_compensation = step
 
-    camera.capture(filename, format, bayer=True)
+    stream = BytesIO()
+    camera.capture(stream, format, bayer=bayer)
+    write_via_thread(filename, 'wb', stream.getbuffer())
 
   camera.brightness = original_brightness
   # camera.exposure_compensation = original_exposure_compensation
@@ -371,21 +376,15 @@ def take_single_shot(camera, overlay, config):
   print(f'screen: ({screen_w}, {screen_h}), res: ({width}, {height}), shutter_speed: {camera.shutter_speed}')
 
   camera.capture(stream, format, bayer=bayer)
-
-  # with open(original_filename, 'wb') as f:
-  #   f.write(stream.getbuffer())
-
-  w = ThreadWriter(original_filename, "wb")
-  w.write(stream.getbuffer())
-  w.close() #it is really important to close or the program would not end
+  write_via_thread(original_filename, 'wb', stream.getbuffer())
 
   if (config["raw_convert"] == True):
     print("Begin conversion and save DNG raw ...")
     json_colour_profile = document_handler.load_colour_profile(config)
     output = RPICAM2DNG().convert(stream, json_camera_profile=json_colour_profile)
 
-    with open(filename, 'wb') as f:
-      f.write(output)
+    write_via_thread(filename, 'wb', output)
+
   else:
     print("--- skip raw conversion ---")
 
@@ -419,3 +418,8 @@ def trigger_video(camera, overlay, config):
 
     config["recording"] = True
     camera.start_recording(original_filename, format)
+
+def write_via_thread(original_filename, write_type, stream):
+  w = ThreadWriter(original_filename, write_type)
+  w.write(stream)
+  w.close()
