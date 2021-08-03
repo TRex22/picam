@@ -375,8 +375,7 @@ def take_single_shot(camera, overlay, config):
   # with open(original_filename, 'wb') as f:
   #   f.write(stream.getbuffer())
 
-  #use it like ordinary open like this:
-  w = SafeWriter(original_filename, "wb")
+  w = ThreadWriter(original_filename, "wb")
   w.write(stream.getbuffer())
   w.close() #it is really important to close or the program would not end
 
