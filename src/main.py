@@ -34,7 +34,7 @@
 # width = 4056
 # height = 3040
 
-VERSION = "0.0.20"
+VERSION = "0.0.21"
 
 # Modules
 import document_handler
@@ -46,7 +46,7 @@ import camera_handler
 config = {
   "colour_profile_path": "/home/pi/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Neutral Look.json",
   "dcim_path": 'home/pi/DCIM',
-  "dcim_images_path_raw": '/home/pi/DCIM/images',
+  "dcim_images_path_raw": '/home/pi/DCIM/images/raw',
   "dcim_original_images_path": '/home/pi/DCIM/images/original',
   "dcim_hdr_images_path": '/home/pi/DCIM/images/hdr',
   "dcim_videos_path": '/home/pi/DCIM/videos',

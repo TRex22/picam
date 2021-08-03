@@ -5,14 +5,13 @@ import glob
 from io import BytesIO
 
 from picamerax import PiCamera
-from pydng.core import RPICAM2DNG
 import RPi.GPIO as GPIO
 
 # Modules
-import document_handler
 import overlay_handler
 import menu_handler
 from thread_writer import ThreadWriter
+from thread_raw_converter import ThreadRawConverter
 
 ################################################################################
 ##                                Camera Instance                             ##
@@ -380,10 +379,7 @@ def take_single_shot(camera, overlay, config):
 
   if (config["raw_convert"] == True):
     print("Begin conversion and save DNG raw ...")
-    json_colour_profile = document_handler.load_colour_profile(config)
-    output = RPICAM2DNG().convert(stream, json_camera_profile=json_colour_profile)
-
-    write_via_thread(filename, 'wb', output)
+    convert_raw_via_thread(config, stream, filename)
 
   else:
     print("--- skip raw conversion ---")
@@ -423,3 +419,8 @@ def write_via_thread(original_filename, write_type, stream):
   w = ThreadWriter(original_filename, write_type)
   w.write(stream)
   w.close()
+
+def convert_raw_via_thread(config, stream, filename):
+  wc = ThreadRawConverter(config, filename)
+  wc.convert(stream)
+  wc.close()
