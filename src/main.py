@@ -98,7 +98,7 @@ config = {
   "available_awb_mode": ['auto', 'off', 'sunlight', 'cloudy', 'shade', 'tungsten', 'fluorescent', 'incandescent', 'flash', 'horizon'],
   "awb_mode": 'auto',
   "default_awb_mode": 'auto', # "awb_gains": 0.0 - 8.0 (),
-  "dpc": 3, # 0 - 3, default is 3 and 0 is disabled
+  "dpc": 0, # 0 - 3, default is 3 and 0 is disabled
   "default_dpc": 3,
   "raw_convert": True,
   "available_dpc_options": [0, 1, 2, 3], #https://www.raspberrypi.org/forums/viewtopic.php?f=43&t=277768
