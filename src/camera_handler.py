@@ -12,7 +12,11 @@ import document_handler
 import overlay_handler
 import gpio_handler
 
-def auto_mode(camera, overlay, config):
+def auto_mode():
+  global camera
+  global overlay
+  global config
+
   config['dpc'] = 3
   camera.iso = config["default_iso"]
   camera.exposure_mode = config["default_exposure_mode"]
@@ -310,7 +314,7 @@ def start_camera(config, skip_auto=False):
   camera = PiCamera(framerate=config["fps"])
 
   if skip_auto == False:
-    auto_mode(camera, overlay, config)
+    auto_mode()
 
   overlay = None
 
