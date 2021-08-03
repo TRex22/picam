@@ -271,6 +271,11 @@ def set_dpc(camera, overlay, config):
   camera, overlay = start_camera(config, skip_auto=True)
   start_preview(camera, config) # Runs main camera loop
 
+def set_raw_convert(camera, config):
+  config["raw_convert"] = not config["raw_convert"]
+  overlay_handler.display_text(camera, '', config)
+  print(f'raw_convert: {config["raw_convert"]}')
+
 def zoom(camera, config):
   current_zoom = camera.zoom
   print(f'current_zoom: {current_zoom}')
@@ -369,7 +374,7 @@ def take_single_shot(camera, overlay, config):
   with open(original_filename, 'wb') as f:
     f.write(stream.getbuffer())
 
-  if (config["convert_raw"] == True):
+  if (config["raw_convert"] == True):
     print("Begin conversion and save DNG raw ...")
     json_colour_profile = document_handler.load_colour_profile(config)
     output = RPICAM2DNG().convert(stream, json_camera_profile=json_colour_profile)

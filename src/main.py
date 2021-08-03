@@ -34,7 +34,7 @@
 # width = 4056
 # height = 3040
 
-VERSION = "0.0.18"
+VERSION = "0.0.19"
 
 # Modules
 import document_handler
@@ -45,7 +45,6 @@ import camera_handler
 ################################################################################
 config = {
   "colour_profile_path": "/home/pi/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Neutral Look.json",
-  "convert_raw": False,
   "dcim_path": 'home/pi/DCIM',
   "dcim_images_path_raw": '/home/pi/DCIM/images',
   "dcim_original_images_path": '/home/pi/DCIM/images/original',
@@ -99,8 +98,9 @@ config = {
   "awb_mode": 'auto',
   "default_awb_mode": 'auto', # "awb_gains": 0.0 - 8.0 (),
   "dpc": 3,
+  "raw_convert": False,
   "available_dpc_options": [0, 1, 2, 3], #https://www.raspberrypi.org/forums/viewtopic.php?f=43&t=277768
-  "available_menu_items": ["auto", "exposure_mode", "iso", "shutter_speed", "long_shutter_speed", "awb_mode", "hdr", "video", "resolution", "encoding", "dpc - star eater"],
+  "available_menu_items": ["auto", "exposure_mode", "iso", "shutter_speed", "long_shutter_speed", "awb_mode", "hdr", "video", "resolution", "encoding", "dpc - star eater", "raw_convert"],
   "menu_item": "auto",
   "default_menu_item": "auto",
   "hdr": False,
