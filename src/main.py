@@ -99,7 +99,7 @@ config = {
   "awb_mode": 'auto',
   "default_awb_mode": 'auto', # "awb_gains": 0.0 - 8.0 (),
   "dpc": 0, # 0 - 3, default is 3 and 0 is disabled
-  "default_dpc": 3,
+  "default_dpc": 0,
   "raw_convert": True,
   "available_dpc_options": [0, 1, 2, 3], #https://www.raspberrypi.org/forums/viewtopic.php?f=43&t=277768
   "available_menu_items": ["auto", "exposure_mode", "iso", "shutter_speed", "long_shutter_speed", "awb_mode", "hdr", "video", "resolution", "encoding", "dpc - star eater", "raw_convert"],
