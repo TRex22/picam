@@ -19,7 +19,7 @@ def auto_mode(camera, overlay, config):
   camera.shutter_speed = config["default_shutter_speed"]
   camera.awb_mode = config["default_awb_mode"]
 
-  set_dpc(camera, overlay, config)
+  set_dpc()
 
   overlay_handler.display_text(camera, '', config)
   print(f'auto mode!')
@@ -101,7 +101,11 @@ def adjust_encoding(camera, config):
   overlay_handler.display_text(camera, '', config)
   print(f'encoding: {config["encoding"]}')
 
-def set_dpc(camera, overlay, config):
+def set_dpc():
+  global camera
+  global overlay
+  global config
+
   current_dpc = config["dpc"]
   print(f'current_dpc: {current_dpc}')
 
