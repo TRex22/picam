@@ -379,7 +379,7 @@ def take_single_shot(camera, overlay, config):
 
   if (config["raw_convert"] == True):
     print("Begin conversion and save DNG raw ...")
-    convert_raw_via_thread(config, stream, filename)
+    ThreadRawConverter(config, stream, filename)
 
   else:
     print("--- skip raw conversion ---")
@@ -419,8 +419,3 @@ def write_via_thread(original_filename, write_type, stream):
   w = ThreadWriter(original_filename, write_type)
   w.write(stream)
   w.close()
-
-def convert_raw_via_thread(config, stream, filename):
-  wc = ThreadRawConverter(config, filename)
-  wc.convert(stream)
-  wc.close()
