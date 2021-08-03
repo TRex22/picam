@@ -336,10 +336,6 @@ def take_hdr_shot(camera, overlay, config):
 
   print("--- %s seconds ---" % (time.time() - start_time))
 
-  # Reset callbacks
-  stop_button_listen()
-  start_button_listen(config)
-
 def take_single_shot(camera, overlay, config):
   screen_w = config["screen_w"]
   screen_h = config["screen_h"]
@@ -386,10 +382,6 @@ def take_single_shot(camera, overlay, config):
   print("--- %s seconds ---" % (time.time() - start_time))
 
   camera.resolution = (screen_w, screen_h)
-
-  # Reset callbacks
-  stop_button_listen()
-  start_button_listen(config)
 
 def trigger_video(camera, overlay, config):
   if config["recording"]:
