@@ -53,6 +53,9 @@ def remove_overlay(camera, overlay, config):
     camera.annotate_text = None
     camera.framerate = config["fps"]
 
+  # del overlay # Doesnt work
+  # overlay = None # Global variable
+
 def generate_overlay_image(overlay_h, overlay_w):
   # Create an array representing a wxh image of
   # a cross through the center of the display. The shape of
