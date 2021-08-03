@@ -6,6 +6,7 @@ from io import BytesIO
 
 from picamerax import PiCamera
 from pydng.core import RPICAM2DNG
+import RPi.GPIO as GPIO
 
 # Modules
 import document_handler
