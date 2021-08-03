@@ -115,7 +115,7 @@ def button_callback_3():
   global config
 
   print("Button 3: Zoom")
-  camera_handler.zoom(camera, config)
+  zoom(camera, config)
   overlay = overlay_handler.add_overlay(camera, overlay, config)
 
 def button_callback_4():
@@ -128,12 +128,12 @@ def button_callback_4():
   overlay_handler.remove_overlay(camera, overlay, config)
 
   if config["video"]:
-    camera_handler.trigger_video(camera, overlay, config)
+    trigger_video(camera, overlay, config)
   else:
     if config["hdr"]:
-      camera_handler.take_hdr_shot(camera, overlay, config)
+      take_hdr_shot(camera, overlay, config)
     else:
-      camera_handler.take_single_shot(camera, overlay, config)
+      take_single_shot(camera, overlay, config)
 
   overlay = overlay_handler.add_overlay(camera, overlay, config)
 
