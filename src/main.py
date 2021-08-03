@@ -36,6 +36,10 @@
 
 VERSION = "0.0.18"
 
+global config
+global camera
+global overlay
+
 # Modules
 import document_handler
 import camera_handler
@@ -43,10 +47,6 @@ import camera_handler
 ################################################################################
 ##                                    Config                                  ##
 ################################################################################
-global config
-global camera
-global overlay
-
 config = {
   "colour_profile_path": "/home/pi/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Neutral Look.json",
   "convert_raw": False,
