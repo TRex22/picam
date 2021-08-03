@@ -130,4 +130,4 @@ document_handler.check_for_folders(config)
 global camera
 global overlay
 camera, overlay = camera_handler.start_camera(config) # Runs main camera loop
-camera_handler.stop_camera(camera, overlay, config)
+camera_handler.stop_camera()

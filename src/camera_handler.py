@@ -106,7 +106,7 @@ def set_dpc(camera, overlay, config):
   print(f'current_dpc: {current_dpc}')
 
   # Turn off Camera
-  stop_camera(camera, overlay, config)
+  stop_camera()
 
   # Set DPC Mode
   # TODO: Add to MMAL interface here: https://github.com/labthings/picamerax/blob/master/picamerax/mmal.py
