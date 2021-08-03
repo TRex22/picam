@@ -56,6 +56,8 @@ def remove_overlay(camera, overlay, config):
     # del overlay
     overlay = None
 
+  return None
+
 def generate_overlay_image(overlay_h, overlay_w):
   # Create an array representing a wxh image of
   # a cross through the center of the display. The shape of

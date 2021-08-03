@@ -72,7 +72,7 @@ def start_camera(original_config, skip_auto=False):
   overlay_handler.display_text(camera, '', config)
   print(f'screen: ({screen_w}, {screen_h}), res: ({width}, {height})')
 
-  start_button_listen(camera, overlay, config)
+  start_button_listen(config)
 
   return [camera, overlay]
 
@@ -80,7 +80,7 @@ def stop_camera(camera, overlay, config):
   stop_preview(camera, config)
 
   if overlay != None:
-    overlay_handler.remove_overlay(camera, overlay, config)
+    overlay = overlay_handler.remove_overlay(camera, overlay, config)
 
   if camera != None:
     camera.close()
@@ -125,7 +125,7 @@ def button_callback_4():
 
   print("Button 4: Take shot")
 
-  overlay_handler.remove_overlay(camera, overlay, config)
+  overlay = overlay_handler.remove_overlay(camera, overlay, config)
 
   if config["video"]:
     trigger_video(camera, overlay, config)
@@ -137,7 +137,7 @@ def button_callback_4():
 
   overlay = overlay_handler.add_overlay(camera, overlay, config)
 
-def start_button_listen(camera, overlay, config):
+def start_button_listen(config):
   # GPIO Config
   button_1 = config["gpio"]["button_1"]
   button_2 = config["gpio"]["button_2"]
@@ -338,7 +338,7 @@ def take_hdr_shot(camera, overlay, config):
 
   # Reset callbacks
   stop_button_listen()
-  start_button_listen(camera, overlay, config)
+  start_button_listen(config)
 
 def take_single_shot(camera, overlay, config):
   screen_w = config["screen_w"]
@@ -389,7 +389,7 @@ def take_single_shot(camera, overlay, config):
 
   # Reset callbacks
   stop_button_listen()
-  start_button_listen(camera, overlay, config)
+  start_button_listen(config)
 
 def trigger_video(camera, overlay, config):
   if config["recording"]:
