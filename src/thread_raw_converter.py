@@ -20,6 +20,7 @@ class ThreadRawConverter:
   def internal_converter(self):
     while not self.finished:
       if self.stream != None:
+        # TODO: Copy over the EXIF data
         output = RPICAM2DNG().convert(self.stream, json_camera_profile=self.json_colour_profile)
 
         self.thread_writer.write(output)

@@ -32,6 +32,7 @@ def select_option(camera, overlay, config):
   if config["menu_item"] == "encoding":
     camera_handler.adjust_encoding(camera, config)
   if config["menu_item"] == "dpc - star eater":
+    camera_handler.adjust_dpc(config)
     camera_handler.set_dpc(camera, overlay, config)
   if config["menu_item"] == "raw_convert":
     camera_handler.set_raw_convert(camera, config)

@@ -115,3 +115,4 @@ https://torger.se/anders/dcamprof.html#download
   - https://github.com/raspberrypi/userland/blob/3fd8527eefd8790b4e8393458efc5f94eb21a615/interface/mmal/mmal_parameters_camera.h
   - https://picamera.readthedocs.io/en/release-1.13/api_mmalobj.html
   - http://www.jvcref.com/files/PI/documentation/html/struct_m_m_a_l___p_a_r_a_m_e_t_e_r___h_e_a_d_e_r___t.html
+  - https://picamera.readthedocs.io/en/release-1.10/api_camera.html#picamera.camera.PiCamera.annotate_text_size

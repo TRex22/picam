@@ -66,6 +66,7 @@ config = {
   "height": 3040, # Image height
   "video_width": 4056,
   "video_height": 3040,
+  "annotate_text_size": 48, # 6 to 160, inclusive. The default is 32
   "exposure_mode": 'auto',
   "default_exposure_mode": 'auto',
   "default_zoom": (0.0, 0.0, 1.0, 1.0),
@@ -97,8 +98,9 @@ config = {
   "available_awb_mode": ['auto', 'off', 'sunlight', 'cloudy', 'shade', 'tungsten', 'fluorescent', 'incandescent', 'flash', 'horizon'],
   "awb_mode": 'auto',
   "default_awb_mode": 'auto', # "awb_gains": 0.0 - 8.0 (),
-  "dpc": 3,
-  "raw_convert": False,
+  "dpc": 3, # 0 - 3, default is 3 and 0 is disabled
+  "default_dpc": 3,
+  "raw_convert": True,
   "available_dpc_options": [0, 1, 2, 3], #https://www.raspberrypi.org/forums/viewtopic.php?f=43&t=277768
   "available_menu_items": ["auto", "exposure_mode", "iso", "shutter_speed", "long_shutter_speed", "awb_mode", "hdr", "video", "resolution", "encoding", "dpc - star eater", "raw_convert"],
   "menu_item": "auto",

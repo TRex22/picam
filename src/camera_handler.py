@@ -168,7 +168,7 @@ def stop_button_listen():
 ##                                Camera Actions                              ##
 ################################################################################
 def auto_mode(camera, overlay, config):
-  config['dpc'] = 3
+  config['dpc'] = config['default_dpc']
   camera.iso = config["default_iso"]
   camera.exposure_mode = config["default_exposure_mode"]
   camera.shutter_speed = config["default_shutter_speed"]
@@ -256,8 +256,29 @@ def adjust_encoding(camera, config):
   overlay_handler.display_text(camera, '', config)
   print(f'encoding: {config["encoding"]}')
 
+def adjust_dpc(config):
+  current_dpc = config["dpc"]
+
+  if (current_dpc == config["default_dpc"]):
+    print("Set DPC to disabled")
+    config["dpc"] = 0
+  elif (current_dpc == 0):
+    print("Set DPC to 1")
+    config["dpc"] = 1
+  elif (current_dpc == 1):
+    print("Set DPC to 2")
+    config["dpc"] = 2
+  elif (current_dpc == 2)
+    print("Set DPC to 3")
+    config["dpc"] = 3
+  else:
+    print("Reset DPC")
+    config["dpc"] = config["default_dpc"]
+
 def set_dpc(camera, overlay, config):
   current_dpc = config["dpc"]
+  if (current_dpc == config["default_dpc"]): return None
+
   print(f'current_dpc: {current_dpc}')
 
   # Turn off Camera
