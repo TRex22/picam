@@ -48,7 +48,7 @@ def add_overlay(camera, overlay, config):
   return overlay
 
 def remove_overlay(camera, overlay, config):
-  if camera != None:
+  if camera != None and overlay != None:
     camera.remove_overlay(overlay)
     camera.annotate_text = None
     camera.framerate = config["fps"]
