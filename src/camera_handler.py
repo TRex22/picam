@@ -167,14 +167,15 @@ def stop_button_listen():
 ################################################################################
 ##                                Camera Actions                              ##
 ################################################################################
-def auto_mode(camera, overlay, config):
+def auto_mode(camera, overlay, config, skip_dpc=False):
   config['dpc'] = config['default_dpc']
   camera.iso = config["default_iso"]
   camera.exposure_mode = config["default_exposure_mode"]
   camera.shutter_speed = config["default_shutter_speed"]
   camera.awb_mode = config["default_awb_mode"]
 
-  set_dpc(camera, overlay, config)
+  if skip_dpc == False:
+    set_dpc(camera, overlay, config)
 
   overlay_handler.display_text(camera, '', config)
   print(f'auto mode!')
@@ -277,8 +278,6 @@ def adjust_dpc(config):
 
 def set_dpc(camera, overlay, config):
   current_dpc = config["dpc"]
-  if (current_dpc == config["default_dpc"]): return None
-
   print(f'current_dpc: {current_dpc}')
 
   # Turn off Camera
