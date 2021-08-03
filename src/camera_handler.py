@@ -363,7 +363,7 @@ def take_single_shot(camera, overlay, config):
   filecount = len(existing_files)
   frame_count = filecount
 
-  filename = f'{dcim_images_path_raw}/{frame_count}.{format}'
+  raw_filename = f'{dcim_images_path_raw}/{frame_count}.dng'
   original_filename = f'{dcim_original_images_path}/{frame_count}.{format}'
   print(original_filename)
 
@@ -379,7 +379,7 @@ def take_single_shot(camera, overlay, config):
 
   if (config["raw_convert"] == True):
     print("Begin conversion and save DNG raw ...")
-    ThreadRawConverter(config, stream, filename)
+    ThreadRawConverter(config, stream, raw_filename)
 
   else:
     print("--- skip raw conversion ---")

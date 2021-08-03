@@ -20,7 +20,7 @@ class ThreadRawConverter:
   def internal_converter(self):
     while not self.finished:
       if self.stream != None:
-        RPICAM2DNG().convert(stream, json_camera_profile=json_colour_profile)
+        RPICAM2DNG().convert(self.stream, json_camera_profile=json_colour_profile)
         self.thread_writer.write(self.output)
         self.finished = True
         self.thread_writer.close()
