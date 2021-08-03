@@ -268,7 +268,7 @@ def adjust_dpc(config):
   elif (current_dpc == 1):
     print("Set DPC to 2")
     config["dpc"] = 2
-  elif (current_dpc == 2)
+  elif (current_dpc == 2):
     print("Set DPC to 3")
     config["dpc"] = 3
   else:
