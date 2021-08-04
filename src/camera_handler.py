@@ -300,7 +300,7 @@ def set_raw_convert(camera, config):
   overlay_handler.display_text(camera, '', config)
   print(f'raw_convert: {config["raw_convert"]}')
 
-def set_fom(camera, config):
+def adjust_fom(camera, config):
   config["fom"] = not config["fom"]
   overlay_handler.display_text(camera, '', config)
 
@@ -462,8 +462,10 @@ def write_via_thread(original_filename, write_type, stream):
 def set_mmal_parameter(camera, parameter, value):
   if isinstance(value, bool):
     ret = mmal.mmal_port_parameter_set_boolean(camera._camera.control._port, parameter, value)
+    print(f'MMAL Response: {ret}')
     return ret
   else:
     converted_value = to_rational(value)
     ret = mmal.mmal_port_parameter_set_rational(camera._camera.control._port, parameter, converted_value)
+    print(f'MMAL Response: {ret}')
     return ret
