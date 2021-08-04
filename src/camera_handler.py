@@ -5,6 +5,9 @@ import glob
 from io import BytesIO
 
 from picamerax import PiCamera
+from picamerax import mmal, mmalobj, exc
+from picamerax.mmalobj import to_rational, to_fraction, to_resolution
+
 import RPi.GPIO as GPIO
 
 # Modules
@@ -177,6 +180,7 @@ def auto_mode(camera, overlay, config, skip_dpc=False):
   if skip_dpc == False:
     set_dpc(camera, overlay, config)
 
+  set_fom(camera, config)
   overlay_handler.display_text(camera, '', config)
   print(f'auto mode!')
 
@@ -295,6 +299,16 @@ def set_raw_convert(camera, config):
   config["raw_convert"] = not config["raw_convert"]
   overlay_handler.display_text(camera, '', config)
   print(f'raw_convert: {config["raw_convert"]}')
+
+def set_fom(camera, config):
+  config["fom"] = not config["fom"]
+  overlay_handler.display_text(camera, '', config)
+
+def set_fom(camera, config):
+  value = config["fom"]
+  parameter = mmal.MMAL_PARAMETER_DRAW_BOX_FACES_AND_FOCUS
+  set_mmal_parameter(camera, parameter, value)
+  print(f'fom: {config["fom"]}')
 
 def zoom(camera, config):
   current_zoom = camera.zoom
@@ -439,3 +453,17 @@ def write_via_thread(original_filename, write_type, stream):
   w = ThreadWriter(original_filename, write_type)
   w.write(stream)
   w.close()
+
+# Available conversions
+# to_resolution
+# to_fraction
+# to_rational
+# https://gist.github.com/rwb27/a23808e9f4008b48de95692a38ddaa08
+def set_mmal_parameter(camera, parameter, value):
+  if isinstance(value, bool):
+    ret = mmal.mmal_port_parameter_set_boolean(camera._camera.control._port, parameter, value)
+    return ret
+  else:
+    converted_value = to_rational(value)
+    ret = mmal.mmal_port_parameter_set_rational(camera._camera.control._port, parameter, converted_value)
+    return ret

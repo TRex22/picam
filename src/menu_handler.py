@@ -36,3 +36,8 @@ def select_option(camera, overlay, config):
     camera_handler.set_dpc(camera, overlay, config)
   if config["menu_item"] == "raw_convert":
     camera_handler.set_raw_convert(camera, config)
+  if config["menu_item"] == "fom":
+    camera_handler.adjust_fom(camera, config)
+    camera_handler.set_fom(camera, config)
+  # if config["menu_item"] == "dro":
+  #   camera_handler.set_dro(camera, config)

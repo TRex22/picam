@@ -116,3 +116,7 @@ https://torger.se/anders/dcamprof.html#download
   - https://picamera.readthedocs.io/en/release-1.13/api_mmalobj.html
   - http://www.jvcref.com/files/PI/documentation/html/struct_m_m_a_l___p_a_r_a_m_e_t_e_r___h_e_a_d_e_r___t.html
   - https://picamera.readthedocs.io/en/release-1.10/api_camera.html#picamera.camera.PiCamera.annotate_text_size
+  - https://stamm-wilbrandt.de/en/Raspberry_camera.html
+  - https://github.com/rellimmot/Sony-IMX219-Raspberry-Pi-V2-CMOS/blob/master/RASPBERRY%20PI%20CAMERA%20V2%20DATASHEET%20IMX219PQH5_7.0.0_Datasheet_XXX.PDF
+  - Global external shutter: https://github.com/Hermann-SW/Raspberry_v1_camera_global_external_shutter
+  - Manual MMAL: https://gist.github.com/rwb27/a23808e9f4008b48de95692a38ddaa08
