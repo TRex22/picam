@@ -461,8 +461,8 @@ def trigger_video(camera, overlay, config):
 
 def write_via_thread(original_filename, write_type, stream):
   w = ThreadWriter(original_filename, write_type)
-  w.write(stream, auto_close=True)
-  # w.close()
+  w.write(stream)
+  w.close()
 
 # Available conversions
 # to_resolution
