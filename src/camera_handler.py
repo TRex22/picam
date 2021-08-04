@@ -310,6 +310,16 @@ def set_fom(camera, config):
   set_mmal_parameter(camera, parameter, value)
   print(f'fom: {config["fom"]}')
 
+def adjust_adjust_hdr2(camera, config):
+  config["hdr2"] = not config["hdr2"]
+  overlay_handler.display_text(camera, '', config)
+
+def set_set_hdr2(camera, config):
+  value = config["hdr2"]
+  parameter = mmal.MMAL_PARAMETER_HIGH_DYNAMIC_RANGE
+  set_mmal_parameter(camera, parameter, value)
+  print(f'hdr2: {config["hdr2"]}')
+
 def zoom(camera, config):
   current_zoom = camera.zoom
   print(f'current_zoom: {current_zoom}')
@@ -469,3 +479,22 @@ def set_mmal_parameter(camera, parameter, value):
     ret = mmal.mmal_port_parameter_set_rational(camera._camera.control._port, parameter, converted_value)
     print(f'MMAL Response: {ret}')
     return ret
+
+# TODO:
+# https://github.com/labthings/picamerax/blob/master/picamerax/mmal.py
+# MMAL_PARAMETER_HIGH_DYNAMIC_RANGE,
+# MMAL_PARAMETER_DYNAMIC_RANGE_COMPRESSION,
+# MMAL_PARAMETER_ALGORITHM_CONTROL,
+# MMAL_PARAMETER_SHARPNESS,
+# MMAL_PARAMETER_ANTISHAKE,
+# MMAL_PARAMETER_CAMERA_BURST_CAPTURE,
+# MMAL_PARAMETER_DPC # https://github.com/raspberrypi/userland/blob/3fd8527eefd8790b4e8393458efc5f94eb21a615/interface/mmal/mmal_parameters_camera.h
+# MMAL_PARAMETER_SHUTTER_SPEED
+# MMAL_PARAMETER_BLACK_LEVEL
+# MMAL_PARAMETER_ANALOG_GAIN
+# MMAL_PARAMETER_DIGITAL_GAIN
+# MMAL_PARAMETER_STILLS_DENOISE
+# MMAL_PARAMETER_ZERO_SHUTTER_LAG
+# MMAL_PARAMETER_FIELD_OF_VIEW
+# MMAL_PARAMETER_EXPOSURE_COMP
+# MMAL_PARAMETER_FLICKER_AVOID

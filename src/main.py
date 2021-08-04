@@ -34,7 +34,7 @@
 # width = 4056
 # height = 3040
 
-VERSION = "0.0.22"
+VERSION = "0.0.23"
 
 # Modules
 import document_handler
@@ -102,12 +102,13 @@ config = {
   "default_dpc": 0,
   "raw_convert": True,
   "available_dpc_options": [0, 1, 2, 3], #https://www.raspberrypi.org/forums/viewtopic.php?f=43&t=277768
-  "available_menu_items": ["auto", "exposure_mode", "iso", "shutter_speed", "long_shutter_speed", "awb_mode", "hdr", "video", "resolution", "encoding", "dpc - star eater", "raw_convert", "fom", "dro"],
+  "available_menu_items": ["auto", "exposure_mode", "iso", "shutter_speed", "long_shutter_speed", "awb_mode", "hdr", "video", "resolution", "encoding", "dpc - star eater", "raw_convert", "fom", "hdr2"],
   "menu_item": "auto",
   "default_menu_item": "auto",
   "hdr": False,
   "preview": True,
   "fom": True,
+  "hdr2": False,
   "preview_mode": "built-in", # "built-in" "continuous_shot"
   "default_preview_mode": 'built-in',
   "video": False,

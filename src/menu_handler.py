@@ -39,5 +39,6 @@ def select_option(camera, overlay, config):
   if config["menu_item"] == "fom":
     camera_handler.adjust_fom(camera, config)
     camera_handler.set_fom(camera, config)
-  # if config["menu_item"] == "dro":
-  #   camera_handler.set_dro(camera, config)
+  if config["menu_item"] == "hdr2":
+    camera_handler.adjust_hdr2(camera, config)
+    camera_handler.set_hdr2(camera, config)
