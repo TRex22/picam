@@ -310,11 +310,11 @@ def set_fom(camera, config):
   set_mmal_parameter(camera, parameter, value)
   print(f'fom: {config["fom"]}')
 
-def adjust_adjust_hdr2(camera, config):
+def adjust_hdr2(camera, config):
   config["hdr2"] = not config["hdr2"]
   overlay_handler.display_text(camera, '', config)
 
-def set_set_hdr2(camera, config):
+def set_hdr2(camera, config):
   value = config["hdr2"]
   parameter = mmal.MMAL_PARAMETER_HIGH_DYNAMIC_RANGE
   set_mmal_parameter(camera, parameter, value)
