@@ -8,10 +8,12 @@ class ThreadWriter:
     self.filewriter = open(*args)
     self.queue = Queue()
     self.finished = False
+    self.auto_close = False
     Thread(name = "ThreadWriter", target=self.internal_writer).start()
     
-  def write(self, data):
+  def write(self, data, auto_close=False):
     self.queue.put(data)
+    self.auto_close = auto_close
     
   def internal_writer(self):
     while not self.finished:
@@ -21,6 +23,11 @@ class ThreadWriter:
         continue
       self.filewriter.write(data)
       self.queue.task_done()
+
+      if self.auto_close == True:
+      	self.queue.join()
+    	self.finished = True
+    	self.filewriter.close()
     
   def close(self):
     self.queue.join()
