@@ -25,9 +25,9 @@ class ThreadWriter:
       self.queue.task_done()
 
       if self.auto_close == True:
-      	self.queue.join()
-    	self.finished = True
-    	self.filewriter.close()
+        self.queue.join()
+        self.finished = True
+        self.filewriter.close()
     
   def close(self):
     self.queue.join()
