@@ -13,7 +13,7 @@ import document_handler
 # TODO: Need to figure out highspeed capture (~11FPS)
 # TODO: Handle commandline parameters
 # For now look at a static folder
-dcim_hdr_images_path = '/home/pi/DCIM/images/hdr'
+# dcim_hdr_images_path = '/home/pi/DCIM/images/hdr'
 # dcim_hdr_images_path = '/mnt/i/tmp/hdr'
 dcim_hdr_images_path = '/mnt/g/tmp/hdr'
 

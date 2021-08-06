@@ -6,6 +6,9 @@ I hope that this project will inspire others to help contribute and eventually m
 
 This is still early days and requires a lot of work before its easy to use.
 
+# Development branch
+I actively work on the ``development` branch - `main` is used for releases only.
+
 # Requirements
 - opencv-python
 - numpy

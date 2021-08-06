@@ -5,8 +5,8 @@ import glob
 from io import BytesIO
 
 from picamerax import PiCamera
-from picamerax import mmal, mmalobj, exc
-from picamerax.mmalobj import to_rational, to_fraction, to_resolution
+from picamerax import mmal
+from picamerax.mmalobj import to_rational#, to_fraction, to_resolution
 
 import RPi.GPIO as GPIO
 
@@ -22,17 +22,18 @@ from thread_raw_converter import ThreadRawConverter
 def start_preview(camera, config):
   config["preview"] = True
 
-  format = config["format"]
-  bayer = config["bayer"]
-
   # options are: "built-in" "continuous_shot"
   if config["preview_mode"] == "continuous_shot":
+    format = config["format"]
+    bayer = config["bayer"]
+
     # for frame in camera.capture_continuous(rawCapture, format=format, bayer=bayer, use_video_port=True):
     # TODO:
     time.sleep(0.1)
   else: # default
     camera.start_preview()
-    message = input("Press enter to quit\n\n") # Run until someone presses enter
+    key_press = input("Press enter to quit\n\n") # Run until someone presses enter
+    print(key_press)
 
 def stop_preview(camera, config):
   # Just set the variable. The loop in the other thread will halt on next iteration
@@ -61,7 +62,7 @@ def start_camera(original_config, skip_auto=False):
   height = config["height"]
 
   # Init
-  camera = PiCamera(framerate=config["fps"])
+  camera = PiCamera(framerate=fps)
 
   if skip_auto == False:
     auto_mode(camera, overlay, config)
@@ -83,13 +84,10 @@ def stop_camera(camera, overlay, config):
   stop_preview(camera, config)
 
   if overlay != None:
-    overlay = overlay_handler.remove_overlay(camera, overlay, config)
+    overlay_handler.remove_overlay(camera, overlay, config)
 
   if camera != None:
     camera.close()
-
-  camera = None
-  overlay = None
 
   stop_button_listen()
 
@@ -170,6 +168,21 @@ def stop_button_listen():
 ################################################################################
 ##                                Camera Actions                              ##
 ################################################################################
+
+# TODO - Better auto and other modes
+# Reference:
+# camera.iso = 1600
+# camera.shutter_speed = 1000000000
+# camera.exposure_compensation = 10
+# camera.exposure_mode = 'off' #'auto'
+# camera.image_denoise = True
+# camera.image_effect = 'none'
+# camera.drc_strength = 'off'
+# camera.contrast = 10
+# camera.brightness = 50
+# camera.hflip = False
+# camera.vflip = False
+# camera.rotation = 270
 def auto_mode(camera, overlay, config, skip_dpc=False):
   config['dpc'] = config['default_dpc']
   camera.iso = config["default_iso"]
@@ -357,7 +370,6 @@ def take_hdr_shot(camera, overlay, config):
   nimages = 5
   exposure_min = 25
   exposure_max = 75
-  exp_step = 5
 
   exp_step = (exposure_max - exposure_min) / (nimages - 1.0)
   exposure_times = range(exposure_min, exposure_max + 1, int(exp_step))
