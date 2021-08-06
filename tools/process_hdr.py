@@ -15,6 +15,7 @@ import document_handler
 # For now look at a static folder
 dcim_hdr_images_path = '/home/pi/DCIM/images/hdr'
 # dcim_hdr_images_path = '/mnt/i/tmp/hdr'
+dcim_hdr_images_path = '/mnt/g/tmp/hdr'
 
 filetype = '.png'
 
@@ -31,11 +32,11 @@ def compute_exposure_times(nimages):
 
   return exposure_times
 
-files = glob.glob(f'{dcim_hdr_images_path}/*')
+files = glob.glob(f'{dcim_hdr_images_path}/*.*')
 print(files)
 
 filenames = files # TODO: automate
-nimages = 5 #10 #2160 # TODO: Automate
+nimages = 9 #3 #10 #2160 # TODO: Automate
 frame_count = 0 # TODO: automate
 
 exposure_times = compute_exposure_times(nimages)

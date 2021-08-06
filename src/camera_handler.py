@@ -1,20 +1,186 @@
+import os
 import time
 import glob
 
 from io import BytesIO
 
-from pydng.core import RPICAM2DNG
+from picamerax import PiCamera
+from picamerax import mmal, mmalobj, exc
+from picamerax.mmalobj import to_rational, to_fraction, to_resolution
+
+import RPi.GPIO as GPIO
 
 # Modules
-import document_handler
 import overlay_handler
+import menu_handler
+from thread_writer import ThreadWriter
+from thread_raw_converter import ThreadRawConverter
 
-def auto_mode(camera, config):
+################################################################################
+##                                Camera Instance                             ##
+################################################################################
+def start_preview(camera, config):
+  config["preview"] = True
+
+  format = config["format"]
+  bayer = config["bayer"]
+
+  # options are: "built-in" "continuous_shot"
+  if config["preview_mode"] == "continuous_shot":
+    # for frame in camera.capture_continuous(rawCapture, format=format, bayer=bayer, use_video_port=True):
+    # TODO:
+    time.sleep(0.1)
+  else: # default
+    camera.start_preview()
+    message = input("Press enter to quit\n\n") # Run until someone presses enter
+
+def stop_preview(camera, config):
+  # Just set the variable. The loop in the other thread will halt on next iteration
+  config["preview"] = False
+
+  if config["preview_mode"] == config["default_preview_mode"]:
+    camera.stop_preview()
+
+def start_camera(original_config, skip_auto=False):
+  global camera
+  global overlay
+  global config
+
+  # Force variables to be blanked
+  camera = None
+  overlay = None
+  config = original_config
+
+  # Config Variables
+  fps = config["fps"]
+  screen_fps = config["screen_fps"]
+
+  screen_w = config["screen_w"]
+  screen_h = config["screen_h"]
+  width = config["width"]
+  height = config["height"]
+
+  # Init
+  camera = PiCamera(framerate=config["fps"])
+
+  if skip_auto == False:
+    auto_mode(camera, overlay, config)
+
+  overlay = None
+
+  camera.resolution = (screen_w, screen_h)
+  camera.framerate = screen_fps # fps
+
+  overlay = overlay_handler.add_overlay(camera, overlay, config)
+  overlay_handler.display_text(camera, '', config)
+  print(f'screen: ({screen_w}, {screen_h}), res: ({width}, {height})')
+
+  start_button_listen(config)
+
+  return [camera, overlay]
+
+def stop_camera(camera, overlay, config):
+  stop_preview(camera, config)
+
+  if overlay != None:
+    overlay = overlay_handler.remove_overlay(camera, overlay, config)
+
+  if camera != None:
+    camera.close()
+
+  camera = None
+  overlay = None
+
+  stop_button_listen()
+
+################################################################################
+##                                  GPIO Stuff                                ##
+################################################################################
+def button_callback_1():
+  global camera
+  global overlay
+  global config
+
+  print("Button 1: Menu")
+  menu_handler.select_menu_item(camera, config)
+
+def button_callback_2():
+  global camera
+  global overlay
+  global config
+
+  print("Button 2: Option")
+  menu_handler.select_option(camera, overlay, config)
+
+def button_callback_3():
+  global camera
+  global overlay
+  global config
+
+  print("Button 3: Zoom")
+  zoom(camera, config)
+  overlay = overlay_handler.add_overlay(camera, overlay, config)
+
+def button_callback_4():
+  global camera
+  global overlay
+  global config
+
+  print("Button 4: Take shot")
+
+  overlay = overlay_handler.remove_overlay(camera, overlay, config)
+
+  if config["video"]:
+    trigger_video(camera, overlay, config)
+  else:
+    if config["hdr"]:
+      take_hdr_shot(camera, overlay, config)
+    else:
+      take_single_shot(camera, overlay, config)
+
+  overlay = overlay_handler.add_overlay(camera, overlay, config)
+
+def start_button_listen(config):
+  # GPIO Config
+  button_1 = config["gpio"]["button_1"]
+  button_2 = config["gpio"]["button_2"]
+  button_3 = config["gpio"]["button_3"]
+  button_4 = config["gpio"]["button_4"]
+  bouncetime = config["gpio"]["bouncetime"]
+
+  # Set button callbacks
+  # GPIO.setwarnings(False) # Ignore warning for now
+  GPIO.setwarnings(True)
+  # GPIO.setmode(GPIO.BOARD) # Use physical pin numbering
+  GPIO.setmode(GPIO.BCM)
+
+  GPIO.setup(button_1, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+  GPIO.setup(button_2, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+  GPIO.setup(button_3, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+  GPIO.setup(button_4, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+
+  GPIO.add_event_detect(button_1, GPIO.RISING, callback=lambda x: button_callback_1(), bouncetime=bouncetime)
+  GPIO.add_event_detect(button_2, GPIO.RISING, callback=lambda x: button_callback_2(), bouncetime=bouncetime)
+  GPIO.add_event_detect(button_3, GPIO.RISING, callback=lambda x: button_callback_3(), bouncetime=bouncetime)
+  GPIO.add_event_detect(button_4, GPIO.RISING, callback=lambda x: button_callback_4(), bouncetime=bouncetime)
+
+def stop_button_listen():
+  GPIO.cleanup() # Clean up
+
+################################################################################
+##                                Camera Actions                              ##
+################################################################################
+def auto_mode(camera, overlay, config, skip_dpc=False):
+  config['dpc'] = config['default_dpc']
   camera.iso = config["default_iso"]
   camera.exposure_mode = config["default_exposure_mode"]
   camera.shutter_speed = config["default_shutter_speed"]
   camera.awb_mode = config["default_awb_mode"]
 
+  if skip_dpc == False:
+    set_dpc(camera, overlay, config)
+
+  set_fom(camera, config)
   overlay_handler.display_text(camera, '', config)
   print(f'auto mode!')
 
@@ -56,6 +222,18 @@ def adjust_shutter_speed(camera, config):
   overlay_handler.display_text(camera, '', config)
   print(f'shutter_speed: {config["shutter_speed"]}')
 
+def long_shutter_speed(camera, config):
+  idex = config["available_long_shutter_speeds"].index(config["shutter_speed"]) + 1
+
+  if idex < len(config["available_long_shutter_speeds"]):
+    config["shutter_speed"] = config["available_long_shutter_speeds"][idex]
+  else:
+    config["shutter_speed"] = config["default_shutter_speed"]
+
+  camera.shutter_speed = config["shutter_speed"]
+  overlay_handler.display_text(camera, '', config)
+  print(f'shutter_speed: {config["shutter_speed"]}')
+
 def adjust_awb_mode(camera, config):
   idex = config["available_awb_mode"].index(config["awb_mode"]) + 1
 
@@ -83,36 +261,102 @@ def adjust_encoding(camera, config):
   overlay_handler.display_text(camera, '', config)
   print(f'encoding: {config["encoding"]}')
 
+def adjust_dpc(config):
+  current_dpc = config["dpc"]
+
+  if (current_dpc == config["default_dpc"]):
+    print("Set DPC to disabled")
+    config["dpc"] = 0
+  elif (current_dpc == 0):
+    print("Set DPC to 1")
+    config["dpc"] = 1
+  elif (current_dpc == 1):
+    print("Set DPC to 2")
+    config["dpc"] = 2
+  elif (current_dpc == 2):
+    print("Set DPC to 3")
+    config["dpc"] = 3
+  else:
+    print("Reset DPC")
+    config["dpc"] = config["default_dpc"]
+
+def set_dpc(camera, overlay, config):
+  current_dpc = config["dpc"]
+  print(f'current_dpc: {current_dpc}')
+
+  # Turn off Camera
+  stop_camera(camera, overlay, config)
+
+  # Set DPC Mode
+  # TODO: Add to MMAL interface here: https://github.com/labthings/picamerax/blob/master/picamerax/mmal.py
+  os.system(f'sudo vcdbg set imx477_dpc {current_dpc}') # TODO: Security risk here!
+
+  # Start Camera
+  camera, overlay = start_camera(config, skip_auto=True)
+  start_preview(camera, config) # Runs main camera loop
+
+def set_raw_convert(camera, config):
+  config["raw_convert"] = not config["raw_convert"]
+  overlay_handler.display_text(camera, '', config)
+  print(f'raw_convert: {config["raw_convert"]}')
+
+def adjust_fom(camera, config):
+  config["fom"] = not config["fom"]
+  overlay_handler.display_text(camera, '', config)
+
+def set_fom(camera, config):
+  value = config["fom"]
+  parameter = mmal.MMAL_PARAMETER_DRAW_BOX_FACES_AND_FOCUS
+  set_mmal_parameter(camera, parameter, value)
+  print(f'fom: {config["fom"]}')
+
+def adjust_hdr2(camera, config):
+  config["hdr2"] = not config["hdr2"]
+  overlay_handler.display_text(camera, '', config)
+
+def set_hdr2(camera, config):
+  value = config["hdr2"]
+  parameter = mmal.MMAL_PARAMETER_HIGH_DYNAMIC_RANGE
+  set_mmal_parameter(camera, parameter, value)
+  print(f'hdr2: {config["hdr2"]}')
+
 def zoom(camera, config):
   current_zoom = camera.zoom
+  print(f'current_zoom: {current_zoom}')
 
-  if (current_zoom == config["max_zoom"]):
-    camera.zoom = config["default_zoom"]
-  else:
+  if (current_zoom == config["default_zoom"]):
+    print("Set Zoom to max_zoom")
     camera.zoom = config["max_zoom"]
+  elif (current_zoom == config["max_zoom"]):
+    print("Set Zoom to max_zoom_2")
+    camera.zoom = config["max_zoom_2"]
+  elif (current_zoom == config["max_zoom_2"]):
+    print("Set Zoom to max_zoom_3")
+    camera.zoom = config["max_zoom_3"]
+  else:
+    print("Reset Zoom")
+    camera.zoom = config["default_zoom"]
 
-def take_hdr_shot(camera, config):
+def take_hdr_shot(camera, overlay, config):
   screen_w = config["screen_w"]
   screen_h = config["screen_h"]
 
   width = config["width"]
   height = config["height"]
 
-  # dcim_path = config["dcim_path"]
-  # dcim_images_path_raw = config["dcim_images_path_raw"]
-  # dcim_original_images_path = config["dcim_original_images_path"]
+  format = config["format"]
+  bayer = config["bayer"]
+
   dcim_hdr_images_path = config["dcim_hdr_images_path"]
-  # dcim_videos_path = config["dcim_videos_path"]
-  # dcim_tmp_path = config["dcim_tmp_path"]
 
   camera.resolution = (width, height)
 
   start_time = time.time()
 
   # SEE: https://github.com/KEClaytor/pi-hdr-timelapse
-  nimages = 5 #10 #2160
-  exposure_min = 10
-  exposure_max = 80 #90
+  nimages = 5
+  exposure_min = 25
+  exposure_max = 75
   exp_step = 5
 
   exp_step = (exposure_max - exposure_min) / (nimages - 1.0)
@@ -132,7 +376,9 @@ def take_hdr_shot(camera, config):
     camera.brightness = step
     # camera.exposure_compensation = step
 
-    camera.capture(filename, format, bayer=True)
+    stream = BytesIO()
+    camera.capture(stream, format, bayer=bayer)
+    write_via_thread(filename, 'wb', stream.getbuffer())
 
   camera.brightness = original_brightness
   # camera.exposure_compensation = original_exposure_compensation
@@ -144,19 +390,15 @@ def take_hdr_shot(camera, config):
 
   print("--- %s seconds ---" % (time.time() - start_time))
 
-def take_single_shot(camera, config):
+def take_single_shot(camera, overlay, config):
   screen_w = config["screen_w"]
   screen_h = config["screen_h"]
 
   width = config["width"]
   height = config["height"]
 
-  # dcim_path = config["dcim_path"]
   dcim_images_path_raw = config["dcim_images_path_raw"]
   dcim_original_images_path = config["dcim_original_images_path"]
-  # dcim_hdr_images_path = config["dcim_hdr_images_path"]
-  # dcim_videos_path = config["dcim_videos_path"]
-  # dcim_tmp_path = config["dcim_tmp_path"]
 
   format = config["format"]
   bayer = config["bayer"]
@@ -165,7 +407,7 @@ def take_single_shot(camera, config):
   filecount = len(existing_files)
   frame_count = filecount
 
-  filename = f'{dcim_images_path_raw}/{frame_count}.{format}'
+  raw_filename = f'{dcim_images_path_raw}/{frame_count}.dng'
   original_filename = f'{dcim_original_images_path}/{frame_count}.{format}'
   print(original_filename)
 
@@ -177,17 +419,12 @@ def take_single_shot(camera, config):
   print(f'screen: ({screen_w}, {screen_h}), res: ({width}, {height}), shutter_speed: {camera.shutter_speed}')
 
   camera.capture(stream, format, bayer=bayer)
+  write_via_thread(original_filename, 'wb', stream.getbuffer())
 
-  with open(original_filename, 'wb') as f:
-    f.write(stream.getbuffer())
-
-  if (config["convert_raw"] == True):
+  if (config["raw_convert"] == True):
     print("Begin conversion and save DNG raw ...")
-    json_colour_profile = document_handler.load_colour_profile(config)
-    output = RPICAM2DNG().convert(stream, json_camera_profile=json_colour_profile)
+    ThreadRawConverter(config, stream, raw_filename)
 
-    with open(filename, 'wb') as f:
-      f.write(output)
   else:
     print("--- skip raw conversion ---")
 
@@ -195,7 +432,7 @@ def take_single_shot(camera, config):
 
   camera.resolution = (screen_w, screen_h)
 
-def trigger_video(camera, config):
+def trigger_video(camera, overlay, config):
   if config["recording"]:
     camera.stop_recording()
     config["recording"] = False
@@ -206,12 +443,7 @@ def trigger_video(camera, config):
     width = config["width"]
     height = config["height"]
 
-    # dcim_path = config["dcim_path"]
-    # dcim_images_path_raw = config["dcim_images_path_raw"]
-    # dcim_original_images_path = config["dcim_original_images_path"]
-    # dcim_hdr_images_path = config["dcim_hdr_images_path"]
     dcim_videos_path = config["dcim_videos_path"]
-    # dcim_tmp_path = config["dcim_tmp_path"]
 
     format = config["video_format"]
 
@@ -221,10 +453,48 @@ def trigger_video(camera, config):
     original_filename = f'{dcim_videos_path}/{filecount}.{format}'
     print(original_filename)
 
-    # start_time = time.time()
     camera.resolution = (width, height)
-
     print(f'screen: ({screen_w}, {screen_h}), res: ({width}, {height}), shutter_speed: {camera.shutter_speed}')
 
     config["recording"] = True
     camera.start_recording(original_filename, format)
+
+def write_via_thread(original_filename, write_type, stream):
+  w = ThreadWriter(original_filename, write_type)
+  w.write(stream)
+  w.close()
+
+# Available conversions
+# to_resolution
+# to_fraction
+# to_rational
+# https://gist.github.com/rwb27/a23808e9f4008b48de95692a38ddaa08
+def set_mmal_parameter(camera, parameter, value):
+  if isinstance(value, bool):
+    ret = mmal.mmal_port_parameter_set_boolean(camera._camera.control._port, parameter, value)
+    print(f'MMAL Response: {ret}')
+    return ret
+  else:
+    converted_value = to_rational(value)
+    ret = mmal.mmal_port_parameter_set_rational(camera._camera.control._port, parameter, converted_value)
+    print(f'MMAL Response: {ret}')
+    return ret
+
+# TODO:
+# https://github.com/labthings/picamerax/blob/master/picamerax/mmal.py
+# MMAL_PARAMETER_HIGH_DYNAMIC_RANGE,
+# MMAL_PARAMETER_DYNAMIC_RANGE_COMPRESSION,
+# MMAL_PARAMETER_ALGORITHM_CONTROL,
+# MMAL_PARAMETER_SHARPNESS,
+# MMAL_PARAMETER_ANTISHAKE,
+# MMAL_PARAMETER_CAMERA_BURST_CAPTURE,
+# MMAL_PARAMETER_DPC # https://github.com/raspberrypi/userland/blob/3fd8527eefd8790b4e8393458efc5f94eb21a615/interface/mmal/mmal_parameters_camera.h
+# MMAL_PARAMETER_SHUTTER_SPEED
+# MMAL_PARAMETER_BLACK_LEVEL
+# MMAL_PARAMETER_ANALOG_GAIN
+# MMAL_PARAMETER_DIGITAL_GAIN
+# MMAL_PARAMETER_STILLS_DENOISE
+# MMAL_PARAMETER_ZERO_SHUTTER_LAG
+# MMAL_PARAMETER_FIELD_OF_VIEW
+# MMAL_PARAMETER_EXPOSURE_COMP
+# MMAL_PARAMETER_FLICKER_AVOID

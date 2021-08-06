@@ -12,15 +12,17 @@ def select_menu_item(camera, config):
   overlay_handler.display_text(camera, '', config)
   print(f'menu_item: {config["menu_item"]}')
 
-def select_option(camera, config):
+def select_option(camera, overlay, config):
   if config["menu_item"] == "auto":
-    camera_handler.auto_mode(camera, config)
+    camera_handler.auto_mode(camera, overlay, config)
   if config["menu_item"] == "exposure_mode":
     camera_handler.adjust_exposure_mode(camera, config)
   if config["menu_item"] == "iso":
     camera_handler.adjust_iso(camera, config)
   if config["menu_item"] == "shutter_speed":
     camera_handler.adjust_shutter_speed(camera, config)
+  if config["menu_item"] == "long_shutter_speed":
+    camera_handler.long_shutter_speed(camera, config)
   if config["menu_item"] == "awb_mode":
     camera_handler.adjust_awb_mode(camera, config)
   if config["menu_item"] == "hdr":
@@ -29,3 +31,14 @@ def select_option(camera, config):
     camera_handler.set_video(camera, config)
   if config["menu_item"] == "encoding":
     camera_handler.adjust_encoding(camera, config)
+  if config["menu_item"] == "dpc - star eater":
+    camera_handler.adjust_dpc(config)
+    camera_handler.set_dpc(camera, overlay, config)
+  if config["menu_item"] == "raw_convert":
+    camera_handler.set_raw_convert(camera, config)
+  if config["menu_item"] == "fom":
+    camera_handler.adjust_fom(camera, config)
+    camera_handler.set_fom(camera, config)
+  if config["menu_item"] == "hdr2":
+    camera_handler.adjust_hdr2(camera, config)
+    camera_handler.set_hdr2(camera, config)

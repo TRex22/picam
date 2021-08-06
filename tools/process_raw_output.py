@@ -18,24 +18,24 @@ from pydng.core import RPICAM2DNG
 import document_handler
 
 # Constants
-original_files_path = "/home/pi/DCIM/images/original"
-raw_file_save_path = "/home/pi/DCIM/images/raw"
+original_files_path = "/mnt/g/tmp/original"
+raw_file_save_path = "/mnt/g/tmp/raw"
 filetype = '.dng'
 
 # TODO: List them all
 # Colour profiles:
-# colour_profile_path = "/home/pi/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Neutral Look.json"
-# colour_profile_path = "/home/pi/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Skin+Sky Look.json"
-# colour_profile_path = "/home/pi/Colour_Profiles/imx477/PyDNG_profile"
+# colour_profile_path = "../Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Neutral Look.json"
+# colour_profile_path = "../Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Skin+Sky Look.json"
+# colour_profile_path = "../Colour_Profiles/imx477/PyDNG_profile"
 
 config = {
-  "neutral_colour_profile": "/home/pi/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Neutral Look.json",
+  "neutral_colour_profile": "../Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Neutral Look.json",
   "neutral_colour_profile_name": "neutral_colour",
-  "skin_tone_colour_profile": "/home/pi/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Skin+Sky Look.json",
+  "skin_tone_colour_profile": "../Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Skin+Sky Look.json",
   "skin_tone_colour_profile_name": "skin_tone",
-  "pydng_colour_profile": "/home/pi/Colour_Profiles/imx477/PyDNG_profile.json",
+  "pydng_colour_profile": "../Colour_Profiles/imx477/PyDNG_profile.json",
   "pydng_colour_profile_name": "pydng",
-  "selected_colour_profile": "all" # can be all or neutral_colour_profile, skin_tone_colour_profile, pydng_colour_profile ... others to be added later
+  "selected_colour_profile": "neutral_colour_profile" #"all" # can be all or neutral_colour_profile, skin_tone_colour_profile, pydng_colour_profile ... others to be added later
 }
 
 def generate_filename(original_files_path, raw_file_save_path, f, config, colour_profile_name):
