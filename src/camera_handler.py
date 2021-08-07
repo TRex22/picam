@@ -406,6 +406,7 @@ def take_hdr_shot(camera, overlay, config):
   else:
     camera.framerate = compute_framerate(camera, config)
     camera.shutter_speed = config["shutter_speed"]
+    time.sleep(config["short_delay_time"])
 
   camera.resolution = (width, height)
 
@@ -484,6 +485,7 @@ def take_single_shot(camera, overlay, config):
   else:
     camera.framerate = compute_framerate(camera, config)
     camera.shutter_speed = config["shutter_speed"]
+    time.sleep(config["short_delay_time"])
 
   print(f'screen: ({screen_w}, {screen_h}), res: ({width}, {height}), shutter_speed: {camera.shutter_speed}, fps: {camera.framerate}')
 
