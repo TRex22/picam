@@ -402,7 +402,7 @@ def take_hdr_shot(camera, overlay, config):
   if config["take_long_shutter_speed"] == True:
     camera.framerate = compute_framerate(camera, config)
     camera.shutter_speed = config["long_shutter_speed"]
-    sleep(config["long_delay_time"])
+    time.sleep(config["long_delay_time"])
   else:
     camera.framerate = compute_framerate(camera, config)
     camera.shutter_speed = config["shutter_speed"]
@@ -477,7 +477,7 @@ def take_single_shot(camera, overlay, config):
   if config["take_long_shutter_speed"] == True:
     camera.framerate = compute_framerate(camera, config)
     camera.shutter_speed = config["long_shutter_speed"]
-    sleep(config["long_delay_time"])
+    time.sleep(config["long_delay_time"])
   else:
     camera.framerate = compute_framerate(camera, config)
     camera.shutter_speed = config["shutter_speed"]
