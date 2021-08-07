@@ -263,7 +263,7 @@ def long_shutter_speed(camera, config):
 # Alternatively set the low high fps mmal object
 def compute_framerate(camera, config, long_shutter=False):
   if long_shutter == True:
-    return 1/camera.exposure_speed # Suggested approach for long exposures
+    return config["min_fps"] #1/camera.exposure_speed # Suggested approach for long exposures
 
   framerate = config["max_fps"]
   exposure_fps = camera.exposure_speed
