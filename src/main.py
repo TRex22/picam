@@ -58,7 +58,7 @@ config = {
   "bayer": True,
   "long_delay_time": 5,
   "min_fps": 0.005, # mode 3 for HQ cam is between 0.005 and 10 fps
-  "max_fps": 10, # 40, # Possibly equal to screen_fps
+  "max_fps": 40, # 40, # Possibly equal to screen_fps
   "screen_fps": 40, # 120 fps at 1012x760
   "capture_timeout": 300, # Must be greater than max exposure in seconds
   "screen_w": 1280, # 1024 # 1012 # 320 screen res # Needs to be 4:3

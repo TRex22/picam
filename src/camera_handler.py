@@ -74,8 +74,6 @@ def start_camera(original_config, skip_auto=False):
   overlay = None
 
   camera.resolution = (screen_w, screen_h)
-  camera.framerate = config["min_fps"]
-  camera.framerate = config["max_fps"]
   camera.framerate = screen_fps # fps
 
   overlay = overlay_handler.add_overlay(camera, overlay, config)
@@ -259,7 +257,7 @@ def long_shutter_speed(camera, config):
   config["take_long_shutter_speed"] = True
 
   config["shutter_speed"] = 0
-  # camera.framerate = compute_framerate(camera, config) # Done when taking the shot
+  camera.framerate = compute_framerate(camera, config) # Done when taking the shot
   camera.shutter_speed = config["shutter_speed"]
 
   overlay_handler.display_text(camera, '', config)
