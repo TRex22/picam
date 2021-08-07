@@ -8,7 +8,7 @@ from picamerax.mmalobj import to_rational#, to_fraction, to_resolution
 # https://gist.github.com/rwb27/a23808e9f4008b48de95692a38ddaa08
 
 def get_mmal_parameter(camera, parameter, type):
-  if isinstance(value, bool) or value == 'bool':
+  if isinstance(type, bool) or value == 'bool':
     ret = mmal.mmal_port_parameter_get_boolean(camera._camera.control._port, parameter)
     print(f'MMAL GET Response: {ret}')
     return ret
