@@ -231,7 +231,7 @@ def adjust_shutter_speed(camera, config):
   else:
     config["shutter_speed"] = config["default_shutter_speed"]
 
-  camera.framerate = 1/camera.exposure_speed
+  camera.framerate = compute_framerate(camera, config)
   camera.shutter_speed = config["shutter_speed"]
 
   overlay_handler.display_text(camera, '', config)
@@ -245,11 +245,21 @@ def long_shutter_speed(camera, config):
   else:
     config["shutter_speed"] = config["default_shutter_speed"]
 
-  camera.framerate = 1/camera.exposure_speed
+  camera.framerate = compute_framerate(camera, config)
   camera.shutter_speed = config["shutter_speed"]
 
   overlay_handler.display_text(camera, '', config)
   print(f'shutter_speed: {config["shutter_speed"]}')
+
+# TODO: Look at long vs short, and set a high speed framerate
+# Alternatively set the low high fps mmal object
+def compute_framerate(camera, config):
+  framerate = 1/camera.exposure_speed
+
+  if framerate == 0.0:
+    framerate = 1.0
+
+  return framerate
 
 def adjust_awb_mode(camera, config):
   idex = config["available_awb_mode"].index(config["awb_mode"]) + 1
