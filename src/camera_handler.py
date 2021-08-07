@@ -253,7 +253,7 @@ def long_shutter_speed(camera, config):
   else:
     config["shutter_speed"] = config["default_shutter_speed"]
 
-  camera.framerate = compute_framerate(camera, config)
+  camera.framerate = compute_framerate(camera, config, long_shutter=True)
   camera.shutter_speed = config["shutter_speed"]
 
   overlay_handler.display_text(camera, '', config)
@@ -261,8 +261,10 @@ def long_shutter_speed(camera, config):
 
 # TODO: Look at long vs short, and set a high speed framerate
 # Alternatively set the low high fps mmal object
-def compute_framerate(camera, config):
-  # framerate = 1/camera.exposure_speed # Suggested approach for long exposures
+def compute_framerate(camera, config, long_shutter=False):
+  if long_shutter == True:
+    return 1/camera.exposure_speed # Suggested approach for long exposures
+
   framerate = config["max_fps"]
   exposure_fps = camera.exposure_speed
 
