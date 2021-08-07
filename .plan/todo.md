@@ -71,7 +71,7 @@
   - https://github.com/rellimmot/Sony-IMX219-Raspberry-Pi-V2-CMOS/blob/master/RASPBERRY%20PI%20CAMERA%20V2%20DATASHEET%20IMX219PQH5_7.0.0_Datasheet_XXX.PDF
   - Global external shutter: https://github.com/Hermann-SW/Raspberry_v1_camera_global_external_shutter
   - Manual MMAL: https://gist.github.com/rwb27/a23808e9f4008b48de95692a38ddaa08
-
+  - Stop motion
 
 # MMAL Adjustments
 https://github.com/labthings/picamerax/blob/master/picamerax/mmal.py

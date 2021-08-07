@@ -67,7 +67,6 @@ def remove_overlay(camera, overlay, config):
   if camera != None and overlay != None:
     camera.remove_overlay(overlay)
     camera.annotate_text = None
-    camera.framerate = config["fps"]
 
   return None
 

@@ -54,7 +54,6 @@ def start_camera(original_config, skip_auto=False):
   config = original_config
 
   # Config Variables
-  fps = config["fps"]
   screen_fps = config["screen_fps"]
   capture_timeout = config["capture_timeout"]
 
@@ -65,9 +64,9 @@ def start_camera(original_config, skip_auto=False):
 
   # Init
   # https://github.com/waveform80/picamera/issues/329
-  # PiCamera.CAPTURE_TIMEOUT = capture_timeout
+  PiCamera.CAPTURE_TIMEOUT = capture_timeout
   print(f'Camera Timeout: {PiCamera.CAPTURE_TIMEOUT}')
-  camera = PiCamera(framerate=fps)
+  camera = PiCamera() # framerate=fps is bugged - rather set camera.framerate
 
   if skip_auto == False:
     auto_mode(camera, overlay, config)
