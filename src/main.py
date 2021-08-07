@@ -56,6 +56,7 @@ config = {
   "format": 'jpeg',
   "video_format": 'h264', # mjpeg, h264 TODO: Make into an option
   "bayer": True,
+  "long_delay_time": 5,
   "min_fps": 0.005, # mode 3 for HQ cam is between 0.005 and 10 fps
   "max_fps": 10, # 40, # Possibly equal to screen_fps
   "screen_fps": 40, # 120 fps at 1012x760
