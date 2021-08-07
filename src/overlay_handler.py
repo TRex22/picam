@@ -16,7 +16,7 @@ def compute_shutter_speed_from_us(us):
 
   converted_seconds = math.ceil(one_second/us)
 
-  if converted_seconds > 1.0:
+  if us > one_second:
     return f'{converted_seconds} secs. ({us} us.)'
   else:
     return f'1/{converted_seconds} ({us} us.)'
