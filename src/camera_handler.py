@@ -240,7 +240,7 @@ def adjust_shutter_speed(camera, config):
   camera.shutter_speed = config["shutter_speed"]
 
   overlay_handler.display_text(camera, '', config)
-  print(f'shutter_speed: {config["shutter_speed"]}, set speed: {camera._get_shutter_speed()}, fps: {camera.framerate}')
+  print(f'shutter_speed: {overlay_handler.compute_shutter_speed_from_us(config["shutter_speed"])}, set speed: {camera._get_shutter_speed()}, fps: {camera.framerate}')
 
 def long_shutter_speed(camera, config):
   if config["shutter_speed"] in config["available_shutter_speeds"]:
@@ -257,7 +257,7 @@ def long_shutter_speed(camera, config):
   camera.shutter_speed = config["shutter_speed"]
 
   overlay_handler.display_text(camera, '', config)
-  print(f'shutter_speed: {config["shutter_speed"]}, set speed: {camera._get_shutter_speed()}, fps: {camera.framerate}')
+  print(f'shutter_speed: {overlay_handler.compute_shutter_speed_from_us(config["shutter_speed"])}, set speed: {camera._get_shutter_speed()}, fps: {camera.framerate}')
 
 # TODO: Look at long vs short, and set a high speed framerate
 # Alternatively set the low high fps mmal object
