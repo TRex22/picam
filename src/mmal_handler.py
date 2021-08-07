@@ -8,14 +8,16 @@ from picamerax.mmalobj import to_rational#, to_fraction, to_resolution
 # https://gist.github.com/rwb27/a23808e9f4008b48de95692a38ddaa08
 
 def get_mmal_parameter(camera, parameter, type):
+  value = None
+
   if isinstance(type, bool) or type == 'bool':
-    ret = mmal.mmal_port_parameter_get_boolean(camera._camera.control._port, parameter)
+    ret = mmal.mmal_port_parameter_get_boolean(camera._camera.control._port, parameter, value)
     print(f'MMAL GET Response: {ret}')
-    return ret
+    return value
   else:
-    ret = mmal.mmal_port_parameter_get_rational(camera._camera.control._port, parameter)
+    ret = mmal.mmal_port_parameter_get_rational(camera._camera.control._port, parameter, value)
     print(f'MMAL GET Response: {ret}')
-    return ret
+    return value
 
 def set_mmal_parameter(camera, parameter, value):
   if isinstance(value, bool):
