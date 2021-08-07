@@ -56,6 +56,7 @@ def start_camera(original_config, skip_auto=False):
   # Config Variables
   fps = config["fps"]
   screen_fps = config["screen_fps"]
+  capture_timeout = config["capture_timeout"]
 
   screen_w = config["screen_w"]
   screen_h = config["screen_h"]
@@ -72,6 +73,7 @@ def start_camera(original_config, skip_auto=False):
 
   camera.resolution = (screen_w, screen_h)
   camera.framerate = screen_fps # fps
+  camera.CAPTURE_TIMEOUT = capture_timeout
 
   overlay = overlay_handler.add_overlay(camera, overlay, config)
   overlay_handler.display_text(camera, '', config)

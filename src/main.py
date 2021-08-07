@@ -58,6 +58,7 @@ config = {
   "bayer": True,
   "fps": 1/200, # 60 # 10 fps max at full resolution
   "screen_fps": 30, # 120 fps at 1012x760
+  "capture_timeout": 300, # Must be greater than max exposure in seconds
   "screen_w": 1280, # 1024 # 1012 # 320 screen res # Needs to be 4:3
   "screen_h": 960, # 768 #760 # 240 screen res # Needs to be 4:3
   "overlay_w": 320,
