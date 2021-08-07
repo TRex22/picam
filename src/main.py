@@ -56,8 +56,8 @@ config = {
   "format": 'jpeg',
   "video_format": 'h264', # mjpeg, h264 TODO: Make into an option
   "bayer": True,
-  "fps": 40, # 60 # 10 fps max at full resolution
-  "screen_fps": 40, # 120 fps at 1012x760
+  "fps": 30, # 60 # 10 fps max at full resolution
+  "screen_fps": 30, # 120 fps at 1012x760
   "screen_w": 1280, # 1024 # 1012 # 320 screen res # Needs to be 4:3
   "screen_h": 960, # 768 #760 # 240 screen res # Needs to be 4:3
   "overlay_w": 320,
