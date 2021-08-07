@@ -30,7 +30,7 @@ def display_text(camera, text, config):
   set_shutter_speed = camera._get_shutter_speed() # camera.shutter_speed
 
   shutter_text = f'Shutter Speed: {shutter_speed}, set: {set_shutter_speed}'
-  boolean_text =f'hdr: {config["hdr"]}, raw_convert: {config["raw_convert"]}, dpc: {config["dpc"]}'
+  boolean_text = f'hdr: {config["hdr"]}, raw_convert: {config["raw_convert"]}, dpc: {config["dpc"]}'
   output_text = f'{mode}\n{camera_settings}\n{boolean_text}\n{selected_item}\n{shutter_text}\n{text}'
 
   camera.annotate_text_size = config["annotate_text_size"]
