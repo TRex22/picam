@@ -258,7 +258,7 @@ def compute_framerate(camera, config):
   framerate = 1/camera.exposure_speed
   exposure_fps = math.ceil(1000000/config["shutter_speed"])
 
-  if exposure_fps > config["fps"]
+  if exposure_fps > config["fps"]:
     framerate = config["fps"]
 
   if framerate <= 0.009:
