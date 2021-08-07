@@ -97,6 +97,7 @@ config = {
   "available_long_shutter_speeds": [0, 2000000, 5000000, 10000000, 15000000, 20000000, 25000000, 30000000, 35000000, 40000000, 200000000],
   "take_long_shutter_speed": False,
   "shutter_speed": 0,
+  "long_shutter_speed": 0,
   "default_shutter_speed": 0,
   "available_awb_mode": ['auto', 'off', 'sunlight', 'cloudy', 'shade', 'tungsten', 'fluorescent', 'incandescent', 'flash', 'horizon'],
   "awb_mode": 'auto',

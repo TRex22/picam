@@ -236,7 +236,7 @@ def adjust_shutter_speed(camera, config):
   else:
     config["shutter_speed"] = config["default_shutter_speed"]
 
-  camera.framerate = compute_framerate(camera, config)
+  # camera.framerate = compute_framerate(camera, config) # Done when taking the shot
   camera.shutter_speed = config["shutter_speed"]
   config["take_long_shutter_speed"] = False
 
@@ -257,7 +257,7 @@ def long_shutter_speed(camera, config):
   config["take_long_shutter_speed"] = True
 
   config["shutter_speed"] = 0
-  camera.framerate = compute_framerate(camera, config)
+  # camera.framerate = compute_framerate(camera, config) # Done when taking the shot
   camera.shutter_speed = config["shutter_speed"]
 
   overlay_handler.display_text(camera, '', config)
