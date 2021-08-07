@@ -257,8 +257,8 @@ def long_shutter_speed(camera, config):
   config["take_long_shutter_speed"] = True
 
   config["shutter_speed"] = 0
-  camera.framerate = compute_framerate(camera, config) # Done when taking the shot
-  camera.shutter_speed = config["long_shutter_speed"]
+  camera.framerate = config["screen_fps"] # compute_framerate(camera, config) # Done when taking the shot
+  camera.shutter_speed = config["shutter_speed"]
 
   overlay_handler.display_text(camera, '', config)
   print(f'long_shutter_speed: {overlay_handler.compute_shutter_speed_from_us(config["long_shutter_speed"])}, set speed: {camera._get_shutter_speed()}, fps: {camera.framerate}')
@@ -267,8 +267,7 @@ def long_shutter_speed(camera, config):
 # Alternatively set the low high fps mmal object
 def compute_framerate(camera, config):
   if config["take_long_shutter_speed"] == True:
-    # return config["min_fps"] #1/camera.exposure_speed # Suggested approach for long exposures
-    return 1.0/camera.exposure_speed
+    return config["min_fps"] #1/camera.exposure_speed # Suggested approach for long exposures
 
   framerate = config["max_fps"]
   exposure_fps = camera.exposure_speed
@@ -401,8 +400,7 @@ def take_hdr_shot(camera, overlay, config):
   dcim_hdr_images_path = config["dcim_hdr_images_path"]
 
   if config["long_shutter_speed"] == True:
-    # camera.framerate = compute_framerate(camera, config)
-    camera.framerate = config["min_fps"]
+    camera.framerate = compute_framerate(camera, config)
     camera.shutter_speed = config["long_shutter_speed"]
     sleep(config["long_delay_time"])
   else:
@@ -477,8 +475,7 @@ def take_single_shot(camera, overlay, config):
   camera.resolution = (width, height)
 
   if config["long_shutter_speed"] == True:
-    # camera.framerate = compute_framerate(camera, config)
-    camera.framerate = config["min_fps"]
+    camera.framerate = compute_framerate(camera, config)
     camera.shutter_speed = config["long_shutter_speed"]
     sleep(config["long_delay_time"])
   else:
