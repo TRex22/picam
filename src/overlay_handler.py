@@ -39,10 +39,10 @@ def display_text(camera, text, config):
   mmal_shutter_speed = camera._get_shutter_speed() # camera.shutter_speed
 
   if config['take_long_shutter_speed'] == True:
-    shutter_speed = compute_shutter_speed_from_us(config["shutter_speed"])
+    shutter_speed = compute_shutter_speed_from_us(config["long_shutter_speed"])
     shutter_text = f'Shutter Speed: {shutter_speed}, long_shutter: {config["take_long_shutter_speed"]}'
   else:
-    shutter_speed = compute_shutter_speed_from_us(config["long_shutter_speed"])
+    shutter_speed = compute_shutter_speed_from_us(config["shutter_speed"])
     shutter_text = f'Shutter Speed: {shutter_speed}, set: {mmal_shutter_speed}, long_shutter: {config["take_long_shutter_speed"]}'
 
   framerate = camera.framerate
