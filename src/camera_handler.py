@@ -1,6 +1,7 @@
 import os
 import time
 import glob
+import math
 
 from io import BytesIO
 
@@ -255,6 +256,10 @@ def long_shutter_speed(camera, config):
 # Alternatively set the low high fps mmal object
 def compute_framerate(camera, config):
   framerate = 1/camera.exposure_speed
+  exposure_fps = math.ceil(1000000/config["shutter_speed"])
+
+  if exposure_fps > config["fps"]
+    framerate = config["fps"]
 
   if framerate <= 0.009:
     framerate = 1.0
