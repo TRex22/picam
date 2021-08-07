@@ -399,7 +399,7 @@ def take_hdr_shot(camera, overlay, config):
 
   dcim_hdr_images_path = config["dcim_hdr_images_path"]
 
-  if config["long_shutter_speed"] == True:
+  if config["take_long_shutter_speed"] == True:
     camera.framerate = compute_framerate(camera, config)
     camera.shutter_speed = config["long_shutter_speed"]
     sleep(config["long_delay_time"])
@@ -474,7 +474,7 @@ def take_single_shot(camera, overlay, config):
 
   camera.resolution = (width, height)
 
-  if config["long_shutter_speed"] == True:
+  if config["take_long_shutter_speed"] == True:
     camera.framerate = compute_framerate(camera, config)
     camera.shutter_speed = config["long_shutter_speed"]
     sleep(config["long_delay_time"])
