@@ -9,18 +9,18 @@ from picamerax.mmalobj import to_rational#, to_fraction, to_resolution
 
 def get_mmal_parameter(camera, parameter, type):
   if parameter == mmal.MMAL_PARAMETER_SHUTTER_SPEED:
-    value = MMAL_PARAMETER_UINT32_T.new()
+    value = mmal.MMAL_PARAMETER_UINT32_T
     ret = mmal.mmal_port_parameter_get_rational(camera._camera.control._port, parameter, value)
     print(f'MMAL GET Response: {ret}')
     return value
 
   if isinstance(type, bool) or type == 'bool':
-    value = MMAL_BOOL_T.new()
+    value = mmal.MMAL_BOOL_T
     ret = mmal.mmal_port_parameter_get_boolean(camera._camera.control._port, parameter, value)
     print(f'MMAL GET Response: {ret}')
     return value
   else:
-    value = MMAL_RATIONAL_T.new()
+    value = mmal.MMAL_RATIONAL_T
     ret = mmal.mmal_port_parameter_get_rational(camera._camera.control._port, parameter, value)
     print(f'MMAL GET Response: {ret}')
     return value
