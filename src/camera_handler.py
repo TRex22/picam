@@ -255,16 +255,17 @@ def long_shutter_speed(camera, config):
 # TODO: Look at long vs short, and set a high speed framerate
 # Alternatively set the low high fps mmal object
 def compute_framerate(camera, config):
-  framerate = 1/camera.exposure_speed
+  # framerate = 1/camera.exposure_speed # Suggested approach for long exposures
   exposure_fps = math.ceil(1000000/config["shutter_speed"])
 
-  if exposure_fps > config["fps"]:
-    framerate = config["fps"]
+  # Possible Approach:
+  # if exposure_fps > config["fps"]:
+  #   framerate = config["fps"]
 
-  if framerate <= 0.009:
-    framerate = 1.0
+  # if framerate <= 0.009:
+  #   framerate = 1.0
 
-  return framerate
+  return exposure_fps
 
 def adjust_awb_mode(camera, config):
   idex = config["available_awb_mode"].index(config["awb_mode"]) + 1
