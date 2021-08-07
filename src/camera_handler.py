@@ -65,7 +65,8 @@ def start_camera(original_config, skip_auto=False):
 
   # Init
   # https://github.com/waveform80/picamera/issues/329
-  PiCamera.CAPTURE_TIMEOUT = capture_timeout
+  # PiCamera.CAPTURE_TIMEOUT = capture_timeout
+  print(f'Camera Timeout: {PiCamera.CAPTURE_TIMEOUT}')
   camera = PiCamera(framerate=fps)
 
   if skip_auto == False:
