@@ -73,7 +73,9 @@ def start_camera(original_config, skip_auto=False):
 
   camera.resolution = (screen_w, screen_h)
   camera.framerate = screen_fps # fps
-  camera.CAPTURE_TIMEOUT = capture_timeout
+
+  # https://github.com/waveform80/picamera/issues/329
+  camera.PiCamera.CAPTURE_TIMEOUT = capture_timeout
 
   overlay = overlay_handler.add_overlay(camera, overlay, config)
   overlay_handler.display_text(camera, '', config)
