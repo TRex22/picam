@@ -243,6 +243,10 @@ def adjust_shutter_speed(camera, config):
   overlay_handler.display_text(camera, '', config)
   print(f'shutter_speed: {overlay_handler.compute_shutter_speed_from_us(config["shutter_speed"])}, set speed: {camera._get_shutter_speed()}, fps: {camera.framerate}')
 
+def set_shutter_speed(camera, config):
+  camera.framerate = compute_framerate(camera, config, long_shutter=False)
+  camera.shutter_speed = config["shutter_speed"]
+
 def long_shutter_speed(camera, config):
   if config["long_shutter_speed"] in config["available_shutter_speeds"]:
     config["long_shutter_speed"] = 0
@@ -406,7 +410,7 @@ def take_hdr_shot(camera, overlay, config):
   if config["long_shutter_speed"] == True:
     set_long_shutter_speed(camera, config)
   else:
-    camera.framerate = compute_framerate(camera, config)
+    set_shutter_speed(camera, config)
 
   camera.resolution = (width, height)
 
@@ -476,7 +480,7 @@ def take_single_shot(camera, overlay, config):
   if config["long_shutter_speed"] == True:
     set_long_shutter_speed(camera, config)
   else:
-    camera.framerate = compute_framerate(camera, config)
+    set_shutter_speed(camera, config)
 
   camera.resolution = (width, height)
 
