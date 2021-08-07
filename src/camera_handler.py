@@ -247,7 +247,7 @@ def long_shutter_speed(camera, config):
   if config["long_shutter_speed"] in config["available_shutter_speeds"]:
     config["long_shutter_speed"] = 0
 
-  idex = config["available_long_shutter_speeds"].index(config["shutter_speed"]) + 1
+  idex = config["available_long_shutter_speeds"].index(config["long_shutter_speed"]) + 1
 
   if idex < len(config["available_long_shutter_speeds"]):
     config["long_shutter_speed"] = config["available_long_shutter_speeds"][idex]
