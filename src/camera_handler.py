@@ -424,7 +424,7 @@ def take_hdr_shot(camera, overlay, config):
   frame_count = filecount
 
   original_brightness = camera.brightness
-  # original_exposure_compensation = camera.exposure_compensation
+  original_exposure_compensation = camera.exposure_compensation
 
   for step in exposure_times: # available_exposure_compensations:
     filename = f'{dcim_hdr_images_path}/{frame_count}_{step}_HDR.{format}'
@@ -437,15 +437,18 @@ def take_hdr_shot(camera, overlay, config):
     camera.capture(stream, format, bayer=bayer)
     write_via_thread(filename, 'wb', stream.getbuffer())
 
-  camera.brightness = original_brightness
-  # camera.exposure_compensation = original_exposure_compensation
-
-  camera.resolution = (screen_w, screen_h)
-
   # for file in filenames:
   # shutil.copyfile(src, dst)
 
   print("--- %s seconds ---" % (time.time() - start_time))
+
+  camera.brightness = original_brightness
+  camera.exposure_compensation = original_exposure_compensation
+  camera.resolution = (screen_w, screen_h)
+
+  if config["take_long_shutter_speed"] == True:
+    camera.framerate = config['screen_fps']
+    camera.shutter_speed = 0
 
 def take_single_shot(camera, overlay, config):
   screen_w = config["screen_w"]
@@ -490,13 +493,16 @@ def take_single_shot(camera, overlay, config):
   if (config["raw_convert"] == True):
     print("Begin conversion and save DNG raw ...")
     ThreadRawConverter(config, stream, raw_filename)
-
   else:
     print("--- skip raw conversion ---")
 
   print("--- %s seconds ---" % (time.time() - start_time))
 
   camera.resolution = (screen_w, screen_h)
+
+  if config["take_long_shutter_speed"] == True:
+    camera.framerate = config['screen_fps']
+    camera.shutter_speed = 0
 
 def trigger_video(camera, overlay, config):
   if config["recording"]:
