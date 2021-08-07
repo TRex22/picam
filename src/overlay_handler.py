@@ -1,6 +1,8 @@
 import numpy as np
 from PIL import Image
 
+import math
+
 from picamerax import mmal
 
 # Modules
@@ -10,7 +12,7 @@ def compute_shutter_speed_from_us(us):
   if us == 0:
     return 'auto'
 
-  return f'1/{1000000/us} ({us} us.)'
+  return f'1/{math.ceil(1000000/us)} ({us} us.)'
 
 def display_text(camera, text, config):
   # camera.annotate_text = f'{camera.annotate_text} - {camera.exposure_mode}'
