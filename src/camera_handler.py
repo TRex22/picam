@@ -256,7 +256,7 @@ def long_shutter_speed(camera, config):
 def compute_framerate(camera, config):
   framerate = 1/camera.exposure_speed
 
-  if framerate == 0.0:
+  if framerate <= 0.009:
     framerate = 1.0
 
   return framerate
