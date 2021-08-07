@@ -1,6 +1,8 @@
 import numpy as np
 from PIL import Image
 
+from picamerax import mmal
+
 # Modules
 import mmal_handler
 
