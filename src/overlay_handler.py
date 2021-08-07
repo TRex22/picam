@@ -27,7 +27,7 @@ def display_text(camera, text, config):
   shutter_speed = compute_shutter_speed_from_us(config["shutter_speed"])
 
   parameter = mmal.MMAL_PARAMETER_SHUTTER_SPEED
-  set_shutter_speed = mmal_handler.get_mmal_parameter(camera, parameter, config["shutter_speed"]) # camera.shutter_speed
+  set_shutter_speed = camera._get_shutter_speed(camera) # camera.shutter_speed
 
   shutter_text = f'Shutter Speed: {shutter_speed}, set: {set_shutter_speed}'
   boolean_text =f'hdr: {config["hdr"]}, raw_convert: {config["raw_convert"]}, dpc: {config["dpc"]}'
