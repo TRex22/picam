@@ -231,9 +231,8 @@ def adjust_shutter_speed(camera, config):
   else:
     config["shutter_speed"] = config["default_shutter_speed"]
 
-  # camera.shutter_speed = config["shutter_speed"]
-  parameter = mmal.MMAL_PARAMETER_SHUTTER_SPEED
-  mmal_handler.set_mmal_parameter(camera, parameter, config["shutter_speed"])
+  camera.framerate = 1/camera.exposure_time
+  camera.shutter_speed = config["shutter_speed"]
 
   overlay_handler.display_text(camera, '', config)
   print(f'shutter_speed: {config["shutter_speed"]}')
@@ -246,9 +245,8 @@ def long_shutter_speed(camera, config):
   else:
     config["shutter_speed"] = config["default_shutter_speed"]
 
-  # camera.shutter_speed = config["shutter_speed"]
-  parameter = mmal.MMAL_PARAMETER_SHUTTER_SPEED
-  mmal_handler.set_mmal_parameter(camera, parameter, config["shutter_speed"])
+  camera.framerate = 1/camera.exposure_time
+  camera.shutter_speed = config["shutter_speed"]
 
   overlay_handler.display_text(camera, '', config)
   print(f'shutter_speed: {config["shutter_speed"]}')
