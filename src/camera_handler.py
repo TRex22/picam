@@ -268,7 +268,7 @@ def long_shutter_speed(camera, config):
 def compute_framerate(camera, config):
   if config["long_shutter_speed"] == True:
     # return config["min_fps"] #1/camera.exposure_speed # Suggested approach for long exposures
-    return 1/camera.exposure_speed
+    return 1.0/camera.exposure_speed
 
   framerate = config["max_fps"]
   exposure_fps = camera.exposure_speed
