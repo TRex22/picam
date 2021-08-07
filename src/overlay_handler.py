@@ -9,10 +9,17 @@ from picamerax import mmal
 import mmal_handler
 
 def compute_shutter_speed_from_us(us):
+  one_second = 1000000
+
   if us == 0:
     return 'auto'
 
-  return f'1/{math.ceil(1000000/us)} ({us} us.)'
+  converted_seconds = math.ceil(one_second/us)
+
+  if converted_seconds > 1.0:
+    return f'{converted_seconds} secs. ({us} us.)'
+  else:
+    return f'1/{converted_seconds} ({us} us.)'
 
 def display_text(camera, text, config):
   # camera.annotate_text = f'{camera.annotate_text} - {camera.exposure_mode}'
