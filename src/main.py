@@ -34,7 +34,7 @@
 # width = 4056
 # height = 3040
 
-VERSION = "0.0.25"
+VERSION = "0.0.26"
 
 # Modules
 import document_handler
@@ -57,7 +57,7 @@ config = {
   "video_format": 'h264', # mjpeg, h264 TODO: Make into an option
   "bayer": True,
   "max_fps": 40, # Possibly equal to screen_fps
-  "screen_fps": 40, # 120 fps at 1012x760
+  "screen_fps": 60, # 120 fps at 1012x760
   "capture_timeout": 300, # Must be greater than max exposure in seconds
   "screen_w": 1280, # 1024 # 1012 # 320 screen res # Needs to be 4:3
   "screen_h": 960, # 768 #760 # 240 screen res # Needs to be 4:3

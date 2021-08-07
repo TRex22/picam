@@ -393,6 +393,7 @@ def take_hdr_shot(camera, overlay, config):
 
   dcim_hdr_images_path = config["dcim_hdr_images_path"]
 
+  camera.framerate = compute_framerate(camera, config)
   camera.resolution = (width, height)
 
   start_time = time.time()
@@ -457,6 +458,7 @@ def take_single_shot(camera, overlay, config):
   stream = BytesIO()
 
   start_time = time.time()
+  camera.framerate = compute_framerate(camera, config)
   camera.resolution = (width, height)
 
   print(f'screen: ({screen_w}, {screen_h}), res: ({width}, {height}), shutter_speed: {camera.shutter_speed}, fps: {camera.framerate}')
