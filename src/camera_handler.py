@@ -236,9 +236,12 @@ def adjust_shutter_speed(camera, config):
   camera.shutter_speed = config["shutter_speed"]
 
   overlay_handler.display_text(camera, '', config)
-  print(f'shutter_speed: {config["shutter_speed"]} set speed: {camera._get_shutter_speed()}')
+  print(f'shutter_speed: {config["shutter_speed"]}, set speed: {camera._get_shutter_speed()}, fps: {camera.framerate}')
 
 def long_shutter_speed(camera, config):
+  if config["shutter_speed"] in config["available_shutter_speeds"]:
+    config["shutter_speed"] = 0
+
   idex = config["available_long_shutter_speeds"].index(config["shutter_speed"]) + 1
 
   if idex < len(config["available_long_shutter_speeds"]):
@@ -250,7 +253,7 @@ def long_shutter_speed(camera, config):
   camera.shutter_speed = config["shutter_speed"]
 
   overlay_handler.display_text(camera, '', config)
-  print(f'shutter_speed: {config["shutter_speed"]} set speed: {camera._get_shutter_speed()}')
+  print(f'shutter_speed: {config["shutter_speed"]}, set speed: {camera._get_shutter_speed()}, fps: {camera.framerate}')
 
 # TODO: Look at long vs short, and set a high speed framerate
 # Alternatively set the low high fps mmal object
@@ -448,7 +451,7 @@ def take_single_shot(camera, overlay, config):
   start_time = time.time()
   camera.resolution = (width, height)
 
-  print(f'screen: ({screen_w}, {screen_h}), res: ({width}, {height}), shutter_speed: {camera.shutter_speed}')
+  print(f'screen: ({screen_w}, {screen_h}), res: ({width}, {height}), shutter_speed: {camera.shutter_speed}, fps: {camera.framerate}')
 
   camera.capture(stream, format, bayer=bayer)
   write_via_thread(original_filename, 'wb', stream.getbuffer())

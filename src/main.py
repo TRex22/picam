@@ -56,7 +56,7 @@ config = {
   "format": 'jpeg',
   "video_format": 'h264', # mjpeg, h264 TODO: Make into an option
   "bayer": True,
-  "fps": 30, # 60 # 10 fps max at full resolution
+  "fps": 1/200, # 60 # 10 fps max at full resolution
   "screen_fps": 30, # 120 fps at 1012x760
   "screen_w": 1280, # 1024 # 1012 # 320 screen res # Needs to be 4:3
   "screen_h": 960, # 768 #760 # 240 screen res # Needs to be 4:3
@@ -92,7 +92,7 @@ config = {
   "iso": 0, # 800 / should shift to 0 - auto
   "default_iso": 0,
   "available_shutter_speeds": [0, 100, 500, 1000, 2000, 4000, 8000, 16667, 33333, 66667, 125000, 250000, 500000, 1000000],
-  "available_long_shutter_speeds": [2000000, 5000000, 10000000, 15000000, 20000000, 25000000, 30000000, 35000000, 40000000, 200000000],
+  "available_long_shutter_speeds": [0, 2000000, 5000000, 10000000, 15000000, 20000000, 25000000, 30000000, 35000000, 40000000, 200000000],
   "shutter_speed": 0,
   "default_shutter_speed": 0,
   "available_awb_mode": ['auto', 'off', 'sunlight', 'cloudy', 'shade', 'tungsten', 'fluorescent', 'incandescent', 'flash', 'horizon'],
