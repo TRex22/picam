@@ -194,6 +194,7 @@ def auto_mode(camera, overlay, config, skip_dpc=False):
   camera.exposure_mode = config["default_exposure_mode"]
   camera.shutter_speed = config["default_shutter_speed"]
   camera.awb_mode = config["default_awb_mode"]
+  camera.framerate = compute_framerate(camera, config)
 
   if skip_dpc == False:
     set_dpc(camera, overlay, config)
@@ -267,7 +268,7 @@ def compute_framerate(camera, config):
   exposure_fps = math.ceil(1000000/config["shutter_speed"])
 
   # Possible Approach:
-  if exposure_fps < config["fps"]:
+  if exposure_fps < config["max_fps"]:
     framerate = exposure_fps
 
   # if framerate <= 0.009:
