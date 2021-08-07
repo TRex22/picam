@@ -5,14 +5,13 @@ import glob
 from io import BytesIO
 
 from picamerax import PiCamera
-from picamerax import mmal
-from picamerax.mmalobj import to_rational#, to_fraction, to_resolution
 
 import RPi.GPIO as GPIO
 
 # Modules
 import overlay_handler
 import menu_handler
+import mmal_handler
 from thread_writer import ThreadWriter
 from thread_raw_converter import ThreadRawConverter
 
@@ -320,7 +319,7 @@ def adjust_fom(camera, config):
 def set_fom(camera, config):
   value = config["fom"]
   parameter = mmal.MMAL_PARAMETER_DRAW_BOX_FACES_AND_FOCUS
-  set_mmal_parameter(camera, parameter, value)
+  mmal_handler.set_mmal_parameter(camera, parameter, value)
   print(f'fom: {config["fom"]}')
 
 def adjust_hdr2(camera, config):
@@ -330,7 +329,7 @@ def adjust_hdr2(camera, config):
 def set_hdr2(camera, config):
   value = config["hdr2"]
   parameter = mmal.MMAL_PARAMETER_HIGH_DYNAMIC_RANGE
-  set_mmal_parameter(camera, parameter, value)
+  mmal_handler.set_mmal_parameter(camera, parameter, value)
   print(f'hdr2: {config["hdr2"]}')
 
 def zoom(camera, config):
@@ -475,38 +474,3 @@ def write_via_thread(original_filename, write_type, stream):
   w = ThreadWriter(original_filename, write_type)
   w.write(stream)
   w.close()
-
-# Available conversions
-# to_resolution
-# to_fraction
-# to_rational
-# https://gist.github.com/rwb27/a23808e9f4008b48de95692a38ddaa08
-def set_mmal_parameter(camera, parameter, value):
-  if isinstance(value, bool):
-    ret = mmal.mmal_port_parameter_set_boolean(camera._camera.control._port, parameter, value)
-    print(f'MMAL Response: {ret}')
-    return ret
-  else:
-    converted_value = to_rational(value)
-    ret = mmal.mmal_port_parameter_set_rational(camera._camera.control._port, parameter, converted_value)
-    print(f'MMAL Response: {ret}')
-    return ret
-
-# TODO:
-# https://github.com/labthings/picamerax/blob/master/picamerax/mmal.py
-# MMAL_PARAMETER_HIGH_DYNAMIC_RANGE,
-# MMAL_PARAMETER_DYNAMIC_RANGE_COMPRESSION,
-# MMAL_PARAMETER_ALGORITHM_CONTROL,
-# MMAL_PARAMETER_SHARPNESS,
-# MMAL_PARAMETER_ANTISHAKE,
-# MMAL_PARAMETER_CAMERA_BURST_CAPTURE,
-# MMAL_PARAMETER_DPC # https://github.com/raspberrypi/userland/blob/3fd8527eefd8790b4e8393458efc5f94eb21a615/interface/mmal/mmal_parameters_camera.h
-# MMAL_PARAMETER_SHUTTER_SPEED
-# MMAL_PARAMETER_BLACK_LEVEL
-# MMAL_PARAMETER_ANALOG_GAIN
-# MMAL_PARAMETER_DIGITAL_GAIN
-# MMAL_PARAMETER_STILLS_DENOISE
-# MMAL_PARAMETER_ZERO_SHUTTER_LAG
-# MMAL_PARAMETER_FIELD_OF_VIEW
-# MMAL_PARAMETER_EXPOSURE_COMP
-# MMAL_PARAMETER_FLICKER_AVOID

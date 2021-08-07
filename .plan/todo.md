@@ -71,3 +71,23 @@
   - https://github.com/rellimmot/Sony-IMX219-Raspberry-Pi-V2-CMOS/blob/master/RASPBERRY%20PI%20CAMERA%20V2%20DATASHEET%20IMX219PQH5_7.0.0_Datasheet_XXX.PDF
   - Global external shutter: https://github.com/Hermann-SW/Raspberry_v1_camera_global_external_shutter
   - Manual MMAL: https://gist.github.com/rwb27/a23808e9f4008b48de95692a38ddaa08
+
+
+# MMAL Adjustments
+https://github.com/labthings/picamerax/blob/master/picamerax/mmal.py
+- MMAL_PARAMETER_HIGH_DYNAMIC_RANGE,
+- MMAL_PARAMETER_DYNAMIC_RANGE_COMPRESSION,
+- MMAL_PARAMETER_ALGORITHM_CONTROL,
+- MMAL_PARAMETER_SHARPNESS,
+- MMAL_PARAMETER_ANTISHAKE,
+- MMAL_PARAMETER_CAMERA_BURST_CAPTURE,
+- MMAL_PARAMETER_DPC - https://github.com/raspberrypi/userland/blob/3fd8527eefd8790b4e8393458efc5f94eb21a615/interface/mmal/mmal_parameters_camera.h
+- MMAL_PARAMETER_SHUTTER_SPEED
+- MMAL_PARAMETER_BLACK_LEVEL
+- MMAL_PARAMETER_ANALOG_GAIN
+- MMAL_PARAMETER_DIGITAL_GAIN
+- MMAL_PARAMETER_STILLS_DENOISE
+- MMAL_PARAMETER_ZERO_SHUTTER_LAG
+- MMAL_PARAMETER_FIELD_OF_VIEW
+- MMAL_PARAMETER_EXPOSURE_COMP
+- MMAL_PARAMETER_FLICKER_AVOID
