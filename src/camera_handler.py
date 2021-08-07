@@ -265,8 +265,8 @@ def long_shutter_speed(camera, config):
 
 # TODO: Look at long vs short, and set a high speed framerate
 # Alternatively set the low high fps mmal object
-def compute_framerate(camera, config, long_shutter=False):
-  if long_shutter == True:
+def compute_framerate(camera, config):
+  if config["long_shutter_speed"] == True:
     # return config["min_fps"] #1/camera.exposure_speed # Suggested approach for long exposures
     return 1/camera.exposure_speed
 
@@ -401,11 +401,11 @@ def take_hdr_shot(camera, overlay, config):
   dcim_hdr_images_path = config["dcim_hdr_images_path"]
 
   if config["long_shutter_speed"] == True:
-    camera.framerate = compute_framerate(camera, config, long_shutter=True)
+    camera.framerate = compute_framerate(camera, config)
     camera.shutter_speed = config["long_shutter_speed"]
     sleep(config["long_delay_time"])
   else:
-    camera.framerate = compute_framerate(camera, config, long_shutter=False)
+    camera.framerate = compute_framerate(camera, config)
     camera.shutter_speed = config["shutter_speed"]
 
   camera.resolution = (width, height)
@@ -476,11 +476,11 @@ def take_single_shot(camera, overlay, config):
   camera.resolution = (width, height)
 
   if config["long_shutter_speed"] == True:
-    camera.framerate = compute_framerate(camera, config, long_shutter=True)
+    camera.framerate = compute_framerate(camera, config)
     camera.shutter_speed = config["long_shutter_speed"]
     sleep(config["long_delay_time"])
   else:
-    camera.framerate = compute_framerate(camera, config, long_shutter=False)
+    camera.framerate = compute_framerate(camera, config)
     camera.shutter_speed = config["shutter_speed"]
 
   print(f'screen: ({screen_w}, {screen_h}), res: ({width}, {height}), shutter_speed: {camera.shutter_speed}, fps: {camera.framerate}')
