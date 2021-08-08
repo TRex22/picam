@@ -97,7 +97,7 @@ config = {
   "iso": 0, # 800 / should shift to 0 - auto
   "default_iso": 0,
   "available_shutter_speeds": [0, 100, 500, 1000, 2000, 4000, 8000, 16667, 33333, 66667, 125000, 250000, 500000, 1000000],
-  "available_long_shutter_speeds": [0, 2000000, 5000000, 10000000, 15000000, 20000000, 25000000, 30000000, 35000000, 40000000, 200000000],
+  "available_long_shutter_speeds": [0, 1000000, 2000000, 3000000, 4000000, 5000000, 10000000, 15000000, 20000000, 25000000, 30000000, 35000000, 40000000, 200000000],
   "take_long_shutter_speed": False,
   "shutter_speed": 0,
   "long_shutter_speed": 0,
