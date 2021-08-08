@@ -81,6 +81,9 @@ config = {
   "available_exposure_modes": [
     "auto", # default has to be first in the list
     "off",
+    "verylong",
+    "fixedfps",
+    "antishake",
     "night",
     "nightpreview",
     "backlight",
@@ -88,9 +91,6 @@ config = {
     "sports",
     "snow",
     "beach",
-    "verylong",
-    "fixedfps",
-    "antishake",
     "fireworks"
   ],
   "available_isos": [0, 5, 10, 25, 50, 100, 200, 320, 400, 500, 640, 800, 1600], # 0 is auto / 3200, 6400
@@ -109,7 +109,7 @@ config = {
   "default_dpc": 0,
   "raw_convert": True,
   "available_dpc_options": [0, 1, 2, 3], #https://www.raspberrypi.org/forums/viewtopic.php?f=43&t=277768
-  "available_menu_items": ["auto", "exposure_mode", "iso", "shutter_speed", "long_shutter_speed", "awb_mode", "hdr", "video", "resolution", "encoding", "dpc - star eater", "raw_convert", "fom", "hdr2"],
+  "available_menu_items": ["auto", "iso", "shutter_speed", "exposure_mode", "long_shutter_speed", "fom", "hdr2", "awb_mode", "hdr", "video", "resolution", "encoding", "dpc - star eater", "raw_convert"],
   "menu_item": "auto",
   "default_menu_item": "auto",
   "hdr": False,

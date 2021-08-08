@@ -244,9 +244,6 @@ def adjust_shutter_speed(camera, config):
   print(f'shutter_speed: {overlay_handler.compute_shutter_speed_from_us(config["shutter_speed"])}, set speed: {camera._get_shutter_speed()}, fps: {camera.framerate}')
 
 def long_shutter_speed(camera, config):
-  if config["long_shutter_speed"] in config["available_shutter_speeds"]:
-    config["long_shutter_speed"] = 0
-
   idex = config["available_long_shutter_speeds"].index(config["long_shutter_speed"]) + 1
 
   if idex < len(config["available_long_shutter_speeds"]):
