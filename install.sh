@@ -26,6 +26,7 @@ pip3 install opencv-contrib-python numpy ExifRead
 pip3 install Pillow picamerax
 pip3 install pi-ina219
 pip3 install setuptools
+pip3 install opencv-python
 sudo pip3 install Click==7.0
 sudo pip3 install adafruit-python-shell
 
