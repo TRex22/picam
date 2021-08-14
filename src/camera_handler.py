@@ -188,14 +188,14 @@ def stop_button_listen():
 # camera.vflip = False
 # camera.rotation = 270
 def auto_mode(camera, overlay, config, skip_dpc=False):
-  config['dpc'] = config['default_dpc']
   camera.iso = config["default_iso"]
   camera.exposure_mode = config["default_exposure_mode"]
   camera.shutter_speed = config["default_shutter_speed"]
   camera.awb_mode = config["default_awb_mode"]
   camera.framerate = compute_framerate(camera, config)
 
-  if skip_dpc == False:
+  if skip_dpc == False or config['dpc'] != config['default_dpc']:
+    config['dpc'] = config['default_dpc']
     set_dpc(camera, overlay, config)
 
   if config["fom"] == False:
