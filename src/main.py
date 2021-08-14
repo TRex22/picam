@@ -114,7 +114,7 @@ config = {
   "default_menu_item": "auto",
   "hdr": False,
   "preview": True,
-  "fom": False,
+  "fom": True,
   "default_fom": True,
   "fom_overlay_x_padding": 300, # in pxiels
   "fom_overlay_y_padding": 300, # in pxiels
