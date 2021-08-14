@@ -188,7 +188,7 @@ def stop_button_listen():
 # camera.vflip = False
 # camera.rotation = 270
 def auto_mode(camera, overlay, config, skip_dpc=False):
-  print(f'auto mode!')
+  print('auto mode!')
 
   camera.iso = config["default_iso"]
   camera.exposure_mode = config["default_exposure_mode"]
@@ -196,15 +196,15 @@ def auto_mode(camera, overlay, config, skip_dpc=False):
   camera.awb_mode = config["default_awb_mode"]
   camera.framerate = compute_framerate(camera, config)
 
-  # if skip_dpc == False and config['dpc'] != config['default_dpc']:
-  #   config['dpc'] = config['default_dpc']
-  #   adjust_dpc(config)
-  #   set_dpc(camera, overlay, config)
+  if skip_dpc == False and config['dpc'] != config['default_dpc']:
+    config['dpc'] = config['default_dpc']
+    adjust_dpc(config)
+    set_dpc(camera, overlay, config)
 
-  # if config["fom"] != config["default_fom"]:
-  #   config["fom"] = config["default_fom"]
-  #   adjust_fom(camera, config)
-  #   set_fom(camera, config)
+  if config["fom"] != config["default_fom"]:
+    config["fom"] = config["default_fom"]
+    adjust_fom(camera, config)
+    set_fom(camera, config)
 
   overlay_handler.display_text(camera, '', config)
 
