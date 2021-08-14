@@ -94,13 +94,13 @@ def generate_overlay_image(overlay_h, overlay_w, config):
   a[half_height, :, :] = 0xff
   a[:, half_width, :] = 0xff
 
-  if config['fom'] == True:
-    # Adding on the left is done by the loop starting at the padded space
-    inner_box_width = overlay_w - config['fom_overlay_x_padding']
-    inner_box_height = overlay_h - config['fom_overlay_y_padding']
+  # if config['fom'] == True:
+  #   # Adding on the left is done by the loop starting at the padded space
+  #   inner_box_width = overlay_w - config['fom_overlay_x_padding']
+  #   inner_box_height = overlay_h - config['fom_overlay_y_padding']
 
-    for i in range(inner_box_width):
-      for j in range(inner_box_height):
-        a[i,j] = [0, 0, 0, 0]
+  #   for i in range(inner_box_width):
+  #     for j in range(inner_box_height):
+  #       a[i,j] = [0, 0, 0, 0]
 
   return Image.fromarray(a)
