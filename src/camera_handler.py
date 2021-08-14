@@ -198,7 +198,10 @@ def auto_mode(camera, overlay, config, skip_dpc=False):
   if skip_dpc == False:
     set_dpc(camera, overlay, config)
 
-  set_fom(camera, config)
+  if config["fom"] == False:
+    config["fom"] = True
+    set_fom(camera, config)
+
   overlay_handler.display_text(camera, '', config)
   print(f'auto mode!')
 
