@@ -61,7 +61,7 @@ def add_overlay(camera, overlay, config):
   overlay_w = config["overlay_w"] # 320
   overlay_h = config["overlay_h"] # 280
 
-  img = generate_overlay_image(overlay_h, overlay_w)
+  img = generate_overlay_image(overlay_h, overlay_w, config)
   image_bytes = img.tobytes()
 
   # Broken docs ...
@@ -83,7 +83,7 @@ def remove_overlay(camera, overlay, config):
 
   return None
 
-def generate_overlay_image(overlay_h, overlay_w):
+def generate_overlay_image(overlay_h, overlay_w, config):
   # Create an array representing a wxh image of
   # a cross through the center of the display. The shape of
   # the array must be of the form (height, width, color)
@@ -93,5 +93,14 @@ def generate_overlay_image(overlay_h, overlay_w):
 
   a[half_height, :, :] = 0xff
   a[:, half_width, :] = 0xff
+
+  if config['fom'] == True:
+    # Adding on the left is done by the loop starting at the padded space
+    inner_box_width = overlay_w - config['fom_overlay_x_padding']
+    inner_box_height = overlay_h - config['fom_overlay_y_padding']
+
+    for i in range(inner_box_width):
+      for j in range(inner_box_height):
+        a[i,j] = [0, 0, 0, 0]
 
   return Image.fromarray(a)
