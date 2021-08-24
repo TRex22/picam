@@ -114,7 +114,7 @@ config = {
   "default_menu_item": "auto",
   "hdr": False,
   "preview": True,
-  "fom": True,
+  "fom": False,
   "default_fom": True,
   "fom_overlay_x_padding": 50, # in pixels
   "fom_overlay_y_padding": 50, # in pixels
