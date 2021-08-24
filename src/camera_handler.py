@@ -24,17 +24,22 @@ def start_preview(camera, config):
   config["preview"] = True
 
   # options are: "built-in" "continuous_shot"
-  if config["preview_mode"] == "continuous_shot":
-    format = config["format"]
-    bayer = config["bayer"]
+  # if config["preview_mode"] == "continuous_shot":
+  #   format = config["format"]
+  #   bayer = config["bayer"]
 
-    # for frame in camera.capture_continuous(rawCapture, format=format, bayer=bayer, use_video_port=True):
-    # TODO:
-    time.sleep(0.1)
-  else: # default
-    camera.start_preview()
-    key_press = input("Press enter to quit\n\n") # Run until someone presses enter
-    print(key_press)
+  #   # for frame in camera.capture_continuous(rawCapture, format=format, bayer=bayer, use_video_port=True):
+  #   # TODO:
+  #   time.sleep(0.1)
+  # else: # default
+  #   camera.start_preview()
+  #   key_press = input("Press enter to quit\n\n") # Run until someone presses enter
+  #   print(key_press)
+
+  start_button_listen(config)
+  camera.start_preview()
+  key_press = input("Press enter to quit\n\n") # Run until someone presses enter
+  print(key_press)
 
 def stop_preview(camera, config):
   # Just set the variable. The loop in the other thread will halt on next iteration
