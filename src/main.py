@@ -142,6 +142,7 @@ document_handler.check_for_folders(config)
 # Begin Camera start-up
 camera_handler.start_button_listen(config)
 camera, overlay = camera_handler.start_camera(config) # Runs main camera loop
+message = input("Press enter to quit\n\n") # Run until someone presses enter
 
 print('Stop camera!')
 camera_handler.stop_camera(camera, overlay, config)
