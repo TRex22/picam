@@ -116,8 +116,8 @@ config = {
   "preview": True,
   "fom": True,
   "default_fom": True,
-  "fom_overlay_x_padding": 300, # in pxiels
-  "fom_overlay_y_padding": 300, # in pxiels
+  "fom_overlay_x_padding": 50, # in pixels
+  "fom_overlay_y_padding": 50, # in pixels
   "hdr2": False,
   "preview_mode": "built-in", # "built-in" "continuous_shot"
   "default_preview_mode": 'built-in',

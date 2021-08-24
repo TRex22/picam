@@ -132,6 +132,8 @@ def button_callback_4():
 
   overlay = overlay_handler.remove_overlay(camera, overlay, config)
 
+  time.sleep(config['long_delay_time'])
+
   if config["video"]:
     trigger_video(camera, overlay, config)
   else:
@@ -198,7 +200,6 @@ def auto_mode(camera, overlay, config, skip_dpc=False):
 
   if skip_dpc == False and config['dpc'] != config['default_dpc']:
     config['dpc'] = config['default_dpc']
-    adjust_dpc(config)
     set_dpc(camera, overlay, config)
 
   if config["fom"] != config["default_fom"]:
@@ -333,20 +334,21 @@ def adjust_dpc(config):
     print("Reset DPC")
     config["dpc"] = config["default_dpc"]
 
+# Disabled until it can be done properly
 def set_dpc(camera, overlay, config):
   current_dpc = config["dpc"]
   print(f'current_dpc: {current_dpc}')
 
   # Turn off Camera
-  stop_camera(camera, overlay, config)
+  # stop_camera(camera, overlay, config)
 
   # Set DPC Mode
   # TODO: Add to MMAL interface here: https://github.com/labthings/picamerax/blob/master/picamerax/mmal.py
-  os.system(f'sudo vcdbg set imx477_dpc {current_dpc}') # TODO: Security risk here!
+  # os.system(f'sudo vcdbg set imx477_dpc {current_dpc}') # TODO: Security risk here!
 
   # Start Camera
-  camera, overlay = start_camera(config, skip_auto=True)
-  start_preview(camera, config) # Runs main camera loop
+  # camera, overlay = start_camera(config, skip_auto=True)
+  # start_preview(camera, config) # Runs main camera loop
 
 def set_raw_convert(camera, config):
   config["raw_convert"] = not config["raw_convert"]
