@@ -36,7 +36,6 @@ def start_preview(camera, config):
   #   key_press = input("Press enter to quit\n\n") # Run until someone presses enter
   #   print(key_press)
 
-  start_button_listen(config)
   camera.start_preview()
   key_press = input("Press enter to quit\n\n") # Run until someone presses enter
   print(key_press)
@@ -84,6 +83,9 @@ def start_camera(original_config, skip_auto=False):
   overlay = overlay_handler.add_overlay(camera, overlay, config)
   overlay_handler.display_text(camera, '', config)
   print(f'screen: ({screen_w}, {screen_h}), res: ({width}, {height})')
+
+  start_button_listen(config)
+  start_preview(camera, config)
 
   return [camera, overlay]
 
