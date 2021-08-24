@@ -99,8 +99,8 @@ def generate_overlay_image(overlay_h, overlay_w, config):
     inner_box_width = overlay_w - config['fom_overlay_x_padding']
     inner_box_height = overlay_h - config['fom_overlay_y_padding']
 
-    for i in range(inner_box_width):
-      for j in range(inner_box_height):
+    for i in range(inner_box_width - 1):
+      for j in range(inner_box_height - 1):
         a[i,j] = [0, 0, 0, 0]
 
   return Image.fromarray(a)
