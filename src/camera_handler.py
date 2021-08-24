@@ -80,8 +80,6 @@ def start_camera(original_config, skip_auto=False):
   overlay_handler.display_text(camera, '', config)
   print(f'screen: ({screen_w}, {screen_h}), res: ({width}, {height})')
 
-  start_button_listen(config)
-
   return [camera, overlay]
 
 def stop_camera(camera, overlay, config):
@@ -92,8 +90,6 @@ def stop_camera(camera, overlay, config):
 
   if camera != None:
     camera.close()
-
-  stop_button_listen()
 
 ################################################################################
 ##                                  GPIO Stuff                                ##

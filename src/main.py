@@ -140,6 +140,7 @@ document_handler.check_for_folders(config)
 ################################################################################
 
 # Begin Camera start-up
+camera_handler.start_button_listen(config)
 camera, overlay = camera_handler.start_camera(config) # Runs main camera loop
 
 print('Stop camera!')
