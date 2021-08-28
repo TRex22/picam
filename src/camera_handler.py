@@ -135,7 +135,8 @@ def button_callback_4():
 
   overlay = overlay_handler.remove_overlay(camera, overlay, config)
 
-  time.sleep(config['long_delay_time'])
+  if config['delay_time'] != 0:
+    time.sleep(config['delay_time'])
 
   if config["video"]:
     trigger_video(camera, overlay, config)
@@ -224,6 +225,14 @@ def adjust_exposure_mode(camera, config):
 
   config["exposure_mode"] = camera.exposure_mode
   print(f'exposure_mode: {config["exposure_mode"]}')
+
+def adjust_delay(camera, config):
+  idex = config["delay_times"].index(config["delay_time"]) + 1
+
+  config["delay_time"] = config["delay_times"][idex]
+
+  overlay_handler.display_text(camera, '', config)
+  print(f'delay_time: {config["delay_time"]}')
 
 def adjust_iso(camera, config):
   idex = config["available_isos"].index(config["iso"]) + 1
@@ -410,12 +419,12 @@ def take_hdr_shot(camera, overlay, config):
   if config["take_long_shutter_speed"] == True:
     camera.framerate = compute_framerate(camera, config)
     camera.shutter_speed = config["long_shutter_speed"]
-    time.sleep(config["long_delay_time"])
   else:
     camera.framerate = compute_framerate(camera, config)
     camera.shutter_speed = config["shutter_speed"]
-    if config["short_delay"]:
-      time.sleep(config["short_delay_time"])
+
+  if config["short_delay"]:
+    time.sleep(config["short_delay_time"])
 
   camera.resolution = (width, height)
 
@@ -490,12 +499,12 @@ def take_single_shot(camera, overlay, config):
   if config["take_long_shutter_speed"] == True:
     camera.framerate = compute_framerate(camera, config)
     camera.shutter_speed = config["long_shutter_speed"]
-    time.sleep(config["long_delay_time"])
   else:
     camera.framerate = compute_framerate(camera, config)
     camera.shutter_speed = config["shutter_speed"]
-    if config["short_delay"]:
-      time.sleep(config["short_delay_time"])
+
+  if config["short_delay"]:
+    time.sleep(config["short_delay_time"])
 
   print(f'screen: ({screen_w}, {screen_h}), res: ({width}, {height}), shutter_speed: {camera.shutter_speed}, fps: {camera.framerate}')
 

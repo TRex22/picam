@@ -15,16 +15,15 @@ import document_handler
 # For now look at a static folder
 # dcim_hdr_images_path = '/home/pi/DCIM/images/hdr'
 # dcim_hdr_images_path = '/mnt/i/tmp/hdr'
-dcim_hdr_images_path = '/mnt/g/tmp/hdr'
-
-filetype = '.png'
+dcim_hdr_images_path = '/mnt/f/hdr'
+filetype = '.jpeg'
 
 document_handler.detect_or_create_folder(dcim_hdr_images_path)
 
 # SEE: https://github.com/KEClaytor/pi-hdr-timelapse
 def compute_exposure_times(nimages):
-  exposure_min = 10
-  exposure_max = 90
+  exposure_min = 25
+  exposure_max = 75
   exp_step = 5
 
   exp_step = (exposure_max - exposure_min) / (nimages - 1.0)
@@ -32,11 +31,11 @@ def compute_exposure_times(nimages):
 
   return exposure_times
 
-files = glob.glob(f'{dcim_hdr_images_path}/*.*')
+files = glob.glob(f'{dcim_hdr_images_path}/*{filetype}')
 print(files)
 
 filenames = files # TODO: automate
-nimages = 9 #3 #10 #2160 # TODO: Automate
+nimages = 5 #3 #10 #2160 # TODO: Automate
 frame_count = 0 # TODO: automate
 
 exposure_times = compute_exposure_times(nimages)

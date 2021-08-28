@@ -34,7 +34,7 @@
 # width = 4056
 # height = 3040
 
-VERSION = "0.0.27"
+VERSION = "0.0.28"
 
 # Modules
 import document_handler
@@ -56,7 +56,8 @@ config = {
   "format": 'jpeg',
   "video_format": 'h264', # mjpeg, h264 TODO: Make into an option
   "bayer": True,
-  "long_delay_time": 5,
+  "delay_time": 0,
+  "delay_times": [0, 1, 2, 5, 10], # in seconds
   "short_delay": False,
   "short_delay_time": 0.05,
   "min_fps": 0.005, # mode 3 for HQ cam is between 0.005 and 10 fps
@@ -109,7 +110,7 @@ config = {
   "default_dpc": 0,
   "raw_convert": True,
   "available_dpc_options": [0, 1, 2, 3], #https://www.raspberrypi.org/forums/viewtopic.php?f=43&t=277768
-  "available_menu_items": ["auto", "iso", "shutter_speed", "exposure_mode", "long_shutter_speed", "fom", "hdr2", "awb_mode", "hdr", "video", "resolution", "encoding", "dpc - star eater", "raw_convert"],
+  "available_menu_items": ["auto", "iso", "shutter_speed", "exposure_mode", "long_shutter_speed", "fom", "hdr2", "awb_mode", "hdr", "delay_time", "video", "resolution", "encoding", "dpc - star eater", "raw_convert"],
   "menu_item": "auto",
   "default_menu_item": "auto",
   "hdr": False,

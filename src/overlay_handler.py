@@ -30,7 +30,7 @@ def display_text(camera, text, config):
 
   menu_item = config["menu_item"]
 
-  selected_item = f'Selected Menu Item: {config["menu_item"]}'
+  selected_item = f'Selected Menu Item: {config["menu_item"]}, delay: {config['delay_time']}'
   camera_settings = f"exposure mode: {camera.exposure_mode}, iso: {camera.iso}, awb mode: {config['awb_mode']}"
 
   shutter_text = ''

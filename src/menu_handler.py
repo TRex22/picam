@@ -42,3 +42,5 @@ def select_option(camera, overlay, config):
   if config["menu_item"] == "hdr2":
     camera_handler.adjust_hdr2(camera, config)
     camera_handler.set_hdr2(camera, config)
+  if config["menu_item"] == "delay_time":
+    camera_handler.adjust_delay(camera, config)
