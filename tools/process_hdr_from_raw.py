@@ -33,24 +33,25 @@ save_frames = True
 gamma = 2.2
 bit_depth = 24 #12
 
-nimages = 10 # 3 #10 #2160 # TODO: Automate
+nimages = 5 #10 # 3 #10 #2160 # TODO: Automate
 frame_count = 0 # TODO: automate
 
-exposure_min = 25
-exposure_max = 60
-exp_step = nimages
+exposure_min = 20
+exposure_max = 32 #40 # 60
+
+# exp_step = nimages
+exp_step = 5
 
 # SEE: https://github.com/KEClaytor/pi-hdr-timelapse
 def compute_exposure_times(nimages, exposure_min, exposure_max, exp_step):
   exp_step = (exposure_max - exposure_min) / (nimages - 1.0)
-  exposure_times = range(exposure_min, exposure_max + 1, int(exp_step))
+  exposure_times = range(exposure_min, exposure_max, int(exp_step))
 
-  return exposure_times
+  # https://docs.opencv.org/3.4/d2/df0/tutorial_py_hdr.html
+  arr_exposure_times = np.array(exposure_times, dtype=np.float32)
+  return np.append(arr_exposure_times, float(exposure_max))
 
 exposure_times = compute_exposure_times(nimages, exposure_min, exposure_max, exp_step)
-
-# https://docs.opencv.org/3.4/d2/df0/tutorial_py_hdr.html
-exposure_times = np.array(exposure_times, dtype=np.float32)
 print(exposure_times)
 
 # Open DNG
