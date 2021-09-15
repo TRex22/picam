@@ -22,7 +22,7 @@ mkdir -p ~/DCIM
 sudo apt update
 sudo apt install -y samba samba-common git build-essential cmake python3 python3-pip python-dev python-rpi.gpio python3-dev python3-rpi.gpio libopencv-dev python-opencv python-picamera python3-picamera libatlas-base-dev libhdf5-dev libhdf5-serial-dev libatlas-base-dev libjasper-dev libqtgui4 libqt4-test libatlas-base-dev libxml2-dev libxslt-dev libgstreamer1.0-0
 
-pip3 install opencv-contrib-python numpy ExifRead
+pip3 install opencv-contrib-python numpy ExifRead rawpy
 pip3 install Pillow picamerax
 pip3 install pi-ina219
 pip3 install setuptools
