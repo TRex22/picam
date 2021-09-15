@@ -3,6 +3,7 @@ sys.path.insert(1, '../src/')
 sys.path.insert(1, 'src/')
 
 import glob
+import math
 
 import cv2
 import numpy as np
@@ -15,9 +16,8 @@ import document_handler
 
 # TODO:
 # Blur Combine
-# Sharpen filter
-# Noise removal
 # Contrast equalisation / compensation
+# Progress bar
 
 # raw_file_path = 'G:\\tmp\\725 Half Moon\\raw\\725.dng'
 raw_file_path = '/mnt/g/tmp/725 Half Moon/raw/725.dng'
@@ -29,18 +29,24 @@ document_handler.detect_or_create_folder(frames_save_path)
 output_filetype = '.jpg'
 
 save_frames = True
+sharpen = False
+normalise = True
+denoise = False
 
-gamma = 2.2
+gamma = 2.4 #2.2
 bit_depth = 24 #12
 
-nimages = 5 #10 # 3 #10 #2160 # TODO: Automate
-frame_count = 0 # TODO: automate
+nimages = 8 #5 #10 # 3 #10 #2160 # TODO: Automate
 
-exposure_min = 20
-exposure_max = 32 #40 # 60
+exposure_min = 20 #5 # 20 # 25
+exposure_max = 60 #20 #33 #32 #40 # 60
+
+exposure_shift_min = 0
+exposure_shift_max = 8
 
 # exp_step = nimages
 exp_step = 5
+exp_shift_step = 1
 
 # SEE: https://github.com/KEClaytor/pi-hdr-timelapse
 def compute_exposure_times(nimages, exposure_min, exposure_max, exp_step):
@@ -54,13 +60,24 @@ def compute_exposure_times(nimages, exposure_min, exposure_max, exp_step):
 exposure_times = compute_exposure_times(nimages, exposure_min, exposure_max, exp_step)
 print(exposure_times)
 
+exposure_shift_times = compute_exposure_times(nimages, exposure_shift_min, exposure_shift_max, exp_shift_step)
+print(exposure_shift_times)
+
 # Open DNG
 raw = rawpy.imread(raw_file_path)
+
+def usharp_filer(frame):
+  new_frame = cv2.GaussianBlur(frame, (0, 0), 3)
+  return cv2.addWeighted(new_frame, 1.5, frame, -0.5, 0, frame)
+
+def kernel_sharpen(frame):
+  kernel = np.array([[-1,-1,-1], [-1,9,-1], [-1,-1,-1]])
+  return cv2.filter2D(frame, -1, kernel)
 
 # https://stackoverflow.com/questions/54272236/adjust-exposure-of-raw-image-based-on-ev-value
 def generate_exposure_from_raw(raw, exposure):
   # black_level = raw.black_level_per_channel[0] # assume they're all the same
-  black_level = (raw.black_level_per_channel[0] + raw.black_level_per_channel[1] + raw.black_level_per_channel[2] + raw.black_level_per_channel[3]) / 4
+  black_level = (raw.black_level_per_channel[0] + raw.black_level_per_channel[1] + raw.black_level_per_channel[2]) / 3
 
   im = raw.raw_image
   im = np.maximum(im, black_level) - black_level # changed order of computation
@@ -79,8 +96,27 @@ def generate_exposure_from_raw(raw, exposure):
 
 img_list = []
 
-for exposure in exposure_times:
-  frame = generate_exposure_from_raw(raw, (exposure - exposure_min)/5)
+for exposure in exposure_shift_times:
+  # shifted_exposure = math.floor((exposure - exposure_min)/exp_step)
+  frame = generate_exposure_from_raw(raw, exposure/exp_step)
+
+  if normalise == True:
+    lab = cv2.cvtColor(frame, cv2.COLOR_BGR2LAB)
+    l, a, b = cv2.split(lab)
+    lhist = cv2.equalizeHist(l)
+    ahist = cv2.equalizeHist(a)
+    bhist = cv2.equalizeHist(b)
+
+    lab_img = cv2.merge((l,a,b))
+
+    frame = cv2.cvtColor(lab_img, cv2.COLOR_LAB2BGR)
+
+  if denoise == True:
+    frame = cv2.fastNlMeansDenoisingColored(frame, None, 5, 5, 7, 21)
+
+  if sharpen == True:
+    # frame = usharp_filer(frame)
+    frame = kernel_sharpen(frame)
 
   if save_frames == True:
     cv2.imwrite(f'{frames_save_path}/{exposure}{output_filetype}', frame)
