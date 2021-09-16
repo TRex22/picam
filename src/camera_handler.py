@@ -125,6 +125,7 @@ def button_callback_3():
   print("Button 3: Zoom")
   zoom(camera, config)
   overlay = overlay_handler.add_overlay(camera, overlay, config)
+  overlay_handler.display_text(camera, '', config)
 
 def button_callback_4():
   global camera
@@ -227,9 +228,9 @@ def adjust_exposure_mode(camera, config):
   print(f'exposure_mode: {config["exposure_mode"]}')
 
 def adjust_delay(camera, config):
-  if idex < len(config["delay_times"]):
-    idex = config["delay_times"].index(config["delay_time"]) + 1
-  else:
+  idex = config["delay_times"].index(config["delay_time"]) + 1
+
+  if idex >= len(config["delay_times"]):
     idex = 0
 
   config["delay_time"] = config["delay_times"][idex]
