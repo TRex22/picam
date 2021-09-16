@@ -2,6 +2,7 @@ import sys
 sys.path.insert(1, '../src/')
 sys.path.insert(1, 'src/')
 
+import os
 import glob
 import math
 
@@ -18,12 +19,16 @@ import document_handler
 # Blur Combine
 # Contrast equalisation / compensation
 # Progress bar
+# EXIF Copy
 
 # raw_file_path = 'G:\\tmp\\725 Half Moon\\raw\\725.dng'
-raw_file_path = '/mnt/g/tmp/725 Half Moon/raw/725.dng'
-save_path = '/mnt/g/tmp/725 Half Moon/raw/output'
+# raw_file_path = '/mnt/g/tmp/725 Half Moon/raw/725.dng'
+raw_file_path = '/mnt/g/tmp/749 Waning Gibbons/raw/749.dng'
+# save_path = '/mnt/g/tmp/725 Half Moon/raw/output'
+save_path = '/mnt/g/tmp/749 Waning Gibbons/raw/'
 frames_save_path = f'{save_path}/frames'
 
+print(save_path)
 document_handler.detect_or_create_folder(frames_save_path)
 
 output_filetype = '.jpg'
@@ -32,6 +37,10 @@ save_frames = True
 sharpen = False
 normalise = True
 denoise = False
+
+# Requires Darktable because Im not recreating their filters
+# Also you need to save frames first
+scotopic_vision = True # Low-light compensation
 
 gamma = 2.4 #2.2
 bit_depth = 24 #12
@@ -119,7 +128,15 @@ for exposure in exposure_shift_times:
     frame = kernel_sharpen(frame)
 
   if save_frames == True:
-    cv2.imwrite(f'{frames_save_path}/{exposure}{output_filetype}', frame)
+    save_frame_path = f'{frames_save_path}/{exposure}{output_filetype}'
+    cv2.imwrite(save_frame_path, frame)
+
+    # https://docs.darktable.org/usermanual/3.6/module-reference/processing-modules/lowlight-vision/
+    # https://en.wikipedia.org/wiki/Scotopic_vision
+    if scotopic_vision == True:
+      # --style chromatic-aberrations
+      # --style lowlight-vision
+      os.system(f'darktable-cli {save_frame_path} l_{save_frame_path} --style lowlight-vision')
 
   img_list.append(frame)
 
