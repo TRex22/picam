@@ -80,8 +80,6 @@ def start_camera(original_config, skip_auto=False):
   camera.resolution = (screen_w, screen_h)
   camera.framerate = screen_fps # fps
 
-  config["set_zoom"] = '1x'
-
   overlay = overlay_handler.add_overlay(camera, overlay, config)
   overlay_handler.display_text(camera, '', config)
   print(f'screen: ({screen_w}, {screen_h}), res: ({width}, {height})')

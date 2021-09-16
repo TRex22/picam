@@ -34,7 +34,7 @@
 # width = 4056
 # height = 3040
 
-VERSION = "0.0.29"
+VERSION = "0.0.30"
 
 # Modules
 import document_handler
@@ -76,6 +76,7 @@ config = {
   "exposure_mode": 'auto',
   "default_exposure_mode": 'auto',
   "default_zoom": (0.0, 0.0, 1.0, 1.0),
+  "set_zoom": '1x',
   "max_zoom": (0.4, 0.4, 0.2, 0.2),
   "max_zoom_2": (0.4499885557335775, 0.4499885557335775, 0.09999237048905166, 0.09999237048905166),
   "max_zoom_3": (0.5, 0.5, 0.05, 0.05),
