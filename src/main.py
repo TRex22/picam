@@ -34,7 +34,7 @@
 # width = 4056
 # height = 3040
 
-VERSION = "0.0.28"
+VERSION = "0.0.29"
 
 # Modules
 import document_handler

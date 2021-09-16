@@ -80,6 +80,8 @@ def start_camera(original_config, skip_auto=False):
   camera.resolution = (screen_w, screen_h)
   camera.framerate = screen_fps # fps
 
+  config["set_zoom"] = '1x'
+
   overlay = overlay_handler.add_overlay(camera, overlay, config)
   overlay_handler.display_text(camera, '', config)
   print(f'screen: ({screen_w}, {screen_h}), res: ({width}, {height})')
@@ -227,7 +229,10 @@ def adjust_exposure_mode(camera, config):
   print(f'exposure_mode: {config["exposure_mode"]}')
 
 def adjust_delay(camera, config):
-  idex = config["delay_times"].index(config["delay_time"]) + 1
+  if idex < len(config["delay_times"]):
+    idex = config["delay_times"].index(config["delay_time"]) + 1
+  else:
+    idex = 0
 
   config["delay_time"] = config["delay_times"][idex]
 
@@ -393,15 +398,19 @@ def zoom(camera, config):
 
   if (current_zoom == config["default_zoom"]):
     print("Set Zoom to max_zoom")
+    config["set_zoom"] = '2x'
     camera.zoom = config["max_zoom"]
   elif (current_zoom == config["max_zoom"]):
     print("Set Zoom to max_zoom_2")
+    config["set_zoom"] = '4x'
     camera.zoom = config["max_zoom_2"]
   elif (current_zoom == config["max_zoom_2"]):
     print("Set Zoom to max_zoom_3")
+    config["set_zoom"] = '8x'
     camera.zoom = config["max_zoom_3"]
   else:
     print("Reset Zoom")
+    config["set_zoom"] = '1x'
     camera.zoom = config["default_zoom"]
 
 def take_hdr_shot(camera, overlay, config):
