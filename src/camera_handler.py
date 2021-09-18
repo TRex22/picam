@@ -47,7 +47,7 @@ def stop_preview(camera, config):
   if config["preview_mode"] == config["default_preview_mode"]:
     camera.stop_preview()
 
-def start_camera(original_config, skip_auto=False):
+def start_camera(original_config, skip_auto=False, skip_button_listen=False):
   global camera
   global overlay
   global config
@@ -84,7 +84,9 @@ def start_camera(original_config, skip_auto=False):
   overlay_handler.display_text(camera, '', config)
   print(f'screen: ({screen_w}, {screen_h}), res: ({width}, {height})')
 
-  start_button_listen(config)
+  if skip_button_listen == False:
+    start_button_listen(config)
+
   start_preview(camera, config)
 
   return [camera, overlay]
@@ -136,7 +138,7 @@ def button_callback_4():
 
   stop_camera(camera, overlay, config)
   config["screen_fps"] = config["max_fps"]
-  start_camera(config, skip_auto=True)
+  start_camera(config, skip_auto=True, skip_button_listen=True)
 
   overlay = overlay_handler.remove_overlay(camera, overlay, config)
 
@@ -153,7 +155,7 @@ def button_callback_4():
 
   stop_camera(camera, overlay, config)
   config["screen_fps"] = config["default_screen_fps"]
-  start_camera(config, skip_auto=True)
+  start_camera(config, skip_auto=True, skip_button_listen=True)
 
   # overlay = overlay_handler.add_overlay(camera, overlay, config)
 
