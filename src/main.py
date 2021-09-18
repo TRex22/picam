@@ -34,7 +34,7 @@
 # width = 4056
 # height = 3040
 
-VERSION = "0.0.34"
+VERSION = "0.0.35"
 
 # Modules
 import document_handler
@@ -62,7 +62,8 @@ config = {
   "short_delay_time": 0.05,
   "min_fps": 0.005, # mode 3 for HQ cam is between 0.005 and 10 fps
   "max_fps": 40, # 40, # Possibly equal to screen_fps
-  "screen_fps": 40, # 120 fps at 1012x760
+  "screen_fps": 60, # 120 fps at 1012x760
+  "default_screen_fps": 60,
   "capture_timeout": 1000, # Must be greater than max exposure in seconds
   "screen_w": 1280, # 1024 # 1012 # 320 screen res # Needs to be 4:3
   "screen_h": 960, # 768 #760 # 240 screen res # Needs to be 4:3
