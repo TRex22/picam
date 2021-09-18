@@ -34,7 +34,7 @@
 # width = 4056
 # height = 3040
 
-VERSION = "0.0.31"
+VERSION = "0.0.33"
 
 # Modules
 import document_handler
@@ -98,7 +98,7 @@ config = {
   "available_isos": [0, 5, 10, 25, 50, 100, 200, 320, 400, 500, 640, 800, 1600], # 0 is auto / 3200, 6400
   "iso": 5, #0, # 800 / should shift to 0 - auto
   "default_iso": 5,
-  "available_shutter_speeds": [0, 100, 500, 1000, 2000, 4000, 8000, 16667, 33333, 66667, 125000, 250000, 500000, 1000000],
+  "available_shutter_speeds": [0, 100, 500, 1000, 1500, 2000, 4000, 8000, 16667, 33333, 66667, 125000, 250000, 500000, 1000000], # 1/10000, 1/2000, 1/1000, ...
   "available_long_shutter_speeds": [0, 1000000, 2000000, 3000000, 4000000, 5000000, 10000000, 15000000, 20000000, 25000000, 30000000, 35000000, 40000000, 200000000],
   "take_long_shutter_speed": False,
   "shutter_speed": 0,
@@ -111,7 +111,9 @@ config = {
   "default_dpc": 0,
   "raw_convert": True,
   "available_dpc_options": [0, 1, 2, 3], #https://www.raspberrypi.org/forums/viewtopic.php?f=43&t=277768
-  "available_menu_items": ["auto", "shutter_speed", "iso", "hdr2", "delay_time", "exposure_mode", "long_shutter_speed", "fom", "awb_mode", "hdr", "video", "resolution", "encoding", "dpc - star eater", "raw_convert"],
+  "current_menu_items": ["auto", "shutter_speed", "iso", "hdr2", "delay_time", "long_shutter_speed", "sub_menu"],
+  "available_menu_items": ["auto", "shutter_speed", "iso", "hdr2", "delay_time", "long_shutter_speed", "sub_menu"],
+  "available_sub_menu_items": ["exposure_mode", "awb_mode", "hdr", "video", "resolution", "encoding", "dpc - star eater", "raw_convert", "fom"],
   "menu_item": "auto",
   "default_menu_item": "auto",
   "hdr": False,

@@ -2,10 +2,10 @@ import overlay_handler
 import camera_handler
 
 def select_menu_item(camera, config):
-  idex = config["available_menu_items"].index(config["menu_item"]) + 1
+  idex = config["current_menu_items"].index(config["menu_item"]) + 1
 
-  if idex < len(config["available_menu_items"]):
-    config["menu_item"] = config["available_menu_items"][idex]
+  if idex < len(config["current_menu_items"]):
+    config["menu_item"] = config["current_menu_items"][idex]
   else:
     config["menu_item"] = config["default_menu_item"]
 
@@ -44,3 +44,13 @@ def select_option(camera, overlay, config):
     camera_handler.set_hdr2(camera, config)
   if config["menu_item"] == "delay_time":
     camera_handler.adjust_delay(camera, config)
+  if config["menu_item"] == "sub_menu":
+    handle_sub_menu(config)
+
+def handle_sub_menu(config):
+  if (config["current_menu_items"] == config["available_menu_items"]):
+    config["current_menu_items"] = config["available_sub_menu_items"]
+  else:
+    config["current_menu_items"] = config["available_items"]
+
+  config["default_menu_item"] = config["current_menu_items"][0]
