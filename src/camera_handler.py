@@ -136,9 +136,9 @@ def button_callback_4():
 
   print("Button 4: Take shot")
 
-  stop_camera(camera, overlay, config)
-  config["screen_fps"] = config["max_fps"]
-  start_camera(config, skip_auto=True, skip_button_listen=True)
+  # stop_camera(camera, overlay, config)
+  # config["screen_fps"] = config["max_fps"]
+  # start_camera(config, skip_auto=True, skip_button_listen=True)
 
   overlay = overlay_handler.remove_overlay(camera, overlay, config)
 
@@ -153,11 +153,11 @@ def button_callback_4():
     else:
       take_single_shot(camera, overlay, config)
 
-  stop_camera(camera, overlay, config)
-  config["screen_fps"] = config["default_screen_fps"]
-  start_camera(config, skip_auto=True, skip_button_listen=True)
+  # stop_camera(camera, overlay, config)
+  # config["screen_fps"] = config["default_screen_fps"]
+  # start_camera(config, skip_auto=True, skip_button_listen=True)
 
-  # overlay = overlay_handler.add_overlay(camera, overlay, config)
+  overlay = overlay_handler.add_overlay(camera, overlay, config)
 
 def start_button_listen(config):
   # GPIO Config
