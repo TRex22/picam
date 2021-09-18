@@ -136,7 +136,7 @@ def button_callback_4():
 
   stop_camera(camera, overlay, config)
   config["screen_fps"] = config["max_fps"]
-  start_camera(original_config, skip_auto=True)
+  start_camera(config, skip_auto=True)
 
   overlay = overlay_handler.remove_overlay(camera, overlay, config)
 
@@ -153,7 +153,7 @@ def button_callback_4():
 
   stop_camera(camera, overlay, config)
   config["screen_fps"] = config["default_screen_fps"]
-  start_camera(original_config, skip_auto=True)
+  start_camera(config, skip_auto=True)
 
   # overlay = overlay_handler.add_overlay(camera, overlay, config)
 
