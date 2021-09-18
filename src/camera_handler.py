@@ -208,7 +208,6 @@ def auto_mode(camera, overlay, config, skip_dpc=False):
     set_dpc(camera, overlay, config)
 
   if config["fom"] != config["default_fom"]:
-    config["fom"] = config["default_fom"]
     adjust_fom(camera, config)
     set_fom(camera, config)
 

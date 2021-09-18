@@ -23,9 +23,15 @@ import document_handler
 
 # raw_file_path = 'G:\\tmp\\725 Half Moon\\raw\\725.dng'
 # raw_file_path = '/mnt/g/tmp/725 Half Moon/raw/725.dng'
-raw_file_path = '/mnt/g/tmp/749 Waning Gibbons/raw/749.dng'
+# raw_file_path = '/mnt/g/tmp/749 Waning Gibbons/raw/749.dng'
+# raw_file_path = '/mnt/g/tmp/761 Waning Gibbons/raw/761.dng'
+# raw_file_path = '/mnt/g/tmp/773 Waxing Gibbons/raw/773.dng'
+raw_file_path = '/mnt/g/tmp/784 Waxing Gibbons/raw/784.dng'
 # save_path = '/mnt/g/tmp/725 Half Moon/raw/output'
-save_path = '/mnt/g/tmp/749 Waning Gibbons/raw/'
+# save_path = '/mnt/g/tmp/749 Waning Gibbons/raw/'
+# save_path = '/mnt/g/tmp/761 Waning Gibbons/raw/'
+# save_path = '/mnt/g/tmp/773 Waxing Gibbons/raw/'
+save_path = '/mnt/g/tmp/784 Waxing Gibbons/raw/'
 frames_save_path = f'{save_path}/frames'
 
 print(save_path)
@@ -40,12 +46,12 @@ denoise = False
 
 # Requires Darktable because Im not recreating their filters
 # Also you need to save frames first
-scotopic_vision = True # Low-light compensation
+scotopic_vision = False # Low-light compensation
 
 gamma = 2.4 #2.2
 bit_depth = 24 #12
 
-nimages = 8 #5 #10 # 3 #10 #2160 # TODO: Automate
+nimages = 6# 8 #5 #10 # 3 #10 #2160 # TODO: Automate
 
 exposure_min = 20 #5 # 20 # 25
 exposure_max = 60 #20 #33 #32 #40 # 60
@@ -147,14 +153,14 @@ for exposure in exposure_shift_times:
 # img_list = [cv2.imread(filename) for filename in filenames]
 
 # Merge exposures to HDR image
-merge_debevec = cv2.createMergeDebevec()
-hdr_debevec = merge_debevec.process(img_list, times=exposure_times.copy())
-merge_robertson = cv2.createMergeRobertson()
-hdr_robertson = merge_robertson.process(img_list, times=exposure_times.copy())
+# merge_debevec = cv2.createMergeDebevec()
+# hdr_debevec = merge_debevec.process(img_list, times=exposure_times.copy())
+# merge_robertson = cv2.createMergeRobertson()
+# hdr_robertson = merge_robertson.process(img_list, times=exposure_times.copy())
 
 # Tonemap HDR image
-tonemap1 = cv2.createTonemap(gamma=gamma)
-res_debevec = tonemap1.process(hdr_debevec.copy())
+# tonemap1 = cv2.createTonemap(gamma=gamma)
+# res_debevec = tonemap1.process(hdr_debevec.copy())
 
 # res_robertson = merge_robertson(hdr_robertson.copy())
 
@@ -163,12 +169,12 @@ merge_mertens = cv2.createMergeMertens()
 res_mertens = merge_mertens.process(img_list)
 
 # Convert datatype to 8-bit and save
-res_debevec_8bit = np.clip(res_debevec*255, 0, 255).astype('uint8')
-res_robertson_8bit = np.clip(hdr_robertson*255, 0, 255).astype('uint8')
+# res_debevec_8bit = np.clip(res_debevec*255, 0, 255).astype('uint8')
+# res_robertson_8bit = np.clip(hdr_robertson*255, 0, 255).astype('uint8')
 res_mertens_8bit = np.clip(res_mertens*255, 0, 255).astype('uint8')
 
-cv2.imwrite(f'{save_path}/ldr_debevec_HDR_{output_filetype}', res_debevec_8bit)
-cv2.imwrite(f'{save_path}/ldr_robertson_HDR_{output_filetype}', res_robertson_8bit)
+# cv2.imwrite(f'{save_path}/ldr_debevec_HDR_{output_filetype}', res_debevec_8bit)
+# cv2.imwrite(f'{save_path}/ldr_robertson_HDR_{output_filetype}', res_robertson_8bit)
 cv2.imwrite(f'{save_path}/fusion_mertens_{output_filetype}', res_mertens_8bit)
 
 # Estimate camera response function (CRF)
