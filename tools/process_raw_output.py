@@ -18,8 +18,10 @@ from pydng.core import RPICAM2DNG
 import document_handler
 
 # Constants
-original_files_path = "/mnt/g/tmp/original"
-raw_file_save_path = "/mnt/g/tmp/raw"
+# original_files_path = "/mnt/g/tmp/original"
+original_files_path = "/mnt/g/tmp/784 Waxing Gibbons/raw/original"
+# raw_file_save_path = "/mnt/g/tmp/raw"
+raw_file_save_path = "/mnt/g/tmp/784 Waxing Gibbons/raw/"
 filetype = '.dng'
 
 # TODO: List them all

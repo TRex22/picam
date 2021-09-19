@@ -20,11 +20,13 @@ sudo raspi-config
 mkdir -p ~/DCIM
 
 sudo apt update
-sudo apt install -y samba samba-common git build-essential cmake python3 python3-pip python-dev python-rpi.gpio python3-dev python3-rpi.gpio libopencv-dev python-opencv python-picamera python3-picamera libatlas-base-dev libhdf5-dev libhdf5-serial-dev libatlas-base-dev libjasper-dev libqtgui4 libqt4-test libatlas-base-dev libxml2-dev libxslt-dev libgstreamer1.0-0
+sudo apt install -y samba samba-common git build-essential cmake python3 python3-pip python-dev python-rpi.gpio python3-dev python3-rpi.gpio libopencv-dev python-opencv python-picamera python3-picamera libatlas-base-dev libhdf5-dev libhdf5-serial-dev libatlas-base-dev libjasper-dev libqtgui4 libqt4-test libatlas-base-dev libxml2-dev libxslt-dev libgstreamer1.0-0 darktable
 
-pip3 install opencv-contrib-python numpy ExifRead
+pip3 install opencv-contrib-python numpy ExifRead rawpy
 pip3 install Pillow picamerax
 pip3 install pi-ina219
+pip3 install setuptools
+pip3 install opencv-python
 sudo pip3 install Click==7.0
 sudo pip3 install adafruit-python-shell
 
@@ -32,6 +34,7 @@ git clone https://github.com/TRex22/PyDNG.git
 git clone https://github.com/TRex22/Colour_Profiles.git
 git clone https://github.com/tasanakorn/rpi-fbcp.git
 git clone https://github.com/adafruit/Raspberry-Pi-Installer-Scripts.git
+git clone https://github.com/TRex22/picamerax.git
 git clone https://github.com/TRex22/picam.git
 # git clone https://github.com/CT83/SmoothStream/
 # git clone https://github.com/jacksonliam/mjpg-streamer.git
@@ -46,6 +49,12 @@ cmake ..
 make
 sudo cp fbcp /usr/bin
 cd ~/
+
+# Custom picamerax
+# cd ~/picamerax
+# python3 setup.py sdist bdist_wheel
+# pip3 install --upgrade dist/picamerax-20.9.1-py3-none-any.whl
+# cd ~/
 
 # adafruit screen
 # https://learn.adafruit.com/adafruit-2-2-pitft-hat-320-240-primary-display-for-raspberry-pi
