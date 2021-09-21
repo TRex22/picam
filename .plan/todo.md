@@ -1,4 +1,5 @@
 # TODO List:
+  - Brenheiser method: https://duckduckgo.com/?q=brenheiser+image&ia=web
   - histograms
   - profiles
   - logging
