@@ -546,8 +546,8 @@ def trigger_video(camera, overlay, config):
   screen_w = config["screen_w"]
   screen_h = config["screen_h"]
 
-  width = config["width"]
-  height = config["height"]
+  width = config["video_width"]
+  height = config["video_height"]
 
   dcim_videos_path = config["dcim_videos_path"]
 

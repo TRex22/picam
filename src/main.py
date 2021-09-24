@@ -130,6 +130,8 @@ config = {
   "recording": False,
   "recording_time": 30, # 30 secs
   "recording_fps": 30, # 30 secs
+  "video_width": 3840, # 4k
+  "video_height": 2160, # 4k
   "encoding": False, # TODO
   "gpio": {
     "button_1": 27,
