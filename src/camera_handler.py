@@ -543,31 +543,35 @@ def take_single_shot(camera, overlay, config):
     camera.shutter_speed = 0
 
 def trigger_video(camera, overlay, config):
-  if config["recording"]:
-    camera.stop_recording()
-    config["recording"] = False
-  else:
-    screen_w = config["screen_w"]
-    screen_h = config["screen_h"]
+  screen_w = config["screen_w"]
+  screen_h = config["screen_h"]
 
-    width = config["width"]
-    height = config["height"]
+  width = config["width"]
+  height = config["height"]
 
-    dcim_videos_path = config["dcim_videos_path"]
+  dcim_videos_path = config["dcim_videos_path"]
 
-    format = config["video_format"]
+  format = config["video_format"]
 
-    existing_files = glob.glob(f'{dcim_videos_path}/*.{format}')
-    filecount = len(existing_files)
+  existing_files = glob.glob(f'{dcim_videos_path}/*.{format}')
+  filecount = len(existing_files)
 
-    original_filename = f'{dcim_videos_path}/{filecount}.{format}'
-    print(original_filename)
+  original_filename = f'{dcim_videos_path}/{filecount}.{format}'
+  print(original_filename)
 
-    camera.resolution = (width, height)
-    print(f'screen: ({screen_w}, {screen_h}), res: ({width}, {height}), shutter_speed: {camera.shutter_speed}')
+  camera.resolution = (width, height)
+  camera.framerate = config["recording_fps"]
+  print(f'screen: ({screen_w}, {screen_h}), res: ({width}, {height}), shutter_speed: {camera.shutter_speed}')
 
-    config["recording"] = True
-    camera.start_recording(original_filename, format)
+  config["recording"] = True
+
+  camera.start_recording(original_filename, format)
+
+  time.sleep(config["recording_time"])
+
+  camera.stop_recording()
+
+  config["recording"] = False
 
 def write_via_thread(original_filename, write_type, stream):
   w = ThreadWriter(original_filename, write_type)

@@ -34,7 +34,7 @@
 # width = 4056
 # height = 3040
 
-VERSION = "0.0.35"
+VERSION = "0.0.36"
 
 # Modules
 import document_handler
@@ -128,6 +128,8 @@ config = {
   "default_preview_mode": 'built-in',
   "video": False,
   "recording": False,
+  "recording_time": 30, # 30 secs
+  "recording_fps": 30, # 30 secs
   "encoding": False, # TODO
   "gpio": {
     "button_1": 27,
