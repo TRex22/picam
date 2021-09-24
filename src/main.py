@@ -71,8 +71,8 @@ config = {
   "overlay_h": 240,
   "width": 4056, # Image width
   "height": 3040, # Image height
-  "video_width": 4056,
-  "video_height": 3040,
+  "video_width": 3840, # 4k
+  "video_height": 2160, # 4k
   "annotate_text_size": 48, # 6 to 160, inclusive. The default is 32
   "exposure_mode": 'auto',
   "default_exposure_mode": 'auto',
@@ -130,8 +130,6 @@ config = {
   "recording": False,
   "recording_time": 30, # 30 secs
   "recording_fps": 30, # 30 secs
-  "video_width": 3840, # 4k
-  "video_height": 2160, # 4k
   "encoding": False, # TODO
   "gpio": {
     "button_1": 27,
