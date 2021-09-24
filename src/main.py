@@ -71,8 +71,8 @@ config = {
   "overlay_h": 240,
   "width": 4056, # Image width
   "height": 3040, # Image height
-  "video_width": 3840, # 4k
-  "video_height": 2160, # 4k
+  "video_width": 1920, # 1920x1080
+  "video_height": 1080, # 1920x1080
   "annotate_text_size": 48, # 6 to 160, inclusive. The default is 32
   "exposure_mode": 'auto',
   "default_exposure_mode": 'auto',
