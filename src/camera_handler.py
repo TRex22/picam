@@ -403,7 +403,7 @@ def set_hdr2(camera, config):
   mmal_handler.set_mmal_parameter(camera, parameter, value)
   print(f'hdr2: {config["hdr2"]}')
 
-def adjust_shot(camera, config);
+def adjust_shot(camera, config):
   config["continuous_shot"] = not config["continuous_shot"]
   overlay_handler.display_text(camera, '', config)
 
