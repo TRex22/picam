@@ -224,6 +224,8 @@ def auto_mode(camera, overlay, config, skip_dpc=False):
     adjust_fom(camera, config)
     set_fom(camera, config)
 
+  set_hdr2(camera, config)
+
   overlay_handler.display_text(camera, '', config)
 
 def adjust_exposure_mode(camera, config):

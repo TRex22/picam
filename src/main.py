@@ -123,7 +123,7 @@ config = {
   "default_fom": True,
   "fom_overlay_x_padding": 50, # in pixels
   "fom_overlay_y_padding": 50, # in pixels
-  "hdr2": False,
+  "hdr2": True,
   "preview_mode": "built-in", # "built-in" "continuous_shot"
   "continuous_shot": False,
   "continuous_shot_count": 30,
