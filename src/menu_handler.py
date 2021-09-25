@@ -53,6 +53,6 @@ def handle_sub_menu(config):
   if (config["current_menu_items"] == config["available_menu_items"]):
     config["current_menu_items"] = config["available_sub_menu_items"]
   else:
-    config["current_menu_items"] = config["available_items"]
+    config["current_menu_items"] = config["available_menu_items"]
 
   config["default_menu_item"] = config["current_menu_items"][0]
