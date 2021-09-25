@@ -34,7 +34,7 @@
 # width = 4056
 # height = 3040
 
-VERSION = "0.0.36"
+VERSION = "0.0.37"
 
 # Modules
 import document_handler
@@ -114,7 +114,7 @@ config = {
   "available_dpc_options": [0, 1, 2, 3], #https://www.raspberrypi.org/forums/viewtopic.php?f=43&t=277768
   "current_menu_items": ["auto", "shutter_speed", "iso", "hdr2", "delay_time", "long_shutter_speed", "sub_menu"],
   "available_menu_items": ["auto", "shutter_speed", "iso", "hdr2", "delay_time", "long_shutter_speed", "sub_menu"],
-  "available_sub_menu_items": ["sub_menu", "exposure_mode", "awb_mode", "hdr", "video", "resolution", "encoding", "dpc - star eater", "raw_convert", "fom"],
+  "available_sub_menu_items": ["sub_menu", "continuous_shot", "exposure_mode", "awb_mode", "hdr", "video", "resolution", "encoding", "dpc - star eater", "raw_convert", "fom"],
   "menu_item": "auto",
   "default_menu_item": "auto",
   "hdr": False,
@@ -125,6 +125,8 @@ config = {
   "fom_overlay_y_padding": 50, # in pixels
   "hdr2": False,
   "preview_mode": "built-in", # "built-in" "continuous_shot"
+  "continuous_shot": False,
+  "continuous_shot_count": 30,
   "default_preview_mode": 'built-in',
   "video": False,
   "recording": False,

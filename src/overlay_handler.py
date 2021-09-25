@@ -24,7 +24,9 @@ def compute_shutter_speed_from_us(us):
 def display_text(camera, text, config):
   # camera.annotate_text = f'{camera.annotate_text} - {camera.exposure_mode}'
   if config["video"]:
-    mode = "Video Mode"
+    mode = f'Video Mode ({config['recording_time']} secs)'
+  elif config["continuous_shot"] == True:
+    mode = f'Photo Mode Continuous ({config['continuous_shot_count']} frames)'
   else:
     mode = "Photo Mode"
 

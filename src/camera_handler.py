@@ -150,6 +150,9 @@ def button_callback_4():
   else:
     if config["hdr"]:
       take_hdr_shot(camera, overlay, config)
+    elif not config["hdr"] and config["continuous_shot"]:
+      for i in range(config["continuous_shot_count"]):
+        take_single_shot(camera, overlay, config)
     else:
       take_single_shot(camera, overlay, config)
 
@@ -400,6 +403,10 @@ def set_hdr2(camera, config):
   mmal_handler.set_mmal_parameter(camera, parameter, value)
   print(f'hdr2: {config["hdr2"]}')
 
+def adjust_shot(camera, config);
+  config["continuous_shot"] = not config["continuous_shot"]
+  overlay_handler.display_text(camera, '', config)
+
 def zoom(camera, config):
   current_zoom = camera.zoom
   print(f'current_zoom: {current_zoom}')
@@ -503,8 +510,13 @@ def take_single_shot(camera, overlay, config):
   filecount = len(existing_files)
   frame_count = filecount
 
-  raw_filename = f'{dcim_images_path_raw}/{frame_count}.dng'
-  original_filename = f'{dcim_original_images_path}/{frame_count}.{format}'
+  if config["continuous_shot"] == True:
+    raw_filename = f'{dcim_images_path_raw}/{frame_count}_continuous.dng'
+    original_filename = f'{dcim_original_images_path}/{frame_count}_continuous.{format}'
+  else:
+    raw_filename = f'{dcim_images_path_raw}/{frame_count}.dng'
+    original_filename = f'{dcim_original_images_path}/{frame_count}.{format}'
+
   print(original_filename)
 
   stream = BytesIO()
