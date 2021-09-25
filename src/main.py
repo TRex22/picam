@@ -112,9 +112,9 @@ config = {
   "default_dpc": 0,
   "raw_convert": True,
   "available_dpc_options": [0, 1, 2, 3], #https://www.raspberrypi.org/forums/viewtopic.php?f=43&t=277768
-  "current_menu_items": ["auto", "shutter_speed", "iso", "hdr2", "delay_time", "long_shutter_speed", "sub_menu"],
-  "available_menu_items": ["auto", "shutter_speed", "iso", "hdr2", "delay_time", "long_shutter_speed", "sub_menu"],
-  "available_sub_menu_items": ["sub_menu", "continuous_shot", "exposure_mode", "awb_mode", "hdr", "video", "resolution", "encoding", "dpc - star eater", "raw_convert", "fom"],
+  "current_menu_items": ["auto", "shutter_speed", "iso", "delay_time", "long_shutter_speed", "sub_menu"],
+  "available_menu_items": ["auto", "shutter_speed", "iso", "delay_time", "long_shutter_speed", "sub_menu"],
+  "available_sub_menu_items": ["sub_menu", "continuous_shot", "exposure_mode", "awb_mode", "hdr", "hdr2", "video", "resolution", "encoding", "dpc - star eater", "raw_convert", "fom"],
   "menu_item": "auto",
   "default_menu_item": "auto",
   "hdr": False,
@@ -126,7 +126,7 @@ config = {
   "hdr2": True,
   "preview_mode": "built-in", # "built-in" "continuous_shot"
   "continuous_shot": False,
-  "continuous_shot_count": 30,
+  "continuous_shot_count": 15,
   "default_preview_mode": 'built-in',
   "video": False,
   "recording": False,
