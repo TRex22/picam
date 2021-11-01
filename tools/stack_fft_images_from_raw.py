@@ -49,4 +49,6 @@ def from_fft(f_ishift):
 
   return img_back
 
-def find_significance(fft_frames):
+def avg_tensor(tensor_stack):
+  return np.mean(tensor_stack, axis=0)
+# def find_significance(fft_frames):
