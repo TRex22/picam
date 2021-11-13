@@ -12,6 +12,9 @@ import numpy as np
 from scipy import fftpack
 import matplotlib.pyplot as plt
 
+import platform
+environment = platform.system().lower()
+
 import rawpy
 from PIL import Image
 
@@ -25,23 +28,42 @@ import document_handler
 # EXIF Copy
 # Select Base Image
 
-stacked_file_paths = [
-  "/mnt/g/tmp/continious_shot/3/885_continuous.jpeg",
-  "/mnt/g/tmp/continious_shot/3/886_continuous.jpeg",
-  "/mnt/g/tmp/continious_shot/3/887_continuous.jpeg",
-  "/mnt/g/tmp/continious_shot/3/888_continuous.jpeg",
-  "/mnt/g/tmp/continious_shot/3/889_continuous.jpeg",
-  "/mnt/g/tmp/continious_shot/3/890_continuous.jpeg",
-  "/mnt/g/tmp/continious_shot/3/891_continuous.jpeg",
-  "/mnt/g/tmp/continious_shot/3/892_continuous.jpeg",
-  "/mnt/g/tmp/continious_shot/3/893_continuous.jpeg",
-  "/mnt/g/tmp/continious_shot/3/894_continuous.jpeg"
-]
+if (environment == 'windows'):
+  stacked_file_paths = [
+    "G:\\tmp\\continious_shot\\3\\885_continuous.jpeg",
+    "G:\\tmp\\continious_shot\\3\\886_continuous.jpeg",
+    "G:\\tmp\\continious_shot\\3\\887_continuous.jpeg",
+    "G:\\tmp\\continious_shot\\3\\888_continuous.jpeg",
+    "G:\\tmp\\continious_shot\\3\\889_continuous.jpeg",
+    "G:\\tmp\\continious_shot\\3\\890_continuous.jpeg",
+    "G:\\tmp\\continious_shot\\3\\891_continuous.jpeg",
+    "G:\\tmp\\continious_shot\\3\\892_continuous.jpeg",
+    "G:\\tmp\\continious_shot\\3\\893_continuous.jpeg",
+    "G:\\tmp\\continious_shot\\3\\894_continuous.jpeg"
+  ]
 
-# raw_file_path = '/mnt/g/tmp/812 Waxing Gibbons/raw/812.dng'
+  # raw_file_path = '/mnt/g/tmp/812 Waxing Gibbons/raw/812.dng'
 
-save_path = '/mnt/g/tmp/continious_shot/3/output/'
-frames_save_path = f'{save_path}/frames'
+  save_path = 'G:\\tmp\\continious_shot\\3\\output\\'
+  frames_save_path = f'{save_path}\\frames'
+else:
+  stacked_file_paths = [
+    "/mnt/g/tmp/continious_shot/3/885_continuous.jpeg",
+    "/mnt/g/tmp/continious_shot/3/886_continuous.jpeg",
+    "/mnt/g/tmp/continious_shot/3/887_continuous.jpeg",
+    "/mnt/g/tmp/continious_shot/3/888_continuous.jpeg",
+    "/mnt/g/tmp/continious_shot/3/889_continuous.jpeg",
+    "/mnt/g/tmp/continious_shot/3/890_continuous.jpeg",
+    "/mnt/g/tmp/continious_shot/3/891_continuous.jpeg",
+    "/mnt/g/tmp/continious_shot/3/892_continuous.jpeg",
+    "/mnt/g/tmp/continious_shot/3/893_continuous.jpeg",
+    "/mnt/g/tmp/continious_shot/3/894_continuous.jpeg"
+  ]
+
+  # raw_file_path = '/mnt/g/tmp/812 Waxing Gibbons/raw/812.dng'
+
+  save_path = '/mnt/g/tmp/continious_shot/3/output/'
+  frames_save_path = f'{save_path}/frames'
 
 print('Compute fft avg from a stack of images')
 print(f'Save path: {save_path}')
@@ -155,6 +177,7 @@ def plot(image):
   # plt.imshow(image, plt.cm.gray)
   plt.imshow(image)
   plt.title('Original image')
+  plt.show()
 
 def save_stack(stack, name):
   index = 0
@@ -198,19 +221,24 @@ base_image_fft = to_fft(base_image)
 base_image_filter_fft = filter_fft(base_image_fft, keep_fraction = 0.2)
 save(base_image_filter_fft, 'base_image_filter_fft')
 filtered_base_image = from_fft(base_image_filter_fft)
-breakpoint()
-save(filtered_base_image, 'filtered_base_image')
+# breakpoint()
+# im = Image.fromarray(filtered_base_image)
+# im.save(f'{save_path}filtered_base_image.png')
+# cv2.imwrite(f'{save_path}filtered_base_image.bmp', im)
+# save(filtered_base_image, 'filtered_base_image')
+# plot(filtered_base_image)
 
-# print("Generate FFT Stack")
-# fft_stack = generate_fft_stack(base_images)
-# save_stack(fft_stack, 'fft')
+print("Generate FFT Stack")
+fft_stack = generate_fft_stack(base_images)
+save_stack(fft_stack, 'fft')
 
-# print('Compute AVG Tensor')
-# avg_fft = avg_tensor(fft_stack)
-# save(avg_fft, f'avg_fft{output_filetype}')
+print('Compute AVG Tensor')
+avg_fft = avg_tensor(fft_stack)
+save(avg_fft, f'avg_fft')
 
-# print('Convert back to image')
-# avg_image = from_fft(avg_fft)
-# save(avg_image, f'avg_fft_converted{output_filetype}')
+print('Convert back to image')
+avg_image = from_fft(avg_fft)
+save(avg_image, f'avg_fft_converted')
+plot(avg_image)
 
 # print('Complete!')
