@@ -14,6 +14,7 @@ import matplotlib.pyplot as plt
 
 import platform
 environment = platform.system().lower()
+print(f'Environment detected: {environment}')
 
 import rawpy
 from PIL import Image
@@ -98,7 +99,8 @@ def filter(fft, keep_fraction = 0.1):
 
 def fft(channel):
   # fft = fftpack.fft2(channel)
-  fft = np.fft.fft2(channel)
+  # fft = np.fft.fft2(channel)
+  fft = np.fft.fftn(channel)
   # fft = np.fft.fftshift(channel)
   # fft *= 255.0 / fft.max()  # proper scaling into 0..255 range
   # return np.absolute(fft)
@@ -111,7 +113,8 @@ def ifft(channel):
 
   # ifft = fftpack.ifft2(channel).real
   channel_shift = channel * (255.0 / channel.max())
-  ifft = np.fft.ifft2(channel_shift)
+  # ifft = np.fft.ifft2(channel_shift)
+  ifft = np.fft.ifftn(channel_shift)
   # ifft *= 255.0 / ifft.max()  # proper scaling back to 0..255 range
 
   # return np.absolute(ifft)
@@ -122,10 +125,10 @@ def filter_fft(frame, keep_fraction = 0.1):
   # f_ishift = np.fft.ifftshift(frame)
   # return f_ishift
 
-  channels = cv2.split(frame)
-  result_array = np.zeros_like(frame)
+  channels = cv2.split(frame.real)
+  result_array = np.zeros_like(frame.real)
 
-  if len(channels) > 1:  # grayscale images have only one channel
+  if frame.shape[2] > 1:  # grayscale images have only one channel
     for i, channel in enumerate(channels):
       result_array[..., i] = filter(channel, keep_fraction)
   else:
@@ -139,11 +142,12 @@ def to_fft(frame):
   # return f_ishift
 
   channels = cv2.split(frame)
-  result_array = np.zeros_like(frame)
+  result_array = np.zeros_like(frame, dtype=float)
 
-  if len(channels) > 1:  # grayscale images have only one channel
-    for i, channel in enumerate(channels):
-      result_array[..., i] = fft(channel)
+  if frame.shape[2] > 1:  # grayscale images have only one channel
+    # for i, channel in enumerate(channels):
+    #   result_array[..., i] = fft(channel)
+    result_array = np.fft.fftn(frame)
   else:
     result_array[...] = fft(channels[0])
 
@@ -152,13 +156,16 @@ def to_fft(frame):
 def from_fft(frame):
   # img_back = np.fft.ifft2(f_ishift)
   # return img_back
-
+  breakpoint()
   channels = cv2.split(frame)
-  result_array = np.zeros_like(frame)
+  result_array = np.zeros_like(frame, dtype=float)
 
-  if len(channels) > 1:  # grayscale images have only one channel
+  if frame.shape[2] > 1:  # grayscale images have only one channel
     for i, channel in enumerate(channels):
       result_array[..., i] = ifft(channel)
+
+    # result_array = np.absolute(np.fft.ifftn(frame))
+    # result_array = np.fft.ifftn(frame) #.real
   else:
     result_array[...] = ifft(channels[0])
 
@@ -170,13 +177,13 @@ def avg_tensor(tensor_stack):
 def save(frame, name):
   cv2.imwrite(f'{save_path}{name}{output_filetype}', frame)
 
-def plot(image):
+def plot(image, caption='Original image'):
   # im = plt.imread('../../../../data/moonlanding.png').astype(float)
 
   plt.figure()
   # plt.imshow(image, plt.cm.gray)
   plt.imshow(image)
-  plt.title('Original image')
+  plt.title(caption)
   plt.show()
 
 def save_stack(stack, name):
@@ -214,13 +221,31 @@ base_images = open_files(stacked_file_paths)
 print(f'Number of files: {len(base_images)}')
 
 base_image = base_images[0]
-save(base_image, 'base_image')
+# save(base_image, 'base_image')
+plot(base_image, 'Base Image')
 
-print('Filter Test')
-base_image_fft = to_fft(base_image)
-base_image_filter_fft = filter_fft(base_image_fft, keep_fraction = 0.2)
-save(base_image_filter_fft, 'base_image_filter_fft')
-filtered_base_image = from_fft(base_image_filter_fft)
+
+# TEST:
+# base_fft = to_fft(base_image)
+# base_fft = fft(base_image[:,:,0])
+base_fft = fft(base_image)
+plot(base_fft.real, 'Base FFT')
+# save(base_fft, 'base_image_fft')
+
+filtered_base_image = filter_fft(base_fft, keep_fraction = 0.2)
+plot(filtered_base_image.real, 'Base Filter')
+
+# base_ifft = from_fft(base_fft)
+base_ifft = ifft(filtered_base_image[:,:,0])
+plot(base_ifft.real, 'Base IFFT Filter')
+# save(base_ifft.real, 'base_image_ifft')
+
+# print('Filter Test')
+# base_image_fft = to_fft(base_image)
+# base_image_filter_fft = filter_fft(base_image_fft, keep_fraction = 0.2)
+# save(base_image_filter_fft, 'base_image_filter_fft')
+# filtered_base_image = from_fft(base_image_filter_fft)
+
 # breakpoint()
 # im = Image.fromarray(filtered_base_image)
 # im.save(f'{save_path}filtered_base_image.png')
@@ -228,17 +253,17 @@ filtered_base_image = from_fft(base_image_filter_fft)
 # save(filtered_base_image, 'filtered_base_image')
 # plot(filtered_base_image)
 
-print("Generate FFT Stack")
-fft_stack = generate_fft_stack(base_images)
-save_stack(fft_stack, 'fft')
+# print("Generate FFT Stack")
+# fft_stack = generate_fft_stack(base_images)
+# # save_stack(fft_stack, 'fft')
 
-print('Compute AVG Tensor')
-avg_fft = avg_tensor(fft_stack)
-save(avg_fft, f'avg_fft')
+# print('Compute AVG Tensor')
+# avg_fft = avg_tensor(fft_stack)
+# save(avg_fft, f'avg_fft')
 
-print('Convert back to image')
-avg_image = from_fft(avg_fft)
-save(avg_image, f'avg_fft_converted')
-plot(avg_image)
+# print('Convert back to image')
+# avg_image = from_fft(avg_fft)
+# save(avg_image, f'avg_fft_converted')
+# plot(avg_image)
 
-# print('Complete!')
+print('Complete!')
