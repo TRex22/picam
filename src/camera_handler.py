@@ -233,7 +233,7 @@ def set_overlay(camera, overlay, config):
   if config["show_overlay"] == False:
     overlay_handler.display_text(camera, '', config)
   if config["show_overlay"] == True:
-    overlay_handler.hide_overlay(camera, text, config)
+    overlay_handler.hide_overlay(camera, config)
 
 def adjust_exposure_mode(camera, config):
   idex = config["available_exposure_modes"].index(config["exposure_mode"]) + 1

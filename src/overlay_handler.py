@@ -21,7 +21,7 @@ def compute_shutter_speed_from_us(us):
   else:
     return f'1/{converted_seconds} ({us} us.)'
 
-def hide_overlay(camera, text, config):
+def hide_overlay(camera, config):
   camera.annotate_text = ""
 
 def display_text(camera, text, config):
