@@ -79,6 +79,7 @@ def start_camera(original_config, skip_auto=False, skip_button_listen=False):
 
   camera.resolution = (screen_w, screen_h)
   camera.framerate = screen_fps # fps
+  camera.image_denoise = False # TODO: Make this configurable?
 
   overlay = overlay_handler.add_overlay(camera, overlay, config)
   overlay_handler.display_text(camera, '', config)
@@ -317,6 +318,18 @@ def compute_framerate(camera, config):
   #   framerate = 1.0
 
   return framerate
+
+def adjust_effect(camera, config):
+  idex = config["available_camera_effects"].index(config["selected_camera_effect"]) + 1
+
+  if idex < len(config["available_camera_effects"]):
+    config["selected_camera_effect"] = config["available_camera_effects"][idex]
+  else:
+    config["selected_camera_effect"] = config["default_camera_effect"]
+
+  camera.image_effect = config["selected_camera_effect"]
+  overlay_handler.display_text(camera, '', config)
+  print(f'image_effect: {config["selected_camera_effect"]}')
 
 def adjust_awb_mode(camera, config):
   idex = config["available_awb_mode"].index(config["awb_mode"]) + 1

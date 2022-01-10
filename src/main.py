@@ -34,7 +34,7 @@
 # width = 4056
 # height = 3040
 
-VERSION = "0.0.38"
+VERSION = "0.0.39"
 
 # Modules
 import document_handler
@@ -96,25 +96,125 @@ config = {
     "beach",
     "fireworks"
   ],
+  # "selected_camera_effect": 'none',
+  "default_camera_effect": 'none',
+  "available_camera_effects": [
+    "none",
+    "negative",
+    "solarize",
+    "sketch",
+    "denoise",
+    "emboss",
+    "oilpaint",
+    "hatch",
+    "gpen",
+    "pastel",
+    "watercolor",
+    "film",
+    "blur",
+    "saturation",
+    "film",
+    "blur",
+    "saturation",
+    "colorswap",
+    "washedout",
+    "posterise",
+    "colorpoint",
+    "colorbalance",
+    "cartoon",
+    "deinterlace1",
+    "deinterlace2"
+  ],
   "available_isos": [0, 5, 10, 25, 50, 100, 200, 320, 400, 500, 640, 800, 1600], # 0 is auto / 3200, 6400
   "iso": 5, #0, # 800 / should shift to 0 - auto
   "default_iso": 5,
-  "available_shutter_speeds": [0, 100, 500, 1000, 1500, 2000, 4000, 8000, 3000, 16667, 33333, 66667, 125000, 250000, 500000, 1000000], # 1/10000, 1/2000, 1/1000, ...
-  "available_long_shutter_speeds": [0, 1000000, 2000000, 3000000, 4000000, 5000000, 10000000, 15000000, 20000000, 25000000, 30000000, 35000000, 40000000, 200000000],
+  "available_shutter_speeds": [
+    0,
+    100,
+    500,
+    1000,
+    1500,
+    2000,
+    4000,
+    8000,
+    3000,
+    16667,
+    33333,
+    66667,
+    125000,
+    250000,
+    500000,
+    1000000
+  ], # 1/10000, 1/2000, 1/1000, ...
+  "available_long_shutter_speeds": [
+    0,
+    1000000,
+    2000000,
+    3000000,
+    4000000,
+    5000000,
+    10000000,
+    15000000,
+    20000000,
+    25000000,
+    30000000,
+    35000000,
+    40000000,
+    200000000
+  ],
   "take_long_shutter_speed": False,
   "shutter_speed": 0,
   "long_shutter_speed": 0,
   "default_shutter_speed": 0,
-  "available_awb_mode": ['auto', 'off', 'sunlight', 'cloudy', 'shade', 'tungsten', 'fluorescent', 'incandescent', 'flash', 'horizon'],
+  "available_awb_mode": [
+    'auto',
+    'off',
+    'sunlight',
+    'cloudy',
+    'shade',
+    'tungsten',
+    'fluorescent',
+    'incandescent',
+    'flash',
+    'horizon'
+  ],
   "awb_mode": 'auto',
   "default_awb_mode": 'auto', # "awb_gains": 0.0 - 8.0 (),
   "dpc": 0, # 0 - 3, default is 3 and 0 is disabled
   "default_dpc": 0,
   "raw_convert": True,
   "available_dpc_options": [0, 1, 2, 3], #https://www.raspberrypi.org/forums/viewtopic.php?f=43&t=277768
-  "current_menu_items": ["auto", "shutter_speed", "iso", "delay_time", "long_shutter_speed", "sub_menu"],
-  "available_menu_items": ["auto", "shutter_speed", "iso", "delay_time", "long_shutter_speed", "sub_menu"],
-  "available_sub_menu_items": ["sub_menu", "continuous_shot", "exposure_mode", "awb_mode", "hdr", "hdr2", "video", "resolution", "encoding", "dpc - star eater", "raw_convert", "fom"],
+  "current_menu_items": [
+    "auto",
+    "shutter_speed",
+    "iso",
+    "delay_time",
+    "long_shutter_speed",
+    "sub_menu"
+  ],
+  "available_menu_items": [
+    "auto",
+    "shutter_speed",
+    "iso",
+    "delay_time",
+    "long_shutter_speed",
+    "effect",
+    "sub_menu"
+  ],
+  "available_sub_menu_items": [
+    "sub_menu",
+    "continuous_shot",
+    "exposure_mode",
+    "awb_mode",
+    "hdr",
+    "hdr2",
+    "video",
+    "resolution",
+    "encoding",
+    "dpc - star eater",
+    "raw_convert",
+    "fom"
+  ],
   "menu_item": "auto",
   "default_menu_item": "auto",
   "hdr": False,

@@ -46,6 +46,8 @@ def select_option(camera, overlay, config):
     camera_handler.adjust_delay(camera, config)
   if config["menu_item"] == "continuous_shot":
     camera_handler.adjust_shot(camera, config)
+  if config["menu_item"] == "effect":
+    camera_handler.adjust_effect(camera, config)
   if config["menu_item"] == "sub_menu":
     handle_sub_menu(config)
 
