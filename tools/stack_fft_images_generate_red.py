@@ -1,3 +1,5 @@
+# Generates interesting red effect
+
 # https://docs.opencv.org/4.5.3/de/dbc/tutorial_py_fourier_transform.html
 import sys
 sys.path.insert(1, '../src/')
@@ -155,74 +157,42 @@ def filter_fft(frame, keep_fraction = 0.1):
 
   return np.array(result_array) # Image.fromarray(result_array)
 
-def to_fft(image):
+def to_fft(frame):
   # ifftshift, fft2, fft
   # f_ishift = np.fft.ifftshift(frame)
   # return f_ishift
 
-  # channels = cv2.split(frame)
-  # result_array = np.zeros_like(frame, dtype=float)
+  channels = cv2.split(frame)
+  result_array = np.zeros_like(frame, dtype=float)
 
-  # if frame.shape[2] > 1:  # grayscale images have only one channel
-  #   for i, channel in enumerate(channels):
-  #     ichan = np.fft.fft2(channel)
-  #     # ichan *= 255.0 / ichan.max()
-  #     # result_array[..., i] = ichan
-  #     result_array[..., i] = np.fft.fftshift(ichan)
+  if frame.shape[2] > 1:  # grayscale images have only one channel
+    # for i, channel in enumerate(channels):
+    #   result_array[..., i] = fft(channel)
+    result_array = np.fft.fftn(frame)
+  else:
+    result_array[...] = fft(channels[0])
 
-  #   # result_array = np.fft.fft2(frame)
-  # else:
-  #   result_array[...] = np.fft.fft2(channels[0])
-
-  # return np.array(result_array) # Image.fromarray(result_array)
-  rgb_fft = np.zeros_like(image, dtype=float)
-
-  for i in range(3):
-    rgb_fft[..., i] = np.fft.fftshift(np.fft.fft2((image[:, :, i])))
-
-  return np.array(rgb_fft)
+  return np.array(result_array) # Image.fromarray(result_array)
 
 def from_fft(frame):
   # img_back = np.fft.ifft2(f_ishift)
   # return img_back
-  # channels = np.split(frame, 3, axis=2)
-  # result_array = np.zeros_like(frame, dtype=float)
+  channels = np.split(frame, 3, axis=2)
+  result_array = np.zeros_like(frame, dtype=float)
 
-  # if frame.shape[2] > 1:  # grayscale images have only one channel
-  #   for i, channel in enumerate(channels):
-  #     ichan = np.fft.fft2(channel[:,:,0])
-  #     # ichan *= 255.0 / ichan.max()
-  #     result_array[..., i] = np.abs(np.fft.ifft2(ichan))
-
-    # result_array[..., 0] = np.fft.ifft2(frame[:,:,0]).real
-    # result_array[..., 1] = np.fft.ifft2(frame[:,:,1]).real
-    # result_array[..., 2] = np.fft.ifft2(frame[:,:,2]).real
+  if frame.shape[2] > 1:  # grayscale images have only one channel
+    for i, channel in enumerate(channels):
+      result_array[..., i] = ifft(channel[:,:,0])
 
     # result_array = np.absolute(np.fft.ifftn(frame))
     # result_array = np.fft.ifftn(frame) #.real
-  # else:
-  #   result_array[...] = np.fft.ifft2(channels[0])
-  # result_array = np.zeros_like(frame, dtype=float)
-  # result_array[..., 0] = abs(np.fft.ifft2(frame[:,:,0]))
-  # result_array[..., 1] = abs(np.fft.ifft2(frame[:,:,1]))
-  # result_array[..., 2] = abs(np.fft.ifft2(frame[:,:,2]))
+  else:
+    result_array[...] = ifft(channels[0])
 
-  # return np.array(result_array) # Image.fromarray(result_array)
+  return np.array(result_array) # Image.fromarray(result_array)
 
-  transformed_channels = [
-    abs(np.fft.ifft2(frame[0])),
-    abs(np.fft.ifft2(frame[1])),
-    abs(np.fft.ifft2(frame[2]))
-  ]
-  return np.dstack([transformed_channels[0].astype(int),
-             transformed_channels[1].astype(int),
-             transformed_channels[2].astype(int)])
-
-# https://stackoverflow.com/questions/43626200/numpy-mean-of-complex-numbers-with-infinities#43626307
-# https://stackoverflow.com/questions/43626200/numpy-mean-of-complex-numbers-with-infinities
 def avg_tensor(tensor_stack):
-  # return np.mean(tensor_stack, axis=0)
-  return np.mean(tensor_stack[np.isfinite(tensor_stack)], axis=0)
+  return np.mean(tensor_stack, axis=0)
 
 def save(frame, name):
   cv2.imwrite(f'{save_path}{name}{output_filetype}', frame)
@@ -269,53 +239,19 @@ def open_files(stacked_file_paths):
 # def find_significance(fft_frames):
 # stacked_file_paths
 
-# https://www.pythonpool.com/numpy-ifft/
-# https://towardsdatascience.com/image-processing-with-python-application-of-fourier-transformation-5a8584dc175b
-def fourier_transform_rgb(image):
-  f_size = 25
-  transformed_channels = []
-  for i in range(3):
-    rgb_fft = np.fft.fftshift(np.fft.fft2((image[:, :, i])))
-    rgb_fft[:225, 235:237] = 1
-    rgb_fft[-225:,235:237] = 1
-    transformed_channels.append(abs(np.fft.ifft2(rgb_fft)))
-
-  final_image = np.dstack([transformed_channels[0].astype(int),
-                           transformed_channels[1].astype(int),
-                           transformed_channels[2].astype(int)])
-
-  fig, ax = plt.subplots(1, 2, figsize=(17,12))
-  ax[0].imshow(image)
-  ax[0].set_title('Original Image', fontsize = f_size)
-  ax[0].set_axis_off()
-
-  ax[1].imshow(final_image)
-  ax[1].set_title('Transformed Image', fontsize = f_size)
-  ax[1].set_axis_off()
-
-  fig.tight_layout()
-  plt.show()
-
 base_images = open_files(stacked_file_paths)
 print(f'Number of files: {len(base_images)}')
 
-# base_image = base_images[0]
-# fourier_transform_rgb(base_image)
+base_image = base_images[0]
+# save(base_image, 'base_image')
+# plot(base_image, 'Base Image')
 
-print("Generate FFT Stack")
-fft_stack = generate_fft_stack(base_images)
+# https://www.pythonpool.com/numpy-ifft/
 
-print('Compute AVG Tensor')
-avg_fft = avg_tensor(fft_stack)
-# plot(avg_fft.real, 'AVG FFT')
-
-print('Filter AVG Tensor')
-# filtered_base_image = filter_fft(avg_fft, keep_fraction = 0.2)
-# plot(filtered_base_image, 'FILTER AVG FFT')
-
-print('Convert back to image')
-avg_image = from_fft(avg_fft)
-# save(avg_image, f'avg_fft_converted')
-plot(avg_image.real, 'AVG_IMAGE')
+# TEST:
+# base_fft = to_fft(base_image)
+# base_fft = fft(base_image[:,:,0])
+base_fft = fft(base_image)
+plot(from_fft(to_fft(base_image)).real)
 
 print('Complete!')
