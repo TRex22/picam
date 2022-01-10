@@ -2,6 +2,10 @@ import overlay_handler
 import camera_handler
 
 def select_menu_item(camera, config):
+  if config["show_overlay"] == False:
+    camera_handler.set_overlay(camera, overlay, config)
+    return True
+
   idex = config["current_menu_items"].index(config["menu_item"]) + 1
 
   if idex < len(config["current_menu_items"]):
