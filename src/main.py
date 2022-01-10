@@ -115,7 +115,6 @@ config = {
     "saturation",
     "film",
     "blur",
-    "saturation",
     "colorswap",
     "washedout",
     "posterise",
