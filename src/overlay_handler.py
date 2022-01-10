@@ -49,8 +49,10 @@ def display_text(camera, text, config):
 
   framerate = camera.framerate
 
+  effect_text = f'Effect: {camera.image_effect}'
+
   boolean_text = f'hdr: {config["hdr"]}; hdr2: {config["hdr2"]}, raw: {config["raw_convert"]}, dpc: {config["dpc"]}'
-  output_text = f'{mode} - fps: {framerate} {config["set_zoom"]}\n{camera_settings}\n{boolean_text}\n{selected_item}\n{shutter_text}\n{text}'
+  output_text = f'{mode} - fps: {framerate} {config["set_zoom"]}\n{camera_settings}\n{boolean_text}\n{selected_item}\n{shutter_text}\n{effect_text}\n{text}'
 
   camera.annotate_text_size = config["annotate_text_size"]
   camera.annotate_text = output_text

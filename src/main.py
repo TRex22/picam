@@ -238,7 +238,7 @@ config = {
     "button_2": 23,
     "button_3": 22,
     "button_4": 17,
-    "bouncetime": 450
+    "bouncetime": 500
   }
 }
 
