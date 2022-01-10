@@ -13,6 +13,10 @@ def select_menu_item(camera, config):
   print(f'menu_item: {config["menu_item"]}')
 
 def select_option(camera, overlay, config):
+  if config["show_overlay"] == False:
+    camera_handler.set_overlay(camera, overlay, config)
+    return True
+
   if config["menu_item"] == "auto":
     camera_handler.auto_mode(camera, overlay, config)
   if config["menu_item"] == "exposure_mode":
@@ -48,6 +52,8 @@ def select_option(camera, overlay, config):
     camera_handler.adjust_shot(camera, config)
   if config["menu_item"] == "effect":
     camera_handler.adjust_effect(camera, config)
+  if config["menu_item"] == "overlay":
+    camera_handler.set_overlay(camera, overlay, config)
   if config["menu_item"] == "sub_menu":
     handle_sub_menu(config)
 

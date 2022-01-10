@@ -34,7 +34,7 @@
 # width = 4056
 # height = 3040
 
-VERSION = "0.0.39"
+VERSION = "0.0.40"
 
 # Modules
 import document_handler
@@ -69,6 +69,7 @@ config = {
   "screen_h": 960, # 768 #760 # 240 screen res # Needs to be 4:3
   "overlay_w": 320,
   "overlay_h": 240,
+  "show_overlay": True,
   "width": 4056, # Image width
   "height": 3040, # Image height
   "video_width": 1920, # 1920x1080

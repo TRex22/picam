@@ -229,6 +229,12 @@ def auto_mode(camera, overlay, config, skip_dpc=False):
 
   overlay_handler.display_text(camera, '', config)
 
+def set_overlay(camera, overlay, config):
+  config["show_overlay"] == False:
+    overlay_handler.display_text(camera, '', config)
+  config["show_overlay"] == True:
+    overlay_handler.hide_overlay(camera, text, config)
+
 def adjust_exposure_mode(camera, config):
   idex = config["available_exposure_modes"].index(config["exposure_mode"]) + 1
 
