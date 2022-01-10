@@ -190,6 +190,7 @@ config = {
     "iso",
     "delay_time",
     "long_shutter_speed",
+    "effect",
     "sub_menu"
   ],
   "available_menu_items": [
