@@ -113,8 +113,6 @@ config = {
     "film",
     "blur",
     "saturation",
-    "film",
-    "blur",
     "colorswap",
     "washedout",
     "posterise",
