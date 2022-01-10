@@ -189,6 +189,7 @@ config = {
     "delay_time",
     "long_shutter_speed",
     "effect",
+    "overlay",
     "sub_menu"
   ],
   "available_menu_items": [
@@ -198,6 +199,7 @@ config = {
     "delay_time",
     "long_shutter_speed",
     "effect",
+    "overlay",
     "sub_menu"
   ],
   "available_sub_menu_items": [
