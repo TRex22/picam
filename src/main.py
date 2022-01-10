@@ -96,7 +96,7 @@ config = {
     "beach",
     "fireworks"
   ],
-  # "selected_camera_effect": 'none',
+  "selected_camera_effect": 'none',
   "default_camera_effect": 'none',
   "available_camera_effects": [
     "none",
