@@ -34,6 +34,11 @@
 # width = 4056
 # height = 3040
 
+# TODO: Add libcamera support
+# https://www.raspberrypi.com/documentation/accessories/camera.html#post-processing-with-opencv
+# https://www.raspberrypi.com/documentation/accessories/camera.html#building-libcamera-and-libcamera-apps
+# https://forums.raspberrypi.com/viewtopic.php?t=273018&sid=567d0c674da8d03e159dbd998d20ace3&start=125
+
 VERSION = "0.0.40"
 
 # Modules
