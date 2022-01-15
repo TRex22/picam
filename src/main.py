@@ -39,6 +39,11 @@
 # https://www.raspberrypi.com/documentation/accessories/camera.html#building-libcamera-and-libcamera-apps
 # https://forums.raspberrypi.com/viewtopic.php?t=273018&sid=567d0c674da8d03e159dbd998d20ace3&start=125
 
+# TODO: Brightness
+# TODO: Contrast
+# TODO: Saturation
+# TODO: Higher fps view
+
 VERSION = "0.0.40"
 
 # Modules
