@@ -43,6 +43,7 @@
 # TODO: Contrast
 # TODO: Saturation
 # TODO: Higher fps view
+# TODO: Fix overlay turn off to use existing methods
 
 VERSION = "0.0.40"
 
