@@ -26,12 +26,14 @@ import document_handler
 # raw_file_path = '/mnt/g/tmp/749 Waning Gibbons/raw/749.dng'
 # raw_file_path = '/mnt/g/tmp/761 Waning Gibbons/raw/761.dng'
 # raw_file_path = '/mnt/g/tmp/773 Waxing Gibbons/raw/773.dng'
-raw_file_path = '/mnt/g/tmp/784 Waxing Gibbons/raw/784.dng'
+# raw_file_path = '/mnt/g/tmp/784 Waxing Gibbons/raw/784.dng'
+raw_file_path = '/mnt/g/tmp/812 Waxing Gibbons/raw/812.dng'
 # save_path = '/mnt/g/tmp/725 Half Moon/raw/output'
 # save_path = '/mnt/g/tmp/749 Waning Gibbons/raw/'
 # save_path = '/mnt/g/tmp/761 Waning Gibbons/raw/'
 # save_path = '/mnt/g/tmp/773 Waxing Gibbons/raw/'
-save_path = '/mnt/g/tmp/784 Waxing Gibbons/raw/'
+# save_path = '/mnt/g/tmp/784 Waxing Gibbons/raw/'
+save_path = '/mnt/g/tmp/812 Waxing Gibbons/raw/'
 frames_save_path = f'{save_path}/frames'
 
 print(save_path)

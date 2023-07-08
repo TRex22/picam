@@ -73,6 +73,8 @@
   - Manual MMAL: https://gist.github.com/rwb27/a23808e9f4008b48de95692a38ddaa08
   - Stop motion
 
+https://www.raspberrypi.com/documentation/accessories/camera.html
+
 # MMAL Adjustments
 https://github.com/labthings/picamerax/blob/master/picamerax/mmal.py
 - MMAL_PARAMETER_HIGH_DYNAMIC_RANGE,

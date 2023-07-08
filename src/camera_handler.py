@@ -79,6 +79,7 @@ def start_camera(original_config, skip_auto=False, skip_button_listen=False):
 
   camera.resolution = (screen_w, screen_h)
   camera.framerate = screen_fps # fps
+  camera.image_denoise = False # TODO: Make this configurable?
 
   overlay = overlay_handler.add_overlay(camera, overlay, config)
   overlay_handler.display_text(camera, '', config)
@@ -150,6 +151,9 @@ def button_callback_4():
   else:
     if config["hdr"]:
       take_hdr_shot(camera, overlay, config)
+    elif not config["hdr"] and config["continuous_shot"]:
+      for i in range(config["continuous_shot_count"]):
+        take_single_shot(camera, overlay, config)
     else:
       take_single_shot(camera, overlay, config)
 
@@ -221,7 +225,15 @@ def auto_mode(camera, overlay, config, skip_dpc=False):
     adjust_fom(camera, config)
     set_fom(camera, config)
 
+  set_hdr2(camera, config)
+
   overlay_handler.display_text(camera, '', config)
+
+def set_overlay(camera, overlay, config):
+  if config["show_overlay"] == False:
+    overlay_handler.display_text(camera, '', config)
+  if config["show_overlay"] == True:
+    overlay_handler.hide_overlay(camera, config)
 
 def adjust_exposure_mode(camera, config):
   idex = config["available_exposure_modes"].index(config["exposure_mode"]) + 1
@@ -313,6 +325,18 @@ def compute_framerate(camera, config):
 
   return framerate
 
+def adjust_effect(camera, config):
+  idex = config["available_camera_effects"].index(config["selected_camera_effect"]) + 1
+
+  if idex < len(config["available_camera_effects"]):
+    config["selected_camera_effect"] = config["available_camera_effects"][idex]
+  else:
+    config["selected_camera_effect"] = config["default_camera_effect"]
+
+  camera.image_effect = config["selected_camera_effect"]
+  overlay_handler.display_text(camera, '', config)
+  print(f'image_effect: {config["selected_camera_effect"]}')
+
 def adjust_awb_mode(camera, config):
   idex = config["available_awb_mode"].index(config["awb_mode"]) + 1
 
@@ -399,6 +423,10 @@ def set_hdr2(camera, config):
   parameter = mmal.MMAL_PARAMETER_HIGH_DYNAMIC_RANGE
   mmal_handler.set_mmal_parameter(camera, parameter, value)
   print(f'hdr2: {config["hdr2"]}')
+
+def adjust_shot(camera, config):
+  config["continuous_shot"] = not config["continuous_shot"]
+  overlay_handler.display_text(camera, '', config)
 
 def zoom(camera, config):
   current_zoom = camera.zoom
@@ -503,8 +531,13 @@ def take_single_shot(camera, overlay, config):
   filecount = len(existing_files)
   frame_count = filecount
 
-  raw_filename = f'{dcim_images_path_raw}/{frame_count}.dng'
-  original_filename = f'{dcim_original_images_path}/{frame_count}.{format}'
+  if config["continuous_shot"] == True:
+    raw_filename = f'{dcim_images_path_raw}/{frame_count}_continuous.dng'
+    original_filename = f'{dcim_original_images_path}/{frame_count}_continuous.{format}'
+  else:
+    raw_filename = f'{dcim_images_path_raw}/{frame_count}.dng'
+    original_filename = f'{dcim_original_images_path}/{frame_count}.{format}'
+
   print(original_filename)
 
   stream = BytesIO()
@@ -543,31 +576,35 @@ def take_single_shot(camera, overlay, config):
     camera.shutter_speed = 0
 
 def trigger_video(camera, overlay, config):
-  if config["recording"]:
-    camera.stop_recording()
-    config["recording"] = False
-  else:
-    screen_w = config["screen_w"]
-    screen_h = config["screen_h"]
+  screen_w = config["screen_w"]
+  screen_h = config["screen_h"]
 
-    width = config["width"]
-    height = config["height"]
+  width = config["video_width"]
+  height = config["video_height"]
 
-    dcim_videos_path = config["dcim_videos_path"]
+  dcim_videos_path = config["dcim_videos_path"]
 
-    format = config["video_format"]
+  format = config["video_format"]
 
-    existing_files = glob.glob(f'{dcim_videos_path}/*.{format}')
-    filecount = len(existing_files)
+  existing_files = glob.glob(f'{dcim_videos_path}/*.{format}')
+  filecount = len(existing_files)
 
-    original_filename = f'{dcim_videos_path}/{filecount}.{format}'
-    print(original_filename)
+  original_filename = f'{dcim_videos_path}/{filecount}.{format}'
+  print(original_filename)
 
-    camera.resolution = (width, height)
-    print(f'screen: ({screen_w}, {screen_h}), res: ({width}, {height}), shutter_speed: {camera.shutter_speed}')
+  camera.resolution = (width, height)
+  camera.framerate = config["recording_fps"]
+  print(f'screen: ({screen_w}, {screen_h}), res: ({width}, {height}), shutter_speed: {camera.shutter_speed}')
 
-    config["recording"] = True
-    camera.start_recording(original_filename, format)
+  config["recording"] = True
+
+  camera.start_recording(original_filename, format)
+
+  time.sleep(config["recording_time"])
+
+  camera.stop_recording()
+
+  config["recording"] = False
 
 def write_via_thread(original_filename, write_type, stream):
   w = ThreadWriter(original_filename, write_type)
