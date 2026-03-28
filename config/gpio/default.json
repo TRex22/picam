@@ -1,0 +1,11 @@
+{
+  "_comment": "Default GPIO button mapping for PiCam V2. Copy to ~/.config/picam2/gpio.json to customise.",
+  "enabled": false,
+  "buttons": {
+    "capture":      {"pin": 17, "pull": "up", "bounce_ms": 50},
+    "timer_toggle": {"pin": 27, "pull": "up", "bounce_ms": 50},
+    "mode_next":    {"pin": 22, "pull": "up", "bounce_ms": 50},
+    "mode_prev":    {"pin": 23, "pull": "up", "bounce_ms": 50},
+    "gallery":      {"pin": 24, "pull": "up", "bounce_ms": 50}
+  }
+}

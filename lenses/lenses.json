@@ -1,0 +1,46 @@
+{
+  "_comment": "Seed lens database for PiCam V2. Additional lenses can be added via ~/.config/picam2/lenses.json",
+  "version": 1,
+  "lenses": [
+    {
+      "id": "rpi-standard-lens",
+      "name": "Raspberry Pi Standard Lens",
+      "focal_length_mm": 6.0,
+      "aperture_min": 1.8,
+      "aperture_max": 16.0,
+      "compatible_sensors": ["IMX477", "IMX296", "IMX519"]
+    },
+    {
+      "id": "rpi-telephoto-lens",
+      "name": "Raspberry Pi Telephoto Lens",
+      "focal_length_mm": 16.0,
+      "aperture_min": 2.8,
+      "aperture_max": 16.0,
+      "compatible_sensors": ["IMX477"]
+    },
+    {
+      "id": "cs-6mm",
+      "name": "CS-Mount 6mm f/1.2",
+      "focal_length_mm": 6.0,
+      "aperture_min": 1.2,
+      "aperture_max": 16.0,
+      "compatible_sensors": ["IMX477", "IMX296"]
+    },
+    {
+      "id": "cs-16mm",
+      "name": "CS-Mount 16mm f/1.4",
+      "focal_length_mm": 16.0,
+      "aperture_min": 1.4,
+      "aperture_max": 16.0,
+      "compatible_sensors": ["IMX477"]
+    },
+    {
+      "id": "no-lens",
+      "name": "No lens (bare sensor / microscope)",
+      "focal_length_mm": null,
+      "aperture_min": null,
+      "aperture_max": null,
+      "compatible_sensors": ["IMX477", "IMX296", "IMX519", "OV5647"]
+    }
+  ]
+}
