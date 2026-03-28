@@ -93,3 +93,22 @@ remote control I was thinking a bluetooth HID device, or remote web access. Not 
 
 
 
+## Second updates
+
+Okay please make the git repo cleanup the first step. Ensure that .gitdoes not get deleted. Also ensure 
+Also ensure that in the freshly cleaned up repo it starts off with the proof of concept and the rewrite 2026.md plan. ./plan should not be deleted too.
+
+claude-code MUST also track completed tasks and refer back to the plan document. It should update and edit it as it goes.
+
+The most important features updates I want first (after POC fixes) is the colour profile work, then zoom work, then AWB settings, then gallery view. Once those are done the rest can happen in the current order. Hardware platform improvements should also come early on.
+
+GPIO buttons must be optional and configurable in a saved configuration. A default configuration should be in the repo by default and updateable.
+
+The gallery should also be able to delete photos and captured videos
+
+Also add a lower priority feature to use the camera as a webcam or security camera with streaming capabilities via the network. Also remote shots. Include support for Darktable and other apps, and also crowsnest and klipper 3d printers.
+
+Also add a lower priority feature to allow for timelapse captures
+
+
+
