@@ -19,9 +19,9 @@ import document_handler
 
 # Constants
 # original_files_path = "/mnt/g/tmp/original"
-original_files_path = "/mnt/g/tmp/784 Waxing Gibbons/raw/original"
+original_files_path = "/data/photography/continious_shot/3"
 # raw_file_save_path = "/mnt/g/tmp/raw"
-raw_file_save_path = "/mnt/g/tmp/784 Waxing Gibbons/raw/"
+raw_file_save_path = "/data/photography/continious_shot/3/raw/"
 filetype = '.dng'
 
 # TODO: List them all
@@ -31,11 +31,11 @@ filetype = '.dng'
 # colour_profile_path = "../Colour_Profiles/imx477/PyDNG_profile"
 
 config = {
-  "neutral_colour_profile": "../Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Neutral Look.json",
+  "neutral_colour_profile": "/home/trex22/development/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Neutral Look.json",
   "neutral_colour_profile_name": "neutral_colour",
-  "skin_tone_colour_profile": "../Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Skin+Sky Look.json",
+  "skin_tone_colour_profile": "/home/trex22/development/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Skin+Sky Look.json",
   "skin_tone_colour_profile_name": "skin_tone",
-  "pydng_colour_profile": "../Colour_Profiles/imx477/PyDNG_profile.json",
+  "pydng_colour_profile": "/home/trex22/development/Colour_Profiles/imx477/PyDNG_profile.json",
   "pydng_colour_profile_name": "pydng",
   "selected_colour_profile": "neutral_colour_profile" #"all" # can be all or neutral_colour_profile, skin_tone_colour_profile, pydng_colour_profile ... others to be added later
 }

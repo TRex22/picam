@@ -2,6 +2,10 @@ import overlay_handler
 import camera_handler
 
 def select_menu_item(camera, config):
+  if config["show_overlay"] == False:
+    camera_handler.set_overlay(camera, overlay, config)
+    return True
+
   idex = config["current_menu_items"].index(config["menu_item"]) + 1
 
   if idex < len(config["current_menu_items"]):
@@ -13,6 +17,10 @@ def select_menu_item(camera, config):
   print(f'menu_item: {config["menu_item"]}')
 
 def select_option(camera, overlay, config):
+  if config["show_overlay"] == False:
+    camera_handler.set_overlay(camera, overlay, config)
+    return True
+
   if config["menu_item"] == "auto":
     camera_handler.auto_mode(camera, overlay, config)
   if config["menu_item"] == "exposure_mode":
@@ -44,6 +52,12 @@ def select_option(camera, overlay, config):
     camera_handler.set_hdr2(camera, config)
   if config["menu_item"] == "delay_time":
     camera_handler.adjust_delay(camera, config)
+  if config["menu_item"] == "continuous_shot":
+    camera_handler.adjust_shot(camera, config)
+  if config["menu_item"] == "effect":
+    camera_handler.adjust_effect(camera, config)
+  if config["menu_item"] == "overlay":
+    camera_handler.set_overlay(camera, overlay, config)
   if config["menu_item"] == "sub_menu":
     handle_sub_menu(config)
 
@@ -51,6 +65,6 @@ def handle_sub_menu(config):
   if (config["current_menu_items"] == config["available_menu_items"]):
     config["current_menu_items"] = config["available_sub_menu_items"]
   else:
-    config["current_menu_items"] = config["available_items"]
+    config["current_menu_items"] = config["available_menu_items"]
 
   config["default_menu_item"] = config["current_menu_items"][0]
