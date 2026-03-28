@@ -60,3 +60,36 @@ The biggest missing feature is around the custom colour profile I have from the 
 There is also an older todo list in the folder ./plan/ in the repo: /Users/trex22/development/picam to also evaluate.
 
 Make this plan markdown
+
+
+# Updates
+
+Please make sure that shutter speeds that would make the preview unusable dont change the preview (too slow shutter speeds) and rather use a simulated preview. Thats important for setting up long exposures. I also want a reset settings button for going back to the configured default quickly. With a plan for future saved profiles that can be applied quickly. Like for astrophotography (moon, or planet or long exposure star shots).
+
+I want to have planned out tests and CI/CD workflow. With AI reviewer and security reviews. Use /Users/trex22/development/artemis as an example of such an implementation.
+
+Also plan for repo cleanup. I will tag v1.5 and then want to clear development and master branches and start fresh with the new implementation.
+
+I'd like to keep some support for the older screen and gpio buttons if I build out a smaller cheaper model in the future. This should be planned for.
+
+Plan for future UI themes, colours and fonts
+
+Plan for an image and video gallery view in the future. This way captured images can be viewed and zoomed on in real-time.
+
+Plan for a feature where the current lens can be manually selected from a manually updated database of available lenses and lens configurations. This would then be saved in the EXIF data.
+
+multi-sensor and dual sensor support is the same thing. Combine them. Allow for up to two previews at the same time with a way to scroll through available sensors.
+
+DPC and other sensor registry controls which were toggled in the older version of the app should be available in the new version.
+
+GPS support is the lowest priority feature.
+
+Timer delay is actually very important to have earlier on
+Ive done some image processing work in this tool: /Users/trex22/development/MagicForge
+
+Also add in a manual focus bracketing continuous shot feature
+
+remote control I was thinking a bluetooth HID device, or remote web access. Not IR.
+
+
+
