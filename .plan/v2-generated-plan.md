@@ -3,6 +3,8 @@
 > **From:** v1.5 (legacy picamera/MMAL, Pi 4, framebuffer, GPIO buttons, headless)
 > **To:** V2 (picamera2/libcamera, Pi 5, DSP touchscreen, Tkinter desktop GUI)
 > **Proof of Concept baseline:** `picam2_proof_of_concept.py`
+> **Image processing tooling:** MagicForge (OpenCV / rawpy / drizzle pipeline)
+> **CI/CD reference:** artemis repo pattern
 > **Target platforms:** Raspberry Pi 4 & 5
 > **Date:** March 2026
 
@@ -11,22 +13,26 @@
 ## Table of Contents
 
 1. [Architecture Overview](#architecture-overview)
-2. [Repository Structure](#repository-structure)
+2. [Repository Cleanup & Migration](#repository-cleanup--migration)
 3. [Phase 0 — PoC Fixes & Stabilisation](#phase-0--poc-fixes--stabilisation)
 4. [Phase 1 — Core Foundation](#phase-1--core-foundation)
 5. [Phase 2 — Camera Features](#phase-2--camera-features)
 6. [Phase 3 — Storage & Output](#phase-3--storage--output)
 7. [Phase 4 — UI & Touchscreen](#phase-4--ui--touchscreen)
-8. [Phase 5 — Advanced Imaging](#phase-5--advanced-imaging)
+8. [Phase 5 — Advanced Imaging & MagicForge Integration](#phase-5--advanced-imaging--magicforge-integration)
 9. [Phase 6 — Connectivity & Remote](#phase-6--connectivity--remote)
 10. [Phase 7 — Video & Audio](#phase-7--video--audio)
 11. [Phase 8 — Hardware & Platform](#phase-8--hardware--platform)
-12. [Phase 9 — Astrophotography & Science Modes](#phase-9--astrophotography--science-modes)
-13. [Phase 10 — Polish & Distribution](#phase-10--polish--distribution)
-14. [Deferred / Research Items](#deferred--research-items)
-15. [Colour Profile Implementation Notes](#colour-profile-implementation-notes)
-16. [Sensor Support Matrix](#sensor-support-matrix)
-17. [Known Hardware Constraints](#known-hardware-constraints)
+12. [Phase 9 — Gallery & Media Browser](#phase-9--gallery--media-browser)
+13. [Phase 10 — Astrophotography & Science Modes](#phase-10--astrophotography--science-modes)
+14. [Phase 11 — Polish & Distribution](#phase-11--polish--distribution)
+15. [Testing Strategy](#testing-strategy)
+16. [CI/CD Pipeline](#cicd-pipeline)
+17. [Deferred / Low Priority Items](#deferred--low-priority-items)
+18. [Colour Profile Implementation Notes](#colour-profile-implementation-notes)
+19. [Sensor Support Matrix](#sensor-support-matrix)
+20. [Known Hardware Constraints](#known-hardware-constraints)
+21. [UI Theme & Visual Design System](#ui-theme--visual-design-system)
 
 ---
 
@@ -35,73 +41,160 @@
 V2 adopts a clean layered architecture to replace the tangled v1.5 MMAL handler spaghetti:
 
 ```
-┌─────────────────────────────────────────────┐
-│              UI Layer (Tkinter)             │
-│  PiCamApp  ·  Panels  ·  Overlays  ·  Touch │
-├─────────────────────────────────────────────┤
-│            Application Layer                │
-│  SettingsManager  ·  CaptureController      │
-│  TimerController  ·  BufferManager          │
-├─────────────────────────────────────────────┤
-│             Camera Abstraction              │
-│  CameraBackend (abstract)                   │
-│    └─ Picamera2Backend  (Pi 4 & 5)          │
-│    └─ DemoBackend       (dev/no-Pi)         │
-├─────────────────────────────────────────────┤
-│           Hardware / Platform               │
-│  SensorRegistry  ·  ColourProfileManager    │
-│  GPIOManager     ·  BatteryMonitor          │
-│  ScreenManager   ·  TempMonitor             │
-└─────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────┐
+│                    UI Layer (Tkinter)               │
+│  PiCamApp · Panels · Overlays · Touch · Gallery     │
+│  ThemeManager · FontRegistry · LayoutManager        │
+├─────────────────────────────────────────────────────┤
+│                 Application Layer                   │
+│  SettingsManager · CaptureController · TimerCtrl    │
+│  ProfileManager · LensDatabase · BufferManager      │
+├─────────────────────────────────────────────────────┤
+│              Camera Abstraction                     │
+│  CameraBackend (abstract)                           │
+│    └─ Picamera2Backend  (Pi 4 & 5, single-config)   │
+│    └─ DemoBackend       (dev / no-Pi)               │
+│  SensorRegistry · ColourProfileManager              │
+│  SimulatedPreviewEngine                             │
+├─────────────────────────────────────────────────────┤
+│           Hardware / Platform Layer                 │
+│  GPIOManager · BatteryMonitor · TempMonitor         │
+│  ScreenManager · BacklightController                │
+└─────────────────────────────────────────────────────┘
 ```
 
-**Key design decisions carried forward from the PoC:**
+**Key design decisions:**
 - **Single-configuration model** — never reconfigure the camera at runtime; prevents the Pi 5 PiSP TDN crash.
-- **Main-thread capture of Tkinter vars** — all `StringVar`/`DoubleVar/.get()` calls happen on the Tk main thread before handing off to worker threads.
-- **Raw stream always on** — raw Bayer stream runs continuously alongside the RGB preview; capture is a grab-from-queue operation with no mode switch.
+- **Main-thread capture of Tkinter vars** — all `StringVar/.get()` calls happen on the Tk main thread before handing off to worker threads.
+- **Raw stream always on** — raw Bayer stream runs continuously; capture is grab-from-queue with no mode switch.
+- **Simulated preview for slow shutters** — shutter speeds below a configurable threshold (default 1/4s) switch the viewfinder into a synthetic simulation mode so the UI remains responsive and useful for composing long exposures.
+- **Headless / legacy fallback** — the hardware layer is abstract enough to support both the DSP/desktop path and a future low-cost headless Pi 4 build with GPIO buttons and framebuffer output.
 
 ---
 
-## Repository Structure
+## Repository Cleanup & Migration
+
+### Step 1 — Tag v1.5
+
+```bash
+git checkout development
+git tag -a v1.5.0 -m "PiCam v1.5 — legacy MMAL/picamera, Pi 4, framebuffer, GPIO buttons"
+git push origin v1.5.0
+```
+
+### Step 2 — Archive the legacy branches
+
+```bash
+# Create archive branches from the current state before clearing anything
+git checkout -b archive/v1.5-legacy
+git push origin archive/v1.5-legacy
+
+git checkout main
+git branch archive/main-v1.5
+git push origin archive/main-v1.5
+```
+
+### Step 3 — Reset development and main
+
+```bash
+# Create a clean orphan branch for V2
+git checkout --orphan v2-init
+git rm -rf .
+# Add the new skeleton structure, then:
+git add .
+git commit -m "chore: init PiCam V2 — clean start (legacy preserved at tag v1.5.0 and archive/* branches)"
+
+# Replace branches with the clean history
+git branch -D development
+git branch -m development
+git push origin development --force
+
+git checkout -b main
+git push origin main --force
+```
+
+### Step 4 — New Repository Structure
 
 ```
 picam/
+├── .ai-reviewer/                   # AI reviewer scripts (artemis pattern)
+│   ├── build-system-prompt.sh
+│   └── extract-claude-sections.sh
+├── .ai-reviewer-config.yml
+├── .github/
+│   └── workflows/
+│       ├── ci.yml
+│       ├── ai-pr-review.yml
+│       ├── ai-pr-review-on-comment.yml
+│       ├── security.yml
+│       ├── semgrep.yml
+│       └── license-check.yml
+├── AGENTS.md                       # Guidelines for AI coding agents
+├── CLAUDE.md                       # Claude Code project context & dev rules
 ├── src/
-│   ├── main.py                   # entry point
-│   ├── app.py                    # PiCamApp (Tkinter root)
+│   ├── main.py
+│   ├── app.py
 │   ├── camera/
-│   │   ├── backend.py            # abstract CameraBackend
-│   │   ├── picamera2_backend.py  # libcamera / picamera2 impl
-│   │   ├── demo_backend.py       # headless demo / dev mode
-│   │   ├── sensor_registry.py    # sensor detection & caps
-│   │   └── colour_profiles.py    # profile loading & embedding
+│   │   ├── backend.py              # abstract CameraBackend
+│   │   ├── picamera2_backend.py
+│   │   ├── demo_backend.py
+│   │   ├── sensor_registry.py
+│   │   ├── colour_profiles.py
+│   │   └── simulated_preview.py   # slow-shutter simulation engine
 │   ├── ui/
-│   │   ├── viewfinder.py         # live preview widget
-│   │   ├── control_panel.py      # right-hand controls
-│   │   ├── overlays.py           # zebra, focus peaking, histogram
-│   │   ├── touch_handler.py      # pinch/zoom/drag for touchscreen
-│   │   └── screen_manager.py     # HDMI / DSP / framebuffer
+│   │   ├── app_window.py
+│   │   ├── viewfinder.py
+│   │   ├── control_panel.py
+│   │   ├── overlays.py
+│   │   ├── touch_handler.py
+│   │   ├── screen_manager.py
+│   │   ├── gallery/
+│   │   │   ├── gallery_view.py
+│   │   │   ├── image_viewer.py
+│   │   │   └── video_player.py
+│   │   └── themes/
+│   │       ├── theme_manager.py
+│   │       ├── dark_blue.py       # default PoC theme
+│   │       ├── dark_red.py
+│   │       ├── night_mode.py      # red-on-black for astrophotography
+│   │       └── high_contrast.py
 │   ├── storage/
-│   │   ├── capture_controller.py # still + video save logic
-│   │   ├── exif_writer.py        # EXIF/XMP metadata injection
-│   │   ├── ramdrive.py           # /dev/shm in-memory buffer
-│   │   └── samba.py              # smbd integration helpers
+│   │   ├── capture_controller.py
+│   │   ├── exif_writer.py
+│   │   ├── ramdrive.py
+│   │   └── samba.py
 │   ├── hardware/
-│   │   ├── gpio_manager.py       # dynamic GPIO button mapping
-│   │   ├── battery_monitor.py    # I²C / GPIO voltage tracking
-│   │   └── temp_monitor.py       # CPU/GPU temp via vcgencmd
+│   │   ├── gpio_manager.py
+│   │   ├── battery_monitor.py
+│   │   └── temp_monitor.py
 │   └── settings/
-│       ├── settings_manager.py   # load / save / defaults
-│       └── defaults.py           # factory defaults per sensor
-├── colour_profiles/              # git submodule → trex22/Colour_Profiles
-├── case/                         # 3D models (STL / OpenSCAD)
+│       ├── settings_manager.py
+│       ├── defaults.py
+│       ├── profiles.py            # named capture profiles
+│       └── lens_database.py
+├── colour_profiles/               # git submodule → trex22/Colour_Profiles
+├── lenses/
+│   └── lenses.json                # bundled lens seed database
+├── case/                          # 3D models (OpenSCAD / STL)
 ├── docs/
-├── tools/                        # CLI utilities (exif tool, intrinsics, etc.)
-├── web/                          # future web-control interface
+├── tools/
+│   ├── intrinsics.py
+│   └── lens_exif.py
+├── web/
+├── tests/
+│   ├── unit/
+│   ├── integration/
+│   └── fixtures/
 ├── install.sh
 ├── requirements.txt
-└── .plan/
+├── CLAUDE.md
+└── AGENTS.md
 ```
+
+### Step 5 — CLAUDE.md & AGENTS.md
+
+- [ ] Write `CLAUDE.md` following the artemis pattern: project stack, essential commands, dev rules, UI/styling rules, testing requirements, PR conventions.
+- [ ] Write `AGENTS.md` for AI coding agent guidelines (tool restrictions, testing requirements, commit message format).
 
 ---
 
@@ -111,52 +204,48 @@ picam/
 
 ### P0.1 — Preview Aspect Ratio
 
-- [ ] Compute viewfinder dimensions to exactly match the sensor's native aspect ratio (IMX477 = 4056:3040 = 4:3). Currently the preview window is 573×366 which is approximately 11:7 — slightly stretched.
-- [ ] Add a helper `aspect_fit(sensor_w, sensor_h, container_w, container_h)` that returns the largest rect preserving ratio with letterbox/pillarbox padding.
-- [ ] Pass `{"size": aspect_fit(...)}` to `create_preview_configuration` so the capture stream and display are pixel-consistent.
+- [ ] Compute viewfinder dimensions to exactly match the sensor's native aspect ratio (IMX477 = 4056:3040 = 4:3).
+- [ ] Implement `aspect_fit(sensor_w, sensor_h, container_w, container_h)` returning a letterboxed rect.
+- [ ] Pass the corrected `size` to `create_preview_configuration`.
 
 ### P0.2 — Drop-down Text Visibility
 
-- [ ] The combobox text is currently invisible (white-on-white or dark-on-dark depending on system theme). Force `foreground=TEXT_LIGHT` on the drop-down list widget, not just the field.
-- [ ] Apply `ttk.Style` patch for `TCombobox` popdown background: `style.map("TCombobox", fieldbackground=[("readonly", BG_PANEL)], ...)`.
-- [ ] Consider switching to a custom `tk.OptionMenu` for more reliable cross-theme styling.
+- [ ] Fix `ttk.Combobox` drop-down list text (currently invisible due to system theme conflicts).
+- [ ] Apply a `ttk.Style` patch forcing `fieldbackground`, `foreground`, and popdown list background to theme colours.
+- [ ] Consider a custom `tk.OptionMenu` wrapper for full colour control.
 
 ### P0.3 — Proper Fullscreen / Display Mode
 
-- [ ] Add `--fullscreen` CLI flag and corresponding `root.attributes("-fullscreen", True)`.
-- [ ] Add `--geometry WxH` flag for fixed-resolution DSP screens (e.g. `800x480`).
-- [ ] Hide the window manager title bar in fullscreen mode.
-- [ ] Re-layout viewfinder to fill the full screen when in fullscreen mode, moving controls to a collapsible overlay panel.
+- [ ] Add `--fullscreen` CLI flag; `root.attributes("-fullscreen", True)`.
+- [ ] Add `--geometry WxH` for fixed-resolution DSP screens (800×480 default).
+- [ ] In fullscreen, hide the title bar and reflow the viewfinder to fill the screen with a collapsible control overlay.
 
 ### P0.4 — Capture Confirmation Feedback
 
-- [ ] Flash a brief green border/overlay on the viewfinder for ~500 ms after a successful capture.
-- [ ] Play a shutter sound (optional, configurable via settings).
-- [ ] Show a thumbnail of the last captured image in the status bar or a small pop-up panel.
-- [ ] Clear the "Saved ✓" status after 3 seconds; revert to "Ready".
+- [ ] Flash a coloured border on the viewfinder for ~500 ms after capture.
+- [ ] Optional shutter sound (configurable).
+- [ ] Show thumbnail of the last captured image in the status bar.
+- [ ] Auto-clear "Saved ✓" status after 3 seconds.
 
 ### P0.5 — EXIF Data Improvements
 
-- [ ] Use `piexif` or `exiftool` (subprocess) to inject:
-  - Accurate `DateTimeOriginal` from `datetime.now()`.
-  - `Make` = `"Raspberry Pi"`, `Model` = `"PiCam2 v{VERSION}"`.
-  - `LensModel` from the sensor registry or user-configured string.
-  - Connected sensor name in `UserComment`.
-  - Shutter speed, ISO, aperture (from applied controls metadata).
-- [ ] For DNG output: embed EXIF directly via `request.save_dng()` metadata overrides or post-process with `exiftool`.
+- [ ] Inject `DateTimeOriginal`, `Make` = `"Raspberry Pi"`, `Model` = `"PiCam2 v{VERSION}"`.
+- [ ] Inject `LensModel` from the lens database or user-configured string.
+- [ ] Inject sensor name in `UserComment`.
+- [ ] Inject applied shutter speed, ISO, and aperture from the controls metadata returned by `capture_request()`.
+- [ ] Use `piexif` for JPEG/PNG; post-process DNG with `exiftool` subprocess.
 
 ### P0.6 — Settings File
 
-- [ ] Implement `SettingsManager` that reads/writes `~/.config/picam2/settings.json`.
-- [ ] On first boot, write defaults. On subsequent boots, restore last-used values.
-- [ ] All UI control variables (`iso`, `shutter`, `awb`, `brightness`, etc.) persist to this file on change.
-- [ ] Add a "Save as Default Boot State" button in the UI.
+- [ ] `SettingsManager` reads/writes `~/.config/picam2/settings.json`.
+- [ ] All UI variables persist on change.
+- [ ] "Save as Default Boot State" button writes current state as the settings default section.
 
-### P0.7 — White Balance Controls
+### P0.7 — White Balance Manual Controls
 
-- [ ] Expose `ColourGains` (red gain, blue gain) as two float sliders, visible when AWB is disabled.
-- [ ] Add `AwbMode` combobox (Auto / Incandescent / Tungsten / Fluorescent / Indoor / Daylight / Cloudy / Custom).
-- [ ] When `AwbEnable=False` and custom gains are set, pass `ColourGains=(r, b)` in the controls dict.
+- [ ] Expose `ColourGains` (red gain, blue gain) sliders when AWB is off.
+- [ ] Add `AwbMode` combobox: Auto / Incandescent / Tungsten / Fluorescent / Indoor / Daylight / Cloudy / Custom.
+- [ ] Pass `ColourGains=(r, b)` when AWB is disabled and custom gains are set.
 
 ---
 
@@ -164,104 +253,141 @@ picam/
 
 ### P1.1 — Abstract Camera Backend
 
-- [ ] Define `CameraBackend` abstract base class with interface:
+- [ ] Define `CameraBackend` abstract base class:
   ```python
   def start(self, config: CameraConfig) -> None
   def stop(self) -> None
   def capture_preview_frame(self) -> Image.Image | None
-  def capture_still(self, controls: dict, path: Path, format: str) -> Path
+  def capture_still(self, controls: dict, path: Path, fmt: str) -> Path
   def apply_controls(self, controls: dict) -> None
   def get_metadata(self) -> dict
   def get_sensor_info(self) -> SensorInfo
   ```
-- [ ] Implement `Picamera2Backend` wrapping the PoC's `Camera` class with the single-config design.
-- [ ] Implement `DemoBackend` that generates synthetic frames (useful for dev on non-Pi hardware).
+- [ ] `Picamera2Backend` implements the single-config design from the PoC.
+- [ ] `DemoBackend` generates synthetic gradient frames for non-Pi development.
 
-### P1.2 — Sensor Registry
+### P1.2 — Sensor Registry & DPC Controls
 
-- [ ] Auto-detect connected sensor(s) via `Picamera2().camera_properties`.
-- [ ] Define a `SensorInfo` dataclass: `name`, `model_id`, `native_resolution`, `base_iso`, `max_gain`, `has_raw`, `supported_formats`, `default_colour_profile`.
-- [ ] Ship built-in sensor definitions for:
-  - IMX477 (HQ Camera, 12.3 MP)
-  - IMX219 (V2 Camera, 8 MP)
-  - IMX296 (Global Shutter)
-  - OV9281 (Global Shutter mono)
-  - ArduCam IMX519 (16 MP AF)
-  - ArduCam 64 MP (Hawkeye)
-- [ ] Sensor registry is extensible via a user JSON config.
+- [ ] Auto-detect sensor(s) via `Picamera2().camera_properties`.
+- [ ] Define `SensorInfo` dataclass: `name`, `model_id`, `native_resolution`, `base_iso`, `max_gain`, `has_raw`, `supported_formats`, `default_colour_profile`, `dpc_modes`.
+- [ ] Expose all per-sensor tunable controls that were available in v1.5 via MMAL, now via libcamera controls in an "Advanced / Sensor" collapsible section:
+  - Dead Pixel Correction (DPC) on-sensor modes 0–3: None / Mapped / Dynamic / Both.
+  - Noise Reduction Mode (ISP NR): Off / Fast / HighQuality (Pi 4 only when raw stream active).
+  - Black level offset slider.
+  - Digital gain slider (separate from analogue gain).
+  - Flicker avoidance (`AeFlickerMode`): Off / 50Hz / 60Hz / Auto.
+  - FPS cap via `FrameDurationLimits` (max fps slider).
+- [ ] Sensor registry is extensible via `~/.config/picam2/sensors.json`.
 
-### P1.3 — Colour Profile System *(highest priority)*
+### P1.3 — Colour Profile System *(highest priority feature)*
 
 - [ ] Add `colour_profiles/` as a git submodule pointing to `https://github.com/trex22/Colour_Profiles.git`.
-- [ ] Implement `ColourProfileManager`:
-  - Discover `.json` profile files for the detected sensor.
-  - Expose a combobox in the UI listing available profiles (e.g. "Lumariver Neutral 2860k-5960k", "Default", "None").
-  - **Default for IMX477**: auto-select `Raspberry Pi High Quality Camera Lumariver 2860k-5960k Neutral Look.json` if present.
-  - Pass the selected profile path to `Picamera2.set_tuning_file()` **before** `configure()` is called (this must happen at startup, not at capture time).
-- [ ] Support runtime profile switching by restarting the camera with the new tuning file (since `set_tuning_file()` requires a restart).
-- [ ] For DNG output: embed the profile name in `UserComment` EXIF. Optionally embed the ICC profile bytes via `exiftool -icc_profile=...`.
-- [ ] Expose a "Embed colour profile in output" toggle in Settings.
-- [ ] v1.5 reference: `config["colour_profile_path"]` already pointed at the Lumariver profile — preserve this default.
+- [ ] `ColourProfileManager`:
+  - Discover `.json` profiles for the detected sensor.
+  - **Default for IMX477**: auto-select `Raspberry Pi High Quality Camera Lumariver 2860k-5960k Neutral Look.json`.
+  - Expose a combobox listing available profiles.
+  - Pass the selected profile path to `Picamera2.set_tuning_file()` **before** `configure()`.
+  - Profile switching requires a ~2 s camera restart (stop → reinstantiate with new tuning → reconfigure → start).
+- [ ] Embed the active profile name in `UserComment` EXIF on every capture.
+- [ ] Optionally embed ICC profile bytes in JPEG/PNG output via Pillow.
+- [ ] "Embed colour profile in output" toggle in Settings.
 
 ### P1.4 — Pi 4 / Pi 5 Compatibility Layer
 
-- [ ] Detect hardware platform at startup (`/proc/device-tree/model`).
-- [ ] On Pi 4 (BCM2711, non-PiSP): `NoiseReductionMode` can be set freely without TDN constraint.
-- [ ] On Pi 5 (BCM2712, PiSP): enforce `NoiseReductionMode=0` when raw stream is active (as in the PoC).
-- [ ] Abstract this into `CameraConfig.noise_reduction_mode` with platform-aware defaults.
-- [ ] Test both `PISP_COMP1` (Pi 5) and `SRGGB10_CSI2P` (Pi 4) raw formats.
+- [ ] Detect hardware platform at startup via `/proc/device-tree/model`.
+- [ ] Pi 5 (PiSP): enforce `NoiseReductionMode=0` when raw stream is active.
+- [ ] Pi 4 (BCM2711): `NoiseReductionMode` is freely settable.
+- [ ] Abstract into `CameraConfig.noise_reduction_mode` with platform-aware defaults.
+
+### P1.5 — Reset Settings Button & Named Capture Profiles
+
+**Reset to Defaults:**
+- [ ] A **"Reset to Defaults"** button in the control panel instantly restores all controls to the configured default boot state (from `settings.json` defaults section, not hardcoded compile-time constants).
+
+**Named Capture Profiles:**
+- [ ] `ProfileManager` stores named profiles in `~/.config/picam2/profiles/`.
+- [ ] Each profile is a JSON snapshot of all control values plus a name, description, and optional colour profile reference.
+- [ ] UI: profile selector combobox at the top of the control panel with **Load**, **Save As**, and **Delete** buttons.
+- [ ] Built-in shipped profiles:
+  - `Default` — restore factory defaults.
+  - `Astrophotography – Moon` — ISO 200, 1/250s, NR off, DPC mapped-only, no AWB, high contrast.
+  - `Astrophotography – Planets` — ISO 400, 1/60s, NR off, DPC off, saturation boosted.
+  - `Astrophotography – Long Exposure Stars` — ISO 800–1600, 30s/bulb, NR off, DPC off, simulated preview enabled.
+  - `Daylight Auto` — all Auto, AWB on, NR HighQuality.
+  - `Indoor Manual` — ISO 400, 1/30s, Tungsten AWB.
+- [ ] Profiles integrate with the Simulated Preview system: any profile with a shutter speed slower than the simulation threshold automatically enables simulated preview.
 
 ---
 
 ## Phase 2 — Camera Features
 
-### P2.1 — AWB Manual Gains
+### P2.1 — Simulated Preview for Long Exposures *(important)*
 
-- [ ] *(see P0.7 above)*
+Long shutter speeds (slower than ~1/4 s) make the live viewfinder useless — the sensor either saturates to white, or the frame update rate falls below 1 fps. The simulated preview keeps the UI responsive and useful for composing long exposures.
 
-### P2.2 — Multi-Sensor Support
+**Implementation:**
 
-- [ ] On startup, enumerate cameras via `Picamera2.global_camera_info()`.
-- [ ] Add a "Sensor" combobox at the top of the control panel.
-- [ ] Switching sensors stops the current backend, reinitialises with new sensor's profile/config, and restarts the preview.
-- [ ] Preserve per-sensor settings independently in `settings.json`.
+- [ ] Define a configurable `PREVIEW_SIMULATION_THRESHOLD_US` (default: 250 000 µs = 1/4 s). Any selected shutter speed slower than this triggers simulation mode automatically.
+- [ ] When simulation is active, the viewfinder switches to a **simulated exposure** frame:
+  - The camera continues running at a fast metering exposure internally (e.g. 1/500 s, ISO auto), keeping the hardware in a stable state.
+  - A reference frame is grabbed from this fast metering exposure.
+  - The reference frame is transformed with a pixel-wise brightness scale: `simulated = clip(reference * (selected_exposure_us / metering_exposure_us) * gain_ratio)`.
+  - This produces a brightened/saturated preview that approximates the brightness of the intended long exposure.
+  - Note: the simulation is a quick approximation, not a perfect render of the final image — it helps with framing and composition but not fine exposure judgement.
+- [ ] Display a red **"SIM"** badge on the viewfinder title bar when simulation is active.
+- [ ] The metering reference frame refreshes every 5 seconds so the simulation stays current if the scene changes.
+- [ ] Simulation is automatically deactivated when the user selects a shutter speed faster than the threshold.
+- [ ] A manual **"Simulate"** toggle button allows forcing simulation on for any shutter speed (useful for very dim scenes where even 1/30 s produces an almost-black preview).
+- [ ] The simulated preview setting is included in capture profiles; the "Long Exposure Stars" profile enables it by default.
 
-### P2.3 — Dual Sensor Support
+### P2.2 — Timer Delay *(elevated priority — Phase 2)*
 
-- [ ] When two sensors are detected, offer a "Dual" mode.
-- [ ] Dual mode: two `Picamera2` instances, two preview windows (side-by-side or toggle).
-- [ ] Dual capture: fire both simultaneously in separate threads; save with matching timestamps.
-- [ ] Note: Pi 5 can handle two camera streams; Pi 4 is limited to one at a time.
+- [ ] Timer delay selector in the UI: Off / 2s / 5s / 10s / Custom.
+- [ ] Large, readable countdown overlay on the viewfinder.
+- [ ] Audible beeps at 3, 2, 1 if audio is available.
+- [ ] GPIO button: press to start timer; press again during countdown to cancel.
+- [ ] Timer persists in `settings.json` and is included in capture profiles.
+- [ ] Timer supported in both still and burst modes.
+
+### P2.3 — Multi-Sensor & Dual Sensor Support
+
+*(Multi-sensor and dual-sensor are the same feature — combined.)*
+
+- [ ] Enumerate all connected cameras via `Picamera2.global_camera_info()` at startup.
+- [ ] **Sensor selector** at the top of the control panel showing detected sensors by model name.
+- [ ] **Single sensor mode** (default): one viewfinder; switching sensors stops and restarts the backend.
+- [ ] **Dual sensor mode** (when two sensors are detected): two preview panes side-by-side or stacked, each with its own independent (collapsible) control column.
+- [ ] Dual capture: both sensors fire simultaneously from two threads; outputs saved with matching timestamps.
+- [ ] Per-sensor settings stored independently in `settings.json` keyed by sensor model.
+- [ ] Pi 5: two concurrent streams supported. Pi 4: one active sensor at a time (switching stops/restarts).
+- [ ] **Scroll-through-sensors** mode: cycles through all detected sensors via touch swipe or GPIO button.
 
 ### P2.4 — ArduCam Autofocus Support
 
-- [ ] Detect ArduCam AF modules (IMX519, 64MP) via camera properties.
-- [ ] Expose `AfMode` combobox: Manual / Continuous / Auto-on-capture.
-- [ ] Expose `LensPosition` slider for manual focus (0.0 to 1.0, maps to dioptre).
-- [ ] Trigger `AutoFocusCycle` on shutter-half-press (GPIO) or tap on the focus window.
+- [ ] Detect ArduCam AF modules via camera properties.
+- [ ] `AfMode` combobox: Manual / Continuous / Auto-on-capture.
+- [ ] `LensPosition` slider for manual focus (0.0–1.0).
+- [ ] `AutoFocusCycle` triggered on shutter-half-press (GPIO) or focus window tap.
 
-### P2.5 — ISO Simulation in Preview
+### P2.5 — Metering Modes
 
-> Shutter Speed Simulation in Preview
+- [ ] `AeMeteringMode` combobox: Centre-weighted / Spot / Matrix / Custom.
 
-- [ ] When a long shutter speed (>1/30s) is selected, the preview should darken proportionally to simulate the exposure visually (rather than always showing a full-brightness live feed).
-- [ ] Implement by adjusting `AnalogueGain` inversely during preview when `ExposureTime` is fixed.
+### P2.6 — Exposure Compensation (EV)
 
-### P2.6 — Dead Pixel Correction Modes
+- [ ] `ExposureValue` slider: −4 EV to +4 EV in 1/3-stop steps. Active only when `AeEnable=True`.
 
-- [ ] DPC is already in the PoC via `NoiseReductionMode`. Keep this.
-- [ ] Add a note in the UI tooltip that on-sensor DPC (mapped/dynamic, modes 1–3) is separate from this ISP NR control.
-- [ ] Long-term: allow tuning JSON DPC masks to be loaded for astrophotography (where mapped DPC is preferred over dynamic DPC).
+### P2.7 — Advanced Sensor Controls (from v1.5 MMAL)
 
-### P2.7 — Metering Modes
+The following controls were in v1.5 and must be preserved in v2 via libcamera in the "Advanced" collapsible section:
 
-- [ ] Add `AeMeteringMode` combobox: Centre-weighted / Spot / Matrix / Custom.
-- [ ] Link to `libcamera` `AeMeteringModeEnum`.
-
-### P2.8 — Exposure Compensation (EV)
-
-- [ ] Add `ExposureValue` slider: −4 EV to +4 EV in 1/3-stop steps.
-- [ ] Active only when `AeEnable=True`.
+- [ ] `AnalogueGain` / `DigitalGain` — separate sliders.
+- [ ] `BlackLevel` — offset slider.
+- [ ] `AeFlickerMode` — Off / 50Hz / 60Hz / Auto.
+- [ ] `NoiseReductionMode` — per platform (see P1.4).
+- [ ] DPC on-sensor modes 0–3.
+- [ ] `Saturation`, `Sharpness`, `Contrast`, `Brightness` — already in PoC.
+- [ ] FPS cap slider via `FrameDurationLimits`.
 
 ---
 
@@ -269,62 +395,41 @@ picam/
 
 ### P3.1 — Save Format Options
 
-- [ ] Replace the single "CAPTURE DNG" button with a configurable capture pipeline.
-- [ ] Add format options in Settings:
-  - `RAW only (DNG)`
-  - `JPEG only`
-  - `PNG only`
-  - `RAW + JPEG (dual save)`
-  - `RAW + PNG (dual save)`
-- [ ] JPEG/PNG saved from the `main` (processed RGB) stream at full sensor resolution via `capture_array("main")` resized to sensor res, or via a dedicated high-res still config.
-- [ ] JPEG quality slider (1–100, default 95).
-- [ ] PNG compression slider (0–9, default 6).
+- [ ] Format picker in Settings: `RAW only (DNG)`, `JPEG only`, `PNG only`, `RAW + JPEG`, `RAW + PNG`.
+- [ ] JPEG quality slider (1–100, default 95); PNG compression slider (0–9, default 6).
+- [ ] Capture button label updates to reflect current format.
 
 ### P3.2 — In-Memory Buffer (RAMDrive)
 
-- [ ] Create a `/dev/shm/picam/` RAMDrive buffer (Pi 5 has 8 GB RAM; allocate up to 2 GB as a ring buffer).
-- [ ] Write captures to RAMDrive first, then flush to persistent storage asynchronously in a background thread.
-- [ ] Add a `BufferManager` that tracks pending flushes and shows a progress indicator.
-- [ ] Burst mode: capture N frames in rapid succession to RAMDrive, flush afterwards.
-- [ ] Configurable: RAMDrive size limit, flush-to-disk immediately vs. deferred.
+- [ ] `/dev/shm/picam/` buffer; configurable allocation limit (default 2 GB on Pi 5).
+- [ ] `BufferManager`: write to RAMDrive first, flush to persistent storage asynchronously.
+- [ ] Progress indicator for pending flushes.
+- [ ] Burst mode captures to RAMDrive; flush after burst ends.
 
 ### P3.3 — DCIM Directory Structure
 
-- [ ] Adopt standard DCIM structure: `~/Pictures/DCIM/YYYYMMDD/IMG_YYYYMMDD_HHMMSS.dng`.
-- [ ] Configurable DCIM root path in settings.
-- [ ] Collision-safe naming (already in PoC — keep and extend to JPEG/PNG).
+- [ ] `~/Pictures/DCIM/YYYYMMDD/IMG_YYYYMMDD_HHMMSS.dng`.
+- [ ] Configurable DCIM root in settings.
 
 ### P3.4 — Colour Profile Embedding
 
-- [ ] For DNG: embed the active tuning profile name in EXIF `UserComment`; optionally inject ICC profile via `exiftool`.
-- [ ] For JPEG/PNG: embed ICC profile bytes directly in the file (Pillow supports `save(..., icc_profile=bytes)`).
-- [ ] For XMP sidecar: write a `.xmp` alongside each DNG noting the colour profile used.
+- [ ] DNG: profile name in `UserComment`; optional ICC inject via `exiftool`.
+- [ ] JPEG/PNG: ICC profile bytes via Pillow.
+- [ ] XMP sidecar alongside DNG.
 
-### P3.5 — GPS EXIF Support
+### P3.5 — Samba / Network Share
 
-- [ ] Detect USB/serial GPS modules (e.g. GlobalSat, u-blox via `gpsd`).
-- [ ] If `gpsd` is running, poll `gps.fix` at capture time and embed `GPSLatitude`, `GPSLongitude`, `GPSAltitude` in EXIF.
-- [ ] GPS support is a toggle in Settings (off by default).
-- [ ] Show GPS lock indicator (satellite icon) in the status bar when a fix is active.
+- [ ] `samba.py` writes a minimal `smb.conf` sharing the DCIM folder.
+- [ ] Settings toggle restarts `smbd`.
+- [ ] Advertise via Avahi/mDNS (`picam2.local`).
 
-### P3.6 — Samba / Network Share
+### P3.6 — PTP/MTP Mount
 
-- [ ] Add `samba.py` helper that writes a minimal `smb.conf` sharing the DCIM folder.
-- [ ] Install script installs `samba` if not present.
-- [ ] Settings toggle: "Share DCIM over Samba". Restarts `smbd` on change.
-- [ ] Advertise share via mDNS (Avahi) so macOS Finder and Windows can discover it.
+- [ ] `gphoto2` virtual camera daemon for macOS Image Capture and Darktable PTP import.
 
-### P3.7 — PTP/MTP Mount (Image Capture / Darktable Import)
+### P3.7 — Darktable on Device
 
-- [ ] Enable PTP over USB using `gphoto2`'s virtual camera daemon or `libgphoto2`.
-- [ ] This allows macOS Image Capture and Darktable (via `gphoto2` input) to mount PiCam2 as a camera.
-- [ ] Add install script step for `gphoto2`, `libgphoto2-dev`.
-- [ ] Alternative: advertise DCIM via Samba and configure Darktable to watch a network folder.
-
-### P3.8 — Darktable on Device
-
-- [ ] Add optional install step in `install.sh` for `darktable` (ARM64 package available on Bookworm).
-- [ ] Add a "Open in Darktable" context menu on last-captured image.
+- [ ] Optional install; "Open in Darktable" context menu on last-captured file.
 
 ---
 
@@ -332,106 +437,92 @@ picam/
 
 ### P4.1 — Focus Window (Draggable / Resizable)
 
-- [ ] Draw a semi-transparent rectangle overlay on the viewfinder.
-- [ ] Bind mouse `<Button-1>`, `<B1-Motion>` for drag; resize handles at corners.
-- [ ] Pass the normalised focus window rect as `AfWindows` (AF) and `AeExposureMode`/`ScalerCrop` (AE) to libcamera controls.
-- [ ] Focus window doubles as digital zoom region (see P4.2).
+- [ ] Semi-transparent rectangle overlay; drag to reposition, corner handles to resize.
+- [ ] Normalised rect passed as `AfWindows` and `ScalerCrop`.
+- [ ] Doubles as digital zoom region.
 
 ### P4.2 — Touch Zoom (Pinch / Expand)
 
-- [ ] Implement touch event handler for DSP touchscreen using `<ButtonPress>`, `<ButtonRelease>`, and multi-touch via `xinput` events or a custom touch driver shim.
-- [ ] Pinch-to-zoom: map touch spread to `ScalerCrop` (digital zoom) in libcamera — narrows the crop window on the sensor, effectively zooming.
-- [ ] Zoom level indicator overlay (e.g. "2.1×") on viewfinder.
-- [ ] Long-press on viewfinder: set focus point (triggers `AutoFocusCycle` at that position).
+- [ ] Pinch-to-zoom mapped to `ScalerCrop`.
+- [ ] Zoom level indicator overlay.
+- [ ] Long-press: set AF point.
 
 ### P4.3 — Collapsible Control Panel
 
-- [ ] In fullscreen mode, collapse the right-hand panel to a thin tab with an expand arrow.
-- [ ] Animate expand/collapse using `after()`-based geometry tweening.
-- [ ] Swipe in from right edge of touchscreen to expand.
+- [ ] In fullscreen, collapse to a thin tab; swipe from right to expand.
 
 ### P4.4 — Screen Brightness Control
 
-- [ ] Write to `/sys/class/backlight/*/brightness` for DSP/HDMI screens that expose a sysfs backlight interface.
-- [ ] Add a brightness slider in Settings → Display.
-- [ ] Auto-dim after N seconds of inactivity (configurable).
+- [ ] Write to `/sys/class/backlight/*/brightness`.
+- [ ] Brightness slider in Settings → Display.
+- [ ] Auto-dim after N seconds of inactivity.
 
 ### P4.5 — Overlay Indicators
 
-**Focus Peaking (Zebra-style)**
-- [ ] Every N frames (configurable, e.g. every 3rd), compute the Laplacian of the preview frame.
-- [ ] Highlight high-frequency edges in a configurable colour (default: red) overlaid on the live view.
-- [ ] Toggle button in the control panel.
+- [ ] **Focus Peaking**: Laplacian-of-preview, configurable highlight colour.
+- [ ] **Histogram**: live luminance/RGB via NumPy overlay widget.
+- [ ] **Zebra Stripes**: overexposure warning; configurable threshold.
+- [ ] **Grid Overlay**: rule-of-thirds / square / diagonal / centre-cross.
 
-**Histogram**
-- [ ] Draw a live luminance/RGB histogram in a corner of the viewfinder.
-- [ ] Computed using NumPy on the preview array; rendered as a small canvas widget.
-- [ ] Toggle and corner position configurable.
+### P4.6 — Screen Support Matrix
 
-**Zebra Stripes (Overexposure)**
-- [ ] Pixels above a configurable threshold (e.g. 95% luminance) are striped with an alternating pattern.
-- [ ] Toggle button; threshold slider.
+| Display Type | Backend | Notes |
+|---|---|---|
+| DSP Touchscreen (800×480) | Tkinter/X11 | Primary v2 target |
+| HDMI (any resolution) | Tkinter/X11 | Fullscreen or windowed |
+| Framebuffer (headless) | pygame / fbdev | Pi 4 legacy / future small model |
 
-**Grid Overlay**
-- [ ] Rule-of-thirds / square grid drawn over the viewfinder.
-- [ ] Toggle and grid type (thirds, square, diagonal, centre-cross) configurable.
-
-### P4.6 — Timer Delay
-
-- [ ] Add a timer delay selector: Off / 2s / 5s / 10s / Custom.
-- [ ] Countdown overlay on viewfinder (large digits).
-- [ ] Audible beeps at 3, 2, 1 (if audio enabled).
-
-### P4.7 — Capture Confirmation Flash
-
-- [ ] *(see P0.4 above)*
-
-### P4.8 — Shutter Speed Simulation in Preview
-
-- [ ] *(see P2.5 above)*
+- [ ] `ScreenManager` selects backend at startup via environment or `--display` flag.
+- [ ] **Framebuffer path preserved** for a future low-cost headless Pi 4 build; all GPIO button actions work in this mode.
 
 ---
 
-## Phase 5 — Advanced Imaging
+## Phase 5 — Advanced Imaging & MagicForge Integration
 
-### P5.1 — Auto Mode
+MagicForge (`/Users/trex22/development/MagicForge`) provides a mature pipeline: SIFT/ORB feature matching, drizzle stacking, lucky-drizzle mosaic, EXIF editing, scan2stl. It uses `opencv-contrib-python`, `rawpy`, `numpy`, `Pillow`, and optionally `drizzle` + `astropy`.
 
-- [ ] "Auto" mode: all controls (ISO, shutter, AWB) set to Auto. Single button to reset to fully automatic.
-- [ ] "Programme" mode: user sets one value, camera auto-handles the others.
+### P5.1 — Auto Mode & Programme Mode
+
+- [ ] "Auto" button: set all controls to Auto.
+- [ ] "Programme" mode: user fixes one parameter; camera auto-handles the rest.
 
 ### P5.2 — Burst / Continuous Shot
 
-- [ ] Hold the capture button to enter burst mode; release to stop.
-- [ ] Burst frames go to RAMDrive buffer; flushed after burst ends.
-- [ ] Configurable max burst length and inter-frame delay.
+- [ ] Hold capture button for burst; release to stop.
+- [ ] Frames to RAMDrive; flushed after burst.
 
-### P5.3 — Stop Motion Mode
+### P5.3 — Manual Focus Bracketing Continuous Shot
 
-- [ ] Capture N frames with configurable interval.
-- [ ] Overlay the last captured frame at reduced opacity as an onion skin.
-- [ ] Output: numbered sequence or an assembled GIF/MP4.
+- [ ] **Focus Bracket** mode: captures N stills stepping `LensPosition` through a user-defined range (start, end, step count).
+- [ ] Designed for ArduCam AF modules; gracefully no-ops on fixed-focus lenses.
+- [ ] Configurable: start position (0.0–1.0), end position, N steps, inter-frame delay.
+- [ ] Output saved to `FOCUSBRACKET_YYYYMMDD_HHMMSS/` sub-folder in DCIM.
+- [ ] Post-processing hook: optionally invoke MagicForge's focus-stack pipeline on the sequence.
+- [ ] Simulated-bracket variant: step `Sharpness` control values for lenses without electronic focus for comparison purposes.
 
-### P5.4 — Camera Intrinsics Tool
+### P5.4 — Stop Motion Mode
 
-- [ ] CLI tool (`tools/intrinsics.py`) that captures a checkerboard sequence and runs OpenCV camera calibration.
-- [ ] Outputs `K`, distortion coefficients, and reprojection error.
-- [ ] Save to `~/.config/picam2/intrinsics_{sensor}.json` for use by downstream tools.
+- [ ] N frames at configurable interval; onion-skin overlay; optional GIF/MP4 assembly.
 
-### P5.5 — Lens EXIF Data Tool
+### P5.5 — MagicForge Pipeline Integration
 
-- [ ] CLI tool (`tools/lens_exif.py`) that prompts for lens metadata (name, focal length, aperture, serial) and writes a profile JSON.
-- [ ] This profile is injected into EXIF `LensModel`, `FocalLength`, `MaxApertureValue` at capture time.
-- [ ] Especially useful for adapted M42 lenses (e.g. Vivitar with teleconverter) that have no electronic contacts.
+- [ ] Gallery "Process in MagicForge" button on selected file(s).
+- [ ] Focus bracket sequences: auto-invoke MagicForge focus-stack / lucky-drizzle pipeline.
+- [ ] Astrophotography sequences: auto-invoke `lucky_drizzle_mosaic()`.
+- [ ] Integration is optional; detects MagicForge via `which magicforge` or configured path.
+- [ ] Can run on the Pi itself (ARM64 compatible) or on a connected host over SSH/Samba.
 
-### P5.6 — Image Statistics Overlay
+### P5.6 — Camera Intrinsics Tool
 
-- [ ] Per-capture: log mean luminance, highlight/shadow clipping percentage, colour temperature estimate to a JSON stats file alongside each DNG.
+- [ ] `tools/intrinsics.py`: checkerboard capture → OpenCV calibration → `K` + distortion saved to `~/.config/picam2/intrinsics_{sensor}.json`.
 
-### P5.7 — HDR / DOL-HDR
+### P5.7 — Image Statistics
 
-- [ ] Research DOL-HDR support on IMX477 via libcamera extensions.
-- [ ] Short-term: software HDR merge via bracketed exposures (capture at −2EV, 0EV, +2EV; merge with OpenCV).
-- [ ] Add "HDR Bracket" capture mode to UI.
+- [ ] Per-capture: mean luminance, clipping %, estimated colour temperature to a JSON stats sidecar.
+
+### P5.8 — HDR Bracket Capture
+
+- [ ] Capture at −2EV, 0EV, +2EV; optionally invoke MagicForge for software HDR merge.
 
 ---
 
@@ -439,25 +530,31 @@ picam/
 
 ### P6.1 — Web Control Interface
 
-- [ ] Implement a lightweight Flask or FastAPI server (`web/server.py`).
-- [ ] Serves a responsive web UI mirroring the desktop controls.
-- [ ] Live MJPEG stream endpoint: `/stream`.
-- [ ] Capture endpoint: `POST /capture`.
-- [ ] Settings endpoint: `GET/PUT /settings`.
-- [ ] Accessible from any device on the local network; Bonjour/Avahi advertises `picam2.local`.
+- [ ] Flask/FastAPI server (`web/server.py`).
+- [ ] MJPEG stream: `GET /stream`; Capture: `POST /capture`; Settings: `GET/PUT /settings`.
+- [ ] Mobile-optimised UI for use as a remote shutter from a phone.
+- [ ] Optional PIN authentication (settings toggle).
+- [ ] Advertised via Avahi as `picam2.local`.
 
 ### P6.2 — GPIO Button Mapping
 
-- [ ] Implement `GPIOManager` using `gpiozero` (Pi 4 & 5 compatible).
-- [ ] Settings: map each GPIO pin to an action: Capture, TimerCapture, ToggleAWB, ZoomIn, ZoomOut, ToggleOverlay, Shutdown, etc.
-- [ ] Default mapping preserves the original v1.5 GPIO layout for backwards compatibility.
-- [ ] GPIO config stored in `settings.json` under `"gpio_map": {pin: action}`.
+- [ ] `GPIOManager` using `gpiozero`; graceful fallback on non-Pi hardware.
+- [ ] Settings: `"gpio_map": {pin: action}`. Default layout preserves v1.5 mapping.
+- [ ] Available actions: Capture, TimerCapture, ToggleAWB, ZoomIn, ZoomOut, ToggleOverlay, NextSensor, BurstStart/Stop, Shutdown.
+- [ ] **Headless / legacy model**: GPIO buttons are the primary UI in framebuffer mode; all capture and menu navigation actions must be reachable via buttons alone.
 
-### P6.3 — Remote Control Support
+### P6.3 — Remote Control
 
-- [ ] Bluetooth shutter remote: detect HID button press events (e.g. from a phone remote or BT shutter button) and map to capture action.
-- [ ] IR remote: via `lirc` — map IR codes to actions.
-- [ ] Both optional and configurable.
+Two supported remote control paths (IR explicitly excluded):
+
+**Bluetooth HID Shutter Remote:**
+- [ ] Listen for HID events from paired BT devices via `evdev`.
+- [ ] Map HID key codes to actions in `settings.json` under `"bt_remote_map": {hid_code: action}`.
+- [ ] Works with standard BT camera shutters, gamepads, or any HID device.
+
+**Web Remote Access:**
+- [ ] The web control interface (P6.1) is the primary remote mechanism.
+- [ ] The web UI mobile layout acts as a full remote control panel.
 
 ---
 
@@ -465,30 +562,21 @@ picam/
 
 ### P7.1 — Video Capture
 
-- [ ] Add a "VIDEO" mode toggle in the UI (separate from still capture).
-- [ ] Use `picamera2` encoder: `H264Encoder` with configurable bitrate.
-- [ ] Record to `~/Videos/DCIM/VID_YYYYMMDD_HHMMSS.mp4` (wrapped with `FfmpegOutput`).
-- [ ] Resolutions: 1080p30, 1080p60 (Pi 5 only), 720p60, 4K (Pi 5 only).
-- [ ] FPS selector linked to resolution.
-- [ ] Bitrate controls: slider from 1 Mbps to 50 Mbps.
+- [ ] "VIDEO" mode toggle in the UI.
+- [ ] `H264Encoder` with configurable bitrate (slider: 1–50 Mbps).
+- [ ] Output to `~/Videos/DCIM/VID_YYYYMMDD_HHMMSS.mp4` via `FfmpegOutput`.
+- [ ] Resolution/FPS presets; H.264 profile selector (Baseline / Main / High).
 
 ### P7.2 — RAW Video
 
-- [ ] Capture raw Bayer video to `.raw` binary or `.dng` sequence using `picamera2`'s `DngEncoder` or `MJPEGEncoder` on the raw stream.
-- [ ] Note: raw video at full sensor resolution generates ~15 MB/frame; RAMDrive buffer is essential.
-- [ ] Offer downsampled raw video (e.g. 2028×1520 @ 40fps) for more manageable file sizes.
+- [ ] Raw Bayer video to `.dng` sequence or `.raw` binary.
+- [ ] RAMDrive buffer essential; downsampled option for manageable file sizes.
 
 ### P7.3 — Audio Input
 
-- [ ] Detect USB/3.5mm audio input via `arecord -l`.
-- [ ] Record audio alongside video using `ffmpeg` as a subprocess muxer.
-- [ ] Audio codec: AAC or PCM, configurable.
+- [ ] Detect USB/3.5mm audio via `arecord -l`.
+- [ ] Record alongside video via `ffmpeg` subprocess muxer.
 - [ ] VU meter overlay in video mode.
-
-### P7.4 — Video Stabilisation
-
-- [ ] Software: `libcamera` has an `Af` stabilisation hint; implement via `ScalerCrop` jitter correction using optical flow between frames.
-- [ ] Hardware: note that Pi cameras don't have OIS; software-only.
 
 ---
 
@@ -496,192 +584,318 @@ picam/
 
 ### P8.1 — Battery Monitor
 
-- [ ] Detect common Pi battery HATs (PiJuice, Waveshare, Pimoroni LiPo SHIM) via I²C.
-- [ ] `BatteryMonitor` polls charge level, voltage, and charging status every 30 seconds.
-- [ ] Display battery percentage and icon in the status bar.
-- [ ] Low-battery warning overlay at 15%; auto-shutdown at 5% (configurable).
-- [ ] Battery percentage tracking persists to `settings.json` for boot display.
+- [ ] Detect battery HATs via I²C (PiJuice, Waveshare, Pimoroni LiPo SHIM).
+- [ ] Charge, voltage, charging status polled every 30 s.
+- [ ] Battery icon in status bar; low-battery warning at 15%; auto-shutdown at 5%.
 
-### P8.2 — Screen Support Matrix
+### P8.2 — Fast Boot
 
-| Display Type | Notes |
-|---|---|
-| DSP Touchscreen (800×480) | Primary target for v2 |
-| HDMI (any resolution) | Fullscreen / windowed |
-| Framebuffer (legacy) | For Pi 4 headless; v1.5 compatibility mode |
+- [ ] Disable unnecessary services; `systemd` service targeting `graphical-session.target`.
+- [ ] Target: boot-to-live-view < 10 s on Pi 5.
 
-- [ ] Auto-detect display type at startup.
-- [ ] `ScreenManager` selects rendering backend (Tkinter/X11 for desktop; direct framebuffer via `pygame` or `fbdev` for headless).
+### P8.3 — Auto Login & Auto-Run
 
-### P8.3 — Fast Boot
+- [ ] `raspi-config nonint do_boot_behaviour B4` in install script.
+- [ ] `.config/autostart/picam2.desktop`.
 
-- [ ] Disable unnecessary services: `bluetooth`, `avahi-daemon` (unless Samba/mDNS needed), `triggerhappy`, `ModemManager`.
-- [ ] Enable `systemd` service for PiCam2 with `After=graphical-session.target`.
-- [ ] Target boot-to-live-view in < 10 seconds on Pi 5 with `raspi-config` optimisations.
-- [ ] Consider `plymouth` splash screen showing the PiCam2 logo during boot.
+### P8.4 — Power Optimisation
 
-### P8.4 — Auto Login & Auto-Run
+- [ ] Disable HDMI in DSP-only mode; CPU governor scaling; screen auto-dim.
 
-- [ ] `install.sh` configures autologin via `raspi-config nonint do_boot_behaviour B4` (desktop autologin).
-- [ ] `.config/autostart/picam2.desktop` entry launches the app on session start.
-- [ ] Alternatively: `systemd --user` service with `After=graphical-session.target`.
+### P8.5 — Temperature Monitoring
 
-### P8.5 — Power Optimisation
+- [ ] `vcgencmd measure_temp` every 60 s; red indicator above 80°C; throttle overlay.
 
-- [ ] Disable HDMI if running on DSP only (`tvservice -o`).
-- [ ] Reduce CPU governor to `powersave` when idle; switch to `performance` during capture.
-- [ ] Disable WiFi if not needed (configurable via settings).
-- [ ] Screen auto-dim (see P4.4).
+### P8.6 — 3D Case Improvements
 
-### P8.6 — Temperature Monitoring
+- [ ] Ergonomic cage with handles; battery pack mounting; cold shoe mount; ventilation; OpenSCAD source in `case/`.
 
-- [ ] Poll `vcgencmd measure_temp` every 60 seconds.
-- [ ] Display CPU temp in the status bar (shown in red above 80°C).
-- [ ] Log temperature alongside each capture in the stats JSON.
-- [ ] Throttle warning overlay if `vcgencmd get_throttled` returns non-zero.
+### P8.7 — Headless / Small Model Support (Future Pi 4 Build)
 
-### P8.7 — 3D Case Improvements
-
-- [ ] Improved cage STL models with handles (ergonomic grip for handheld use).
-- [ ] Mounting points for the battery pack (eliminate the "physical battery pack issues" from the Optimisation List).
-- [ ] Cold shoe mount for external mic/monitor.
-- [ ] Ventilation slots for thermal management.
-- [ ] Source files in OpenSCAD in `case/` for parametric customisation.
+- [ ] All UI flows navigable via GPIO buttons alone in framebuffer mode.
+- [ ] Key-driven menu system for settings changes.
+- [ ] `--headless` flag or `PICAM2_HEADLESS=1` env var selects the framebuffer path.
+- [ ] Console output retained for debug/status in headless mode.
+- [ ] `pygame` drawing for the framebuffer rendering path.
 
 ---
 
-## Phase 9 — Astrophotography & Science Modes
+## Phase 9 — Gallery & Media Browser
 
-> From the legacy `todo.md` astrophotography items.
+### P9.1 — Gallery View
 
-### P9.1 — Astrophotography Mode
+- [ ] Gallery button in the main UI opens the gallery panel.
+- [ ] Grid of thumbnails from the DCIM folder.
+- [ ] Thumbnails generated lazily in a background thread; cached at `~/.cache/picam2/thumbs/`.
+- [ ] Tap/click to open full-screen viewer.
+- [ ] Swipe or arrow keys to navigate.
+- [ ] Video files show a play-button overlay on their thumbnail.
 
-- [ ] Long exposure presets: 10s, 30s, 60s, 120s, 300s, bulb (custom duration).
-- [ ] Disable all ISP processing (NR off, sharpening off, contrast=1.0, saturation=1.0).
-- [ ] Dark frame subtraction: capture a dark frame (lens cap on, same exposure settings) and subtract from the light frame in software.
-- [ ] Star eater avoidance: confirm `MMAL_PARAMETER_DPC` is not aggressively removing faint point sources; test empirically.
-- [ ] Integration with `mosaic_stitch.py` for stacking sequences.
+### P9.2 — Image Viewer
 
-### P9.2 — Motion Detection / Motion Vectors
+- [ ] Full-screen display with pinch/scroll zoom.
+- [ ] Toggleable EXIF data panel.
+- [ ] Delete with confirmation; share via Samba / web download.
+- [ ] "Open in Darktable" / "Process in MagicForge" contextual buttons.
 
-- [ ] Use libcamera's motion vector output (available from the H.264 encoder) for motion detection.
-- [ ] Trigger capture on motion (security camera / wildlife mode).
-- [ ] Configurable sensitivity and region of interest.
+### P9.3 — Video Player
 
-### P9.3 — Face Detection Mode
+- [ ] Inline playback via `ffplay` or embedded player; play/pause, seek, volume.
 
-- [ ] OpenCV `haarcascade_frontalface_default.xml` running on preview frames in a background thread.
-- [ ] Draw bounding boxes on the viewfinder.
-- [ ] Auto-focus and AE lock on detected face region.
+### P9.4 — Gallery Organisation
 
-### P9.4 — Edge Detection / Computer Vision Overlays
-
-- [ ] Canny edge detection overlay (useful for focus confirmation at the pixel level).
-- [ ] Toggle in the overlay panel.
-- [ ] Runs on a downsampled copy of the preview frame to avoid blocking the main thread.
+- [ ] Group by date, session, or capture profile.
+- [ ] Filter by format (RAW / JPEG / video).
 
 ---
 
-## Phase 10 — Polish & Distribution
+## Phase 10 — Astrophotography & Science Modes
 
-### P10.1 — Install Script (`install.sh`)
+### P10.1 — Astrophotography Capture Profiles
 
-- [ ] Update to handle Pi 4 and Pi 5 (detect via `/proc/device-tree/model`).
-- [ ] Install Python dependencies: `python3-picamera2`, `python3-pil`, `python3-pil.imagetk`, `python3-piexif`, `python3-gps`, `python3-numpy`, `python3-opencv`.
-- [ ] Clone/update `colour_profiles` submodule.
-- [ ] Optionally install `darktable`, `samba`, `gphoto2`.
+- [ ] Ship three built-in profiles (Moon, Planets, Long Exposure Stars — see P1.5).
+- [ ] Long Exposure Stars: simulated preview auto-enabled; all ISP processing off.
+- [ ] Dark frame subtraction: capture dark frame; subtract in post.
+
+### P10.2 — Focus Bracket for Astrophotography
+
+- [ ] Focus bracket mode (P5.3) especially useful for planetary/lunar imaging.
+- [ ] Auto-invoke MagicForge's `lucky_drizzle_mosaic()` on the sequence.
+
+### P10.3 — Motion Detection
+
+- [ ] H.264 motion vectors for motion-triggered capture (wildlife / security mode).
+
+### P10.4 — Science Overlays
+
+- [ ] Canny edge detection overlay (focus confirmation).
+- [ ] Face detection bounding boxes (OpenCV haarcascade, background thread).
+
+---
+
+## Phase 11 — Polish & Distribution
+
+### P11.1 — Lens Database
+
+- [ ] `LensDatabase` loads from bundled `lenses/lenses.json` and user file `~/.config/picam2/lenses.json`.
+- [ ] Each entry: `id`, `make`, `model`, `focal_length_mm`, `max_aperture`, `min_aperture`, `mount`, `is_adapted`, `notes`, `serial_number_pattern`.
+- [ ] Ship with a seed database of common lenses — especially M42 mount lenses used with adapters.
+- [ ] **Lens selector UI**: searchable dropdown or pop-up list in the control panel.
+- [ ] Selected lens injected into EXIF (`LensModel`, `FocalLength`, `MaxApertureValue`) on every capture.
+- [ ] **Teleconverter support**: a "TC" multiplier field adjusts the reported focal length (e.g. Vivitar 2× teleconverter doubles effective focal length).
+- [ ] "Add Lens" form: fill in lens details manually; saved to user lenses JSON.
+- [ ] Selected lens persists in `settings.json`.
+
+### P11.2 — Install Script (`install.sh`)
+
+- [ ] Detect Pi 4 vs Pi 5; install Python deps, init submodule; optional darktable / samba / gphoto2.
 - [ ] Configure autologin and autostart.
-- [ ] Write default `settings.json`.
 
-### P10.2 — `requirements.txt`
+### P11.3 — `requirements.txt`
 
 ```
 picamera2>=0.3.12
 Pillow>=10.0
 piexif>=1.1.3
 numpy>=1.24
-gpsd-py3>=0.3.0
 gpiozero>=2.0
 ```
 
-### P10.3 — Logging
+### P11.4 — Logging
 
-- [ ] Replace `print()` calls with `logging` module.
-- [ ] Log levels: DEBUG / INFO / WARN / ERROR.
-- [ ] Log file: `~/.local/share/picam2/picam2.log` with rotation (max 5 MB × 3 files).
-- [ ] In-app log viewer (collapsible panel at the bottom, toggle with a key shortcut).
+- [ ] Replace all `print()` with `logging`; log file with rotation; in-app log viewer.
 
-### P10.4 — Tests
+### P11.5 — README & Docs
 
-- [ ] Unit tests for `SettingsManager`, `ColourProfileManager`, `SensorRegistry`, `ExifWriter`.
-- [ ] Integration test using `DemoBackend` to exercise the full capture pipeline without hardware.
-- [ ] CI: GitHub Actions workflow running tests on Ubuntu (no Pi required, using `DemoBackend`).
-
-### P10.5 — README & Docs
-
-- [ ] Update `README.md` for V2 with install instructions, supported hardware, screenshots.
-- [ ] `docs/SENSORS.md` — sensor support matrix.
-- [ ] `docs/COLOUR_PROFILES.md` — how to use and create colour profiles.
-- [ ] `docs/GPIO.md` — button mapping reference.
-
-### P10.6 — Versioning
-
-- [ ] Adopt semantic versioning: `2.0.0`.
-- [ ] `VERSION` constant in `main.py`; embedded in EXIF and window title.
-- [ ] Git tags for releases.
+- [ ] `README.md`, `docs/SENSORS.md`, `docs/COLOUR_PROFILES.md`, `docs/GPIO.md`, `docs/LENSES.md`.
 
 ---
 
-## Deferred / Research Items
+## Testing Strategy
 
-These items are noted for future consideration but are not on the critical path for V2.
+### Test Architecture
 
-- **DOL-HDR** — requires sensor-level support; research libcamera extensions when available.
+```
+tests/
+├── unit/               # isolated module tests
+├── integration/        # pipeline tests using DemoBackend
+└── fixtures/           # sample images, mock responses, settings JSON
+```
+
+### Unit Tests
+
+| Module | What to Test |
+|---|---|
+| `SettingsManager` | Load / save / defaults / migration / corrupt-file handling |
+| `ColourProfileManager` | Profile discovery, IMX477 auto-select, missing profiles |
+| `SensorRegistry` | Detection, property parsing, unsupported sensor fallback |
+| `ExifWriter` | EXIF injection for DNG / JPEG / PNG; lens data injection |
+| `LensDatabase` | Load bundled DB, load user DB, merge, search, add entry |
+| `ProfileManager` | Load / save / delete / apply; built-in profiles |
+| `BufferManager` | Write to RAMDrive, flush, size limits, eviction |
+| `SimulatedPreviewEngine` | Threshold detection, brightness transform, SIM badge trigger |
+| `TimerController` | Countdown, cancel, capture trigger integration |
+| `CameraConfig` | Platform detection, Pi 4 / Pi 5 NR mode selection |
+| `DemoBackend` | Synthetic frame generation, controls dict pass-through |
+
+### Integration Tests
+
+- [ ] Full still capture pipeline with `DemoBackend` (settings → controls → capture → EXIF → save).
+- [ ] Profile load and apply (snapshot → camera restart → controls restore).
+- [ ] Sensor enumeration and single/dual sensor switching.
+- [ ] Focus bracket sequence capture and folder structure.
+- [ ] Burst mode with RAMDrive buffer and flush.
+- [ ] Simulated preview activation/deactivation on shutter speed change.
+- [ ] Timer delay countdown with mock time.
+- [ ] Save format combinations (DNG, JPEG, DNG+JPEG).
+
+### UI Smoke Tests
+
+- [ ] App starts in `DemoBackend` mode and all widgets render without exceptions.
+- [ ] Control changes propagate to the backend (mock `apply_controls`, assert call args).
+- [ ] Gallery thumbnail generation and display.
+- [ ] Theme switching changes widget colours.
+
+### Hardware-in-the-Loop (HiL) Tests
+
+Run on the self-hosted Pi runner only:
+- [ ] Live preview frame rate (≥ 15 fps on Pi 5).
+- [ ] DNG capture and DNG validity (`exiftool -validate`).
+- [ ] Colour profile loading (verify tuning file reflected in capture metadata).
+- [ ] GPIO button mapping (requires physical buttons or GPIO stimulator).
+
+### Coverage Requirements
+
+- Minimum **80% overall coverage** for all non-hardware modules.
+- No coverage reduction allowed on PRs (enforced by CI).
+- `Picamera2Backend`, `GPIOManager`, `BatteryMonitor` excluded from thresholds; tested by HiL.
+
+---
+
+## CI/CD Pipeline
+
+Following the artemis repo pattern, the following GitHub Actions workflows are implemented:
+
+### `ci.yml` — Main CI Workflow
+
+Triggers on every PR and push to `main` / `development`.
+
+```
+Jobs:
+  lint         → flake8, black --check, isort --check, pylint
+  test         → pytest tests/unit tests/integration + coverage check (≥80%)
+  hil-test     → pytest tests/hil on [self-hosted, raspberry-pi] runner
+                 (only on PRs targeting main)
+  accessibility → pa11y-ci + axe-core on the web control interface
+                 (only when web/ files change)
+```
+
+### `ai-pr-review.yml` — AI PR Reviewer
+
+Adapted from artemis:
+
+- [ ] Triggers on every opened/synchronised/reopened PR.
+- [ ] Uses GitHub Models API (Codestral-2501).
+- [ ] Dismisses stale `REQUEST_CHANGES` reviews on re-push.
+- [ ] Incremental review: checks whether previously flagged issues were fixed.
+- [ ] Reads `CLAUDE.md` guidelines on the first review of a PR.
+
+**PiCam2-specific system prompt focus areas:**
+```
+1. CRITICAL: Threading safety — Tkinter vars (.get()/.set()) ONLY on the main thread.
+   Worker threads must use root.after() callbacks.
+2. CRITICAL: Camera resource management — always stop/close in finally blocks.
+3. Single-config design — never call configure() or stop() on the running camera
+   except for deliberate profile switches with a full restart sequence.
+4. Pi 5 PiSP constraint — NoiseReductionMode must stay 0 when a raw stream
+   is active. Warn on any code that modifies this without a platform check.
+5. Type hints on all public methods.
+6. No bare except — always catch specific exceptions.
+7. Subprocess security — no shell=True; escape all user-supplied arguments.
+8. File path safety — validate user-supplied paths; no open() on unchecked input.
+```
+
+### `ai-pr-review-on-comment.yml`
+
+- [ ] Trigger AI review via a `/ai-review` comment on a PR.
+
+### `security.yml` — Security Scanning
+
+- [ ] **TruffleHog**: scans for secrets/credentials in commits and PRs.
+- [ ] **Semgrep**: Python + security rule sets; custom rules for subprocess injection, path traversal, insecure `/tmp` usage.
+- [ ] **pip-audit**: scans `requirements.txt` for known CVEs.
+- [ ] **Trivy**: Dockerfile config scan (when added).
+- [ ] Scheduled weekly (Monday 6 AM UTC) + on PR/push to main.
+
+### `semgrep.yml`
+
+- [ ] Standalone Semgrep with `SEMGREP_APP_TOKEN`; daily cron + manual trigger.
+
+### `license-check.yml` — License Compliance
+
+- [ ] `pip-licenses` audits all Python dependencies.
+- [ ] Flags non-permissive licenses (GPL, AGPL) that conflict with the project's MIT license.
+- [ ] Weekly scheduled run + on PRs that modify `requirements.txt`.
+- [ ] Monthly detailed license audit artifact.
+
+### Self-Hosted Pi Runner
+
+- [ ] Register a Raspberry Pi 5 as a GitHub Actions self-hosted runner.
+- [ ] Runner tagged `[self-hosted, raspberry-pi, pi5]`.
+- [ ] Only the `hil-test` job uses the self-hosted runner.
+- [ ] Runner has the IMX477 camera and GPIO hardware attached.
+
+### Dependabot
+
+- [ ] Enable Dependabot for `requirements.txt` (weekly Python dependency updates).
+- [ ] Enable Dependabot for GitHub Actions workflow versions.
+
+---
+
+## Deferred / Low Priority Items
+
+- **GPS EXIF support** — lowest priority; add `gpsd-py3` integration when time permits.
+- **DOL-HDR** — requires sensor-level support not yet in libcamera stable.
+- **Video stabilisation** — software only; lower priority.
+- **Image watermark tool** — post-processing CLI; low urgency.
 - **Lens shading control** — via custom tuning JSON; complex to implement correctly.
-- **Video stabilisation** — software only; lower priority given the fixed-mount use case.
-- **Image watermark tool** — post-processing CLI tool; low urgency.
-- **Photo viewer** — a standalone photo viewer within PiCam2; consider deferring to Darktable.
-- **Black level / digital gain controls** — advanced; expose later as part of an "Expert" settings panel.
-- **Flicker avoidance** — `AeFlickerMode` control; useful in fluorescent lighting.
-- **Zero shutter lag** — investigate `ZeroShutterLag` mode in picamera2 for Pi 4.
-- **Field of view / ScalerCrop tool** — already partially covered by zoom; full FOV selector later.
-- **Python module packaging** — package PiCam2 as a pip-installable module.
+- **IR remote** — explicitly excluded; Bluetooth HID and web remote are the supported paths.
+- **Zero Shutter Lag** — research `ZeroShutterLag` mode for Pi 4 later.
+- **Python module packaging** — pip-installable module for a future release.
+- **Face detection** — OpenCV haarcascade; deferred to astrophotography/science phase.
 
 ---
 
 ## Colour Profile Implementation Notes
 
-The v1.5 config already hard-coded the correct path:
+The v1.5 config already pointed at the correct default:
 ```python
 "colour_profile_path": "/home/pi/Colour_Profiles/imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Neutral Look.json"
 ```
 
-In V2, the profile must be loaded **before** `Picamera2.configure()`:
+In V2, the profile is loaded **before** `configure()`:
 
 ```python
-from picamera2 import Picamera2
-
-tuning = Picamera2.load_tuning_file("Raspberry Pi High Quality Camera Lumariver 2860k-5960k Neutral Look.json")
+tuning = Picamera2.load_tuning_file(
+    "Raspberry Pi High Quality Camera Lumariver 2860k-5960k Neutral Look.json",
+    dir=str(COLOUR_PROFILES_DIR / "imx477")
+)
 cam = Picamera2(tuning=tuning)
 cam.configure(config)
 cam.start()
 ```
 
-**Profile switching at runtime** requires a full camera restart:
-1. Call `cam.stop()` and `cam.close()`.
+**Runtime profile switching** requires a full restart (~2 s on Pi 5):
+1. `cam.stop()` → `cam.close()`.
 2. Re-instantiate `Picamera2(tuning=new_tuning)`.
 3. Reconfigure and restart.
-4. Restore controls from the settings dict.
+4. Restore controls from settings.
 
-This should take < 2 seconds on Pi 5 and is acceptable for a deliberate settings change.
-
-**Sensor detection → profile auto-selection:**
-
+**Sensor → profile auto-selection map:**
 ```python
 SENSOR_PROFILE_DEFAULTS = {
     "imx477": "imx477/Raspberry Pi High Quality Camera Lumariver 2860k-5960k Neutral Look.json",
     "imx219": "imx219/default.json",
-    # etc.
 }
 ```
 
@@ -695,7 +909,7 @@ SENSOR_PROFILE_DEFAULTS = {
 | IMX219 | V2 Camera | 3280×2464 | SRGGB10 | No | Built-in |
 | IMX296 | Global Shutter | 1456×1088 | SRGGB10 | No | Built-in |
 | OV9281 | Global Shutter Mono | 1280×800 | Y8/Y10 | No | N/A |
-| IMX519 | ArduCam 16MP | 4656×3496 | SRGGB10 | ✅ | Built-in |
+| IMX519 | ArduCam 16MP AF | 4656×3496 | SRGGB10 | ✅ | Built-in |
 | AR0234 | ArduCam Global | 1920×1200 | SGRBG10 | No | Built-in |
 
 ---
@@ -704,9 +918,59 @@ SENSOR_PROFILE_DEFAULTS = {
 
 | Constraint | Platform | Mitigation |
 |---|---|---|
-| PiSP TDN crash on mode switch | Pi 5 only | Single-config design (already in PoC) |
-| One camera at a time | Pi 4 | Sequential sensor switching; no dual-sensor on Pi 4 |
+| PiSP TDN crash on mode switch | Pi 5 | Single-config design |
+| One concurrent camera stream | Pi 4 | Sequential sensor switching; no dual-sensor |
 | Raw stream memory (~15 MB/frame) | All | `buffer_count=2`; RAMDrive flush |
-| `set_tuning_file()` requires restart | All | Accept 2 s delay on profile switch |
-| GPIO access requires `gpiozero` or `RPi.GPIO` | All | Graceful fallback if not on Pi |
-| DSP touchscreen multi-touch limited | Pi 5 DSP | Use `xinput` events for best pinch support |
+| `set_tuning_file()` requires restart | All | Accept ~2 s delay on profile switch |
+| GPIO requires `gpiozero` / `RPi.GPIO` | All | Graceful fallback on non-Pi |
+| DSP touchscreen multi-touch limited | Pi 5 DSP | `xinput` events for best pinch support |
+| No OIS on any Pi camera module | All | Software stabilisation only |
+
+---
+
+## UI Theme & Visual Design System
+
+### Current Theme (PoC)
+
+Dark blue palette defined as constants in the PoC:
+```python
+BG_DARK  = "#1a1a2e"
+BG_MID   = "#16213e"
+BG_PANEL = "#0f3460"
+ACCENT   = "#e94560"
+```
+
+### Theme System Plan
+
+- [ ] Implement `ThemeManager` loading a theme from `~/.config/picam2/theme.json` or `--theme` CLI flag.
+- [ ] Each theme defines a colour palette dict: `bg_dark`, `bg_mid`, `bg_panel`, `accent`, `text_light`, `text_dim`, `btn_capture`, `btn_ok`, `btn_warn`.
+- [ ] Theme is applied globally through a style registry; hot-swap without restart.
+
+### Planned Built-in Themes
+
+| Theme | Description | Use Case |
+|---|---|---|
+| `dark_blue` | PoC default — navy/teal/red | General use |
+| `dark_red` | Crimson/charcoal | Alternative aesthetic |
+| `night_mode` | Deep red-on-black | Astrophotography — preserves dark-adapted vision |
+| `high_contrast` | White/yellow on black | Outdoor bright light readability |
+| `classic` | Grey/green terminal feel | Nostalgic; v1.5 callback |
+
+### Font Plan
+
+- [ ] `FontRegistry` with named font roles: `ui_small`, `ui_body`, `ui_label`, `vf_overlay`, `status`, `mono`.
+- [ ] Defaults: Helvetica (labels), Courier (status/metadata), system monospace (log viewer).
+- [ ] Font sizes scale with screen resolution (larger on 1080p+, smaller on 800×480).
+- [ ] `--font-scale` CLI flag for accessibility.
+- [ ] Fonts configurable per theme.
+
+### Responsive Layout
+
+- [ ] **Compact mode** (800×480 DSP): minimal visible controls, collapsible side panel, viewfinder maximised.
+- [ ] **Standard mode** (1080p+): full side panel with all controls visible.
+- [ ] Auto-detected from window geometry or `--layout compact|standard` CLI flag.
+
+### Future Theme Possibilities
+
+- [ ] User-defined themes via a JSON editor in Settings → Appearance.
+- [ ] High-DPI / Retina support for 4K HDMI displays.
