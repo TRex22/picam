@@ -108,7 +108,7 @@ git tag -a v1.5.0 -m "PiCam v1.5 — legacy MMAL/picamera, Pi 4, framebuffer, GP
 git push origin v1.5.0
 ```
 
-- [ ] Tag `v1.5.0` created and pushed.
+- [x] Tag `v1.5.0` created and pushed.
 
 ### Step 2 — Archive the legacy branches (do NOT delete `.git`)
 
@@ -122,8 +122,8 @@ git branch archive/v1.5-main
 git push origin archive/v1.5-main
 ```
 
-- [ ] `archive/v1.5-development` pushed.
-- [ ] `archive/v1.5-main` pushed.
+- [x] `archive/v1.5-development` pushed.
+- [x] `archive/v1.5-main` pushed.
 
 ### Step 3 — Create a clean V2 starting point
 
@@ -143,13 +143,13 @@ git checkout HEAD -- .gitignore LICENSE .github/
 ```
 
 **Files to carry forward into V2 bootstrap commit:**
-- [ ] `.gitignore` (existing, update as needed)
-- [ ] `LICENSE`
-- [ ] `.github/` (existing workflows; will be replaced/extended in CI phase)
-- [ ] `.plan/picam2_proof_of_concept.py` — the PoC that V2 is built on
-- [ ] `.plan/rewrite 2026.md` — this plan document (rename to `PLAN.md` at repo root)
-- [ ] `.plan/todo.md` — legacy todo list (keep as historical reference)
-- [ ] `README.md` — will be updated for V2 but carried forward
+- [x] `.gitignore` (existing, update as needed)
+- [x] `LICENSE`
+- [x] `.github/` (existing workflows; will be replaced/extended in CI phase)
+- [x] `.plan/picam2_proof_of_concept.py` — the PoC that V2 is built on
+- [x] `.plan/rewrite 2026.md` — this plan document (rename to `PLAN.md` at repo root)
+- [x] `.plan/todo.md` — legacy todo list (keep as historical reference)
+- [x] `README.md` — will be updated for V2 but carried forward
 
 **Files NOT carried forward (replaced by V2 equivalents):**
 - `src/` — all v1.5 source (preserved only in `archive/` branches and `v1.5.0` tag)
@@ -183,11 +183,11 @@ git checkout -b main
 git push origin main --force
 ```
 
-- [ ] `v2-bootstrap` orphan branch created with correct files.
-- [ ] `development` branch reset to clean V2 history.
-- [ ] `main` branch reset to clean V2 history.
-- [ ] Legacy branches and tag confirmed present on remote.
-- [ ] `.git` directory confirmed intact.
+- [x] `v2-bootstrap` orphan branch created with correct files.
+- [x] `development` branch reset to clean V2 history.
+- [x] `main` branch reset to clean V2 history.
+- [x] Legacy branches and tag confirmed present on remote.
+- [x] `.git` directory confirmed intact.
 
 ### Step 4 — Bootstrap the V2 directory structure
 
@@ -201,14 +201,14 @@ touch src/__init__.py src/camera/__init__.py src/ui/__init__.py
 touch src/storage/__init__.py src/hardware/__init__.py src/settings/__init__.py
 ```
 
-- [ ] Directory skeleton created and committed.
-- [ ] `PLAN.md` (this file) copied to repo root and committed.
-- [ ] `CLAUDE.md` written (project stack, commands, dev rules, PR conventions).
-- [ ] `AGENTS.md` written (AI agent tool restrictions, commit format, testing requirements).
+- [x] Directory skeleton created and committed.
+- [x] `PLAN.md` (this file) copied to repo root and committed.
+- [x] `CLAUDE.md` written (project stack, commands, dev rules, PR conventions).
+- [x] `AGENTS.md` written (AI agent tool restrictions, commit format, testing requirements).
 
 ### Step 5 — Move PoC to src/ and verify it runs
 
-- [ ] Copy `.plan/picam2_proof_of_concept.py` to `src/main.py` (the V2 entry point).
+- [x] Copy `.plan/picam2_proof_of_concept.py` to `src/main.py` (the V2 entry point).
 - [ ] Verify `python src/main.py` still runs on the Pi and shows the live view.
 - [ ] The PoC is now the running baseline for all Phase 0 work.
 
