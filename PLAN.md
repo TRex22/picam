@@ -375,31 +375,31 @@ picam/
 
 ### P1.1 — Abstract Camera Backend
 
-- [ ] Define `CameraBackend` abstract base class:
+- [x] Define `CameraBackend` abstract base class:
   ```python
   def start(self, config: CameraConfig) -> None
   def stop(self) -> None
   def capture_preview_frame(self) -> Image.Image | None
-  def capture_still(self, controls: dict, path: Path, fmt: str) -> Path
+  def capture_still(self, controls: dict, path: Path, fmt: str) -> tuple[Path, dict]
   def apply_controls(self, controls: dict) -> None
   def get_metadata(self) -> dict
   def get_sensor_info(self) -> SensorInfo
   ```
-- [ ] `Picamera2Backend` refactored from the PoC's `Camera` class, implementing the abstract interface.
-- [ ] `DemoBackend` generates synthetic frames for non-Pi development.
+- [x] `Picamera2Backend` refactored from the PoC's `Camera` class, implementing the abstract interface.
+- [x] `DemoBackend` generates synthetic animated frames for non-Pi development.
 
 ### P1.2 — Sensor Registry & Advanced Controls
 
-- [ ] Auto-detect sensor(s) via `Picamera2().camera_properties`.
-- [ ] Define `SensorInfo` dataclass: `name`, `model_id`, `native_resolution`, `base_iso`, `max_gain`, `has_raw`, `supported_formats`, `default_colour_profile`, `dpc_modes`.
-- [ ] Expose all v1.5 MMAL-era controls now via libcamera, in a collapsible "Advanced" section:
+- [x] Auto-detect sensor(s) via `Picamera2().camera_properties` (in `Picamera2Backend.start()`).
+- [x] Define `SensorInfo` dataclass: `name`, `model_id`, `native_resolution`, `base_iso`, `max_gain`, `has_raw`, `supported_formats`, `default_colour_profile`, `dpc_modes`.
+- [~] Expose advanced controls in UI collapsible section *(deferred to Phase 1.5 — needs UI rework)*:
   - DPC on-sensor modes 0–3: None / Mapped / Dynamic / Both.
   - Noise Reduction Mode (ISP NR): Off / Fast / HighQuality (Pi 4); locked Off on Pi 5 with raw stream.
   - Black level offset slider.
   - Digital gain (separate from analogue gain).
   - Flicker avoidance (`AeFlickerMode`): Off / 50Hz / 60Hz / Auto.
   - FPS cap via `FrameDurationLimits` (max fps slider).
-- [ ] Sensor registry extensible via `~/.config/picam2/sensors.json`.
+- [x] Sensor registry extensible via `~/.config/picam2/sensors.json`.
 
 ### P1.3 — Pi 4 / Pi 5 Compatibility Layer
 
